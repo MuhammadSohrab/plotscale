@@ -1,0 +1,25 @@
+{
+  "concepts": [
+    { "id": "concept.ropani", "canonicalName": "Ropani", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.aana", "canonicalName": "Aana", "aliases": ["Anna"], "dimensions": ["area"] },
+    { "id": "concept.paisa", "canonicalName": "Paisa", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.daam", "canonicalName": "Daam", "aliases": ["Dam"], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "NP_HILLS_ROPANI", "conceptId": "concept.ropani", "name": "Ropani (Nepal Hills suggestion)", "symbol": "ropani", "dimension": "area", "suggestedFactorToBase": "508.7", "exactness": "approximate", "system": "nepal_hills_land" },
+    { "id": "NP_HILLS_AANA", "conceptId": "concept.aana", "name": "Aana (Nepal Hills suggestion)", "symbol": "aana", "dimension": "area", "suggestedFactorToBase": "31.79375", "exactness": "approximate", "system": "nepal_hills_land" },
+    { "id": "NP_HILLS_PAISA", "conceptId": "concept.paisa", "name": "Paisa (Nepal Hills suggestion)", "symbol": "paisa", "dimension": "area", "suggestedFactorToBase": "7.9484375", "exactness": "approximate", "system": "nepal_hills_land" },
+    { "id": "NP_HILLS_DAAM", "conceptId": "concept.daam", "name": "Daam (Nepal Hills suggestion)", "symbol": "daam", "dimension": "area", "suggestedFactorToBase": "1.987109375", "exactness": "approximate", "system": "nepal_hills_land" }
+  ],
+  "relationships": [
+    { "id": "NP_HILLS_ROPANI_TO_AANA", "familyId": "NP_HILLS_ROPANI_FAMILY", "parentUnitId": "NP_HILLS_ROPANI", "childUnitId": "NP_HILLS_AANA", "multiplier": "16", "editable": true },
+    { "id": "NP_HILLS_AANA_TO_PAISA", "familyId": "NP_HILLS_ROPANI_FAMILY", "parentUnitId": "NP_HILLS_AANA", "childUnitId": "NP_HILLS_PAISA", "multiplier": "4", "editable": true },
+    { "id": "NP_HILLS_PAISA_TO_DAAM", "familyId": "NP_HILLS_ROPANI_FAMILY", "parentUnitId": "NP_HILLS_PAISA", "childUnitId": "NP_HILLS_DAAM", "multiplier": "4", "editable": true }
+  ],
+  "familyTemplates": [{ "id": "NP_HILLS_ROPANI_FAMILY", "name": "Nepal Hills Ropani family", "unitIds": ["NP_HILLS_ROPANI", "NP_HILLS_AANA", "NP_HILLS_PAISA", "NP_HILLS_DAAM"], "relationshipIds": ["NP_HILLS_ROPANI_TO_AANA", "NP_HILLS_AANA_TO_PAISA", "NP_HILLS_PAISA_TO_DAAM"], "calibrationRequired": true }],
+  "tools": [],
+  "sources": [{ "id": "NEPAL_NSO", "title": "Nepal National Statistics Office land conversion metadata", "authorityTier": 1, "url": "https://microdata.nsonepal.gov.np/" }],
+  "warnings": ["Confirm one known size and all ratios before activation."],
+  "outputRecipes": [{ "id": "NP_HILLS_MIXED", "name": "Ropani, Aana, Paisa & Daam", "dimension": "area", "unitIds": ["NP_HILLS_ROPANI", "NP_HILLS_AANA", "NP_HILLS_PAISA", "NP_HILLS_DAAM"], "precision": 2 }],
+  "qaIssues": []
+}

@@ -1,0 +1,34 @@
+{
+  "concepts": [
+    { "id": "concept.gunters_chain", "canonicalName": "Gunter's chain", "aliases": ["chain"], "dimensions": ["length"] },
+    { "id": "concept.gunters_link", "canonicalName": "Gunter's link", "aliases": ["link"], "dimensions": ["length"] },
+    { "id": "concept.rod", "canonicalName": "Rod", "aliases": ["pole", "perch"], "dimensions": ["length"] },
+    { "id": "concept.furlong", "canonicalName": "Furlong", "aliases": [], "dimensions": ["length"] },
+    { "id": "concept.square_chain", "canonicalName": "Square chain", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.square_link", "canonicalName": "Square link", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.square_rod", "canonicalName": "Square rod", "aliases": ["square perch"], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "GUNTERS_CHAIN", "conceptId": "concept.gunters_chain", "name": "Gunter's chain", "symbol": "ch", "dimension": "length", "factorToBase": "20.1168", "exactness": "exact", "system": "international_survey", "visibility": "advanced" },
+    { "id": "GUNTERS_LINK", "conceptId": "concept.gunters_link", "name": "Gunter's link", "symbol": "lnk", "dimension": "length", "factorToBase": "0.201168", "exactness": "exact", "system": "international_survey", "visibility": "advanced" },
+    { "id": "ROD", "conceptId": "concept.rod", "name": "Rod / Pole / Perch", "symbol": "rd", "dimension": "length", "factorToBase": "5.0292", "exactness": "exact", "system": "international_survey", "visibility": "advanced" },
+    { "id": "FURLONG", "conceptId": "concept.furlong", "name": "Furlong", "symbol": "fur", "dimension": "length", "factorToBase": "201.168", "exactness": "exact", "system": "international_survey", "visibility": "advanced" },
+    { "id": "SQ_CHAIN", "conceptId": "concept.square_chain", "name": "Square chain", "symbol": "ch²", "dimension": "area", "factorToBase": "404.68564224", "exactness": "exact", "system": "international_survey", "visibility": "advanced" },
+    { "id": "SQ_LINK", "conceptId": "concept.square_link", "name": "Square link", "symbol": "lnk²", "dimension": "area", "factorToBase": "0.040468564224", "exactness": "exact", "system": "international_survey", "visibility": "advanced" },
+    { "id": "SQ_ROD", "conceptId": "concept.square_rod", "name": "Square rod / perch", "symbol": "rd²", "dimension": "area", "factorToBase": "25.29285264", "exactness": "exact", "system": "international_survey", "visibility": "advanced" }
+  ],
+  "relationships": [
+    { "id": "SURVEY_CHAIN_TO_ROD", "familyId": "INTERNATIONAL_SURVEY_LENGTH", "parentUnitId": "GUNTERS_CHAIN", "childUnitId": "ROD", "multiplier": "4", "editable": false },
+    { "id": "SURVEY_CHAIN_TO_LINK", "familyId": "INTERNATIONAL_SURVEY_LENGTH", "parentUnitId": "GUNTERS_CHAIN", "childUnitId": "GUNTERS_LINK", "multiplier": "100", "editable": false }
+  ],
+  "familyTemplates": [],
+  "tools": [
+    { "id": "TOOL_GUNTERS_CHAIN", "name": "Gunter's chain", "symbol": "ch", "dimension": "length", "factorToBase": "20.1168", "exactness": "exact", "variantId": "GUNTERS_CHAIN" }
+  ],
+  "sources": [
+    { "id": "NIST_HB44", "title": "NIST Handbook 44, Appendix C", "authorityTier": 1, "url": "https://www.nist.gov/pml/owm/si-units-length" }
+  ],
+  "warnings": [],
+  "outputRecipes": [],
+  "qaIssues": []
+}

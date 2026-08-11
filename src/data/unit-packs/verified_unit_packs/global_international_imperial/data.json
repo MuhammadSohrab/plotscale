@@ -1,0 +1,38 @@
+{
+  "concepts": [
+    { "id": "concept.inch", "canonicalName": "Inch", "aliases": [], "dimensions": ["length"] },
+    { "id": "concept.foot", "canonicalName": "Foot", "aliases": ["feet"], "dimensions": ["length"] },
+    { "id": "concept.yard", "canonicalName": "Yard", "aliases": [], "dimensions": ["length"] },
+    { "id": "concept.mile", "canonicalName": "Mile", "aliases": [], "dimensions": ["length"] },
+    { "id": "concept.square_inch", "canonicalName": "Square inch", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.square_foot", "canonicalName": "Square foot", "aliases": ["square feet"], "dimensions": ["area"] },
+    { "id": "concept.square_yard", "canonicalName": "Square yard", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.square_mile", "canonicalName": "Square mile", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.acre", "canonicalName": "Acre", "aliases": [], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "INCH", "conceptId": "concept.inch", "name": "International inch", "symbol": "in", "dimension": "length", "factorToBase": "0.0254", "exactness": "exact", "system": "international_imperial", "visibility": "default" },
+    { "id": "FOOT", "conceptId": "concept.foot", "name": "International foot", "symbol": "ft", "dimension": "length", "factorToBase": "0.3048", "exactness": "exact", "system": "international_imperial", "visibility": "default" },
+    { "id": "YARD", "conceptId": "concept.yard", "name": "International yard", "symbol": "yd", "dimension": "length", "factorToBase": "0.9144", "exactness": "exact", "system": "international_imperial", "visibility": "default" },
+    { "id": "MILE", "conceptId": "concept.mile", "name": "International mile", "symbol": "mi", "dimension": "length", "factorToBase": "1609.344", "exactness": "exact", "system": "international_imperial", "visibility": "default" },
+    { "id": "SQIN", "conceptId": "concept.square_inch", "name": "Square inch", "symbol": "in²", "dimension": "area", "factorToBase": "0.00064516", "exactness": "exact", "system": "international_imperial", "visibility": "advanced" },
+    { "id": "SQFT", "conceptId": "concept.square_foot", "name": "Square foot", "symbol": "ft²", "dimension": "area", "factorToBase": "0.09290304", "exactness": "exact", "system": "international_imperial", "visibility": "default", "compositeLabel": "Sq Ft" },
+    { "id": "SQYD", "conceptId": "concept.square_yard", "name": "Square yard", "symbol": "yd²", "dimension": "area", "factorToBase": "0.83612736", "exactness": "exact", "system": "international_imperial", "visibility": "default", "compositeLabel": "Sq Yard" },
+    { "id": "SQMI", "conceptId": "concept.square_mile", "name": "Square mile", "symbol": "mi²", "dimension": "area", "factorToBase": "2589988.110336", "exactness": "exact", "system": "international_imperial", "visibility": "advanced" },
+    { "id": "ACRE", "conceptId": "concept.acre", "name": "International acre", "symbol": "acre", "dimension": "area", "factorToBase": "4046.8564224", "exactness": "exact", "system": "international_imperial", "visibility": "default", "compositeLabel": "Acre" }
+  ],
+  "relationships": [
+    { "id": "IMPERIAL_ACRE_TO_SQYD", "familyId": "IMPERIAL_AREA", "parentUnitId": "ACRE", "childUnitId": "SQYD", "multiplier": "4840", "editable": false },
+    { "id": "IMPERIAL_SQYD_TO_SQFT", "familyId": "IMPERIAL_AREA", "parentUnitId": "SQYD", "childUnitId": "SQFT", "multiplier": "9", "editable": false }
+  ],
+  "familyTemplates": [],
+  "tools": [],
+  "sources": [
+    { "id": "NIST_HB44", "title": "NIST Handbook 44, Appendix C", "authorityTier": 1, "url": "https://www.nist.gov/pml/owm/si-units-area" }
+  ],
+  "warnings": [],
+  "outputRecipes": [
+    { "id": "IMPERIAL_ACRE_SQYD_SQFT", "name": "Acre, square yard & square foot", "dimension": "area", "unitIds": ["ACRE", "SQYD", "SQFT"], "precision": 2 }
+  ],
+  "qaIssues": []
+}

@@ -1,0 +1,19 @@
+{
+  "concepts": [
+    { "id": "concept.foot", "canonicalName": "Foot", "aliases": ["feet"], "dimensions": ["length"] },
+    { "id": "concept.acre", "canonicalName": "Acre", "aliases": [], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "US_SURVEY_FOOT_LEGACY", "conceptId": "concept.foot", "name": "U.S. survey foot (legacy)", "symbol": "ftUS", "dimension": "length", "factorToBase": "0.3048006096012192024384048768", "exactness": "exact", "system": "us_survey_legacy", "visibility": "advanced", "status": "historical", "validity": { "validTo": "2022-12-31" }, "warnings": ["Use only for historical survey records."] },
+    { "id": "US_SURVEY_ACRE_LEGACY", "conceptId": "concept.acre", "name": "U.S. survey acre (legacy)", "symbol": "acreUS", "dimension": "area", "factorToBase": "4046.872609874252", "exactness": "approximate", "system": "us_survey_legacy", "visibility": "advanced", "status": "historical", "validity": { "validTo": "2022-12-31" }, "warnings": ["Use only for historical survey records."] }
+  ],
+  "relationships": [],
+  "familyTemplates": [],
+  "tools": [],
+  "sources": [
+    { "id": "NIST_SURVEY_FOOT", "title": "Deprecation of the U.S. survey foot", "authorityTier": 1, "url": "https://www.nist.gov/pml/us-surveyfoot" }
+  ],
+  "warnings": ["The U.S. survey foot is a legacy unit after 31 December 2022."],
+  "outputRecipes": [],
+  "qaIssues": []
+}

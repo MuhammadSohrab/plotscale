@@ -1,0 +1,16 @@
+{
+  "id": "pk_punjab_karam_marla_kanal",
+  "name": "Pakistan Punjab Karam–Marla–Kanal",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["length", "area"],
+  "regions": [{ "countryCode": "PK", "admin1Code": "PB" }],
+  "evidenceGrade": "historical_reference_pending_owner_review",
+  "sourceIds": ["SIZES_MARLA"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "d4d5b6e3d59e430248a98982ec6bc92912542ef1448e9a6afede3b0b23df69bf",
+  "dependencies": ["global_international_imperial"],
+  "supersedes": null
+}

@@ -1,0 +1,16 @@
+{
+  "concepts": [
+    { "id": "concept.jareeb", "canonicalName": "Jareeb", "aliases": ["Jarib", "Zareeb"], "dimensions": ["length", "area"] }
+  ],
+  "variants": [
+    { "id": "PK_JAREEB_22YD_LENGTH", "conceptId": "concept.jareeb", "name": "Jareeb — Length / Measuring Tool", "symbol": "jareeb-len", "dimension": "length", "suggestedFactorToBase": "20.1168", "exactness": "exact", "system": "pk_22yd_jareeb", "warnings": ["This is the length sense of Jareeb."] },
+    { "id": "PK_SQUARE_JAREEB_484SQYD", "conceptId": "concept.jareeb", "name": "Square Jareeb — Area", "symbol": "jareeb²", "dimension": "area", "suggestedFactorToBase": "404.68564224", "exactness": "exact", "system": "pk_22yd_jareeb", "warnings": ["This is the geometric area sense of Jareeb."] }
+  ],
+  "relationships": [],
+  "familyTemplates": [{ "id": "PK_JAREEB_FAMILY", "name": "Pakistan 22-yard Jareeb", "unitIds": ["PK_SQUARE_JAREEB_484SQYD"], "relationshipIds": [], "calibrationRequired": true, "toolIds": ["PK_JAREEB_TOOL"] }],
+  "tools": [{ "id": "PK_JAREEB_TOOL", "name": "Jareeb — Length / Measuring Tool", "symbol": "jareeb-len", "dimension": "length", "suggestedFactorToBase": "20.1168", "isFlexible": true, "derivedArea": { "unitId": "PK_SQUARE_JAREEB_484SQYD", "power": 2, "multiplier": "1" } }],
+  "sources": [{ "id": "SIZES_JAREEB", "title": "Sizes.com Jareeb research page", "authorityTier": 3, "url": "https://www.sizes.com/units/jareeb.htm" }],
+  "warnings": ["Generic Jareeb remains ambiguous; this pack is limited to the named 22-yard Pakistan context."],
+  "outputRecipes": [],
+  "qaIssues": []
+}

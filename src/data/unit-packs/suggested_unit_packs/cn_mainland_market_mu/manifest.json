@@ -1,0 +1,16 @@
+{
+  "id": "cn_mainland_market_mu",
+  "name": "Mainland China Market Mu",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [{ "countryCode": "CN" }],
+  "evidenceGrade": "specialist_secondary_pending_primary_review",
+  "sourceIds": ["SIZES_MU"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "96eb0cc67a4947a8e1aed9033a1e063355f07c1d4ddbcc095b1912a466c0d1ef",
+  "dependencies": ["global_si_metric"],
+  "supersedes": null
+}

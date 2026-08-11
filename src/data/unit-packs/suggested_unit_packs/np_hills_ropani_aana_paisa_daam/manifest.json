@@ -1,0 +1,16 @@
+{
+  "id": "np_hills_ropani_aana_paisa_daam",
+  "name": "Nepal Hills Ropani–Aana–Paisa–Daam",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [{ "countryCode": "NP", "admin1Code": "HILLS" }],
+  "evidenceGrade": "official_statistics_pending_owner_review",
+  "sourceIds": ["NEPAL_NSO"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "00c5f4826474b0f87ef130a07d0c7eb08cc078871e7c6f83e1359e5993316094",
+  "dependencies": ["global_si_metric"],
+  "supersedes": null
+}

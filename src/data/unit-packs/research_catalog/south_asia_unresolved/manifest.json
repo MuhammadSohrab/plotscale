@@ -1,0 +1,21 @@
+{
+  "id": "south_asia_unresolved",
+  "name": "South Asia Unresolved Local Units",
+  "version": "1.0.0",
+  "tier": "research",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["length", "area"],
+  "regions": [
+    { "countryCode": "IN" },
+    { "countryCode": "NP" },
+    { "countryCode": "PK" },
+    { "countryCode": "BD" }
+  ],
+  "evidenceGrade": "unverified_or_conflicting",
+  "sourceIds": ["PLOTSCALE_LEGACY", "SIZES_RESEARCH"],
+  "ownerApproval": { "status": "not_eligible" },
+  "checksum": "3bef2577e168598b42d7e21ec1c60489c476070b97ee1eae8aa94f8cff37b9bd",
+  "dependencies": [],
+  "supersedes": null
+}

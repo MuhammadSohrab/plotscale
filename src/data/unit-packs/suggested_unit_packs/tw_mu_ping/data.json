@@ -1,0 +1,17 @@
+{
+  "concepts": [
+    { "id": "concept.mu", "canonicalName": "Mu", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.ping", "canonicalName": "Ping", "aliases": ["Pyeong"], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "TW_MU", "conceptId": "concept.mu", "name": "Mu (Taiwan suggestion)", "symbol": "甲", "dimension": "area", "suggestedFactorToBase": "99.174", "exactness": "approximate", "system": "taiwan_land" },
+    { "id": "TW_PING", "conceptId": "concept.ping", "name": "Ping (Taiwan suggestion)", "symbol": "坪", "dimension": "area", "suggestedFactorToBase": "3.3058", "exactness": "approximate", "system": "taiwan_land" }
+  ],
+  "relationships": [{ "id": "TW_MU_TO_PING", "familyId": "TW_MU_FAMILY", "parentUnitId": "TW_MU", "childUnitId": "TW_PING", "multiplier": "30", "editable": true }],
+  "familyTemplates": [{ "id": "TW_MU_FAMILY", "name": "Taiwan Mu family", "unitIds": ["TW_MU", "TW_PING"], "relationshipIds": ["TW_MU_TO_PING"], "calibrationRequired": true }],
+  "tools": [],
+  "sources": [{ "id": "SIZES_MU", "title": "Sizes.com Mu research page", "authorityTier": 3, "url": "https://www.sizes.com/units/mu.htm" }],
+  "warnings": ["Confirm local definitions before activation."],
+  "outputRecipes": [{ "id": "TW_MIXED", "name": "Mu & Ping", "dimension": "area", "unitIds": ["TW_MU", "TW_PING"], "precision": 2 }],
+  "qaIssues": []
+}

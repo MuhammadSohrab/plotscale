@@ -1,0 +1,28 @@
+{
+  "concepts": [
+    { "id": "concept.bigha", "canonicalName": "Bigha", "aliases": ["Beegah"], "dimensions": ["area"] },
+    { "id": "concept.katha", "canonicalName": "Katha", "aliases": ["Kattha", "Cottah"], "dimensions": ["area"] },
+    { "id": "concept.biswa", "canonicalName": "Biswa", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.dhur", "canonicalName": "Dhur", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.laggi", "canonicalName": "Laggi", "aliases": ["Latha", "Lattha"], "dimensions": ["length"] },
+    { "id": "concept.guz", "canonicalName": "Guz", "aliases": ["Gaz", "Gaj"], "dimensions": ["length"] },
+    { "id": "concept.jareeb", "canonicalName": "Jareeb", "aliases": ["Jarib", "Jerib"], "dimensions": ["length", "area"] },
+    { "id": "concept.marla", "canonicalName": "Marla", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.kanal", "canonicalName": "Kanal", "aliases": [], "dimensions": ["area"] }
+  ],
+  "variants": [],
+  "relationships": [],
+  "familyTemplates": [],
+  "tools": [],
+  "sources": [
+    { "id": "PLOTSCALE_LEGACY", "title": "PlotScale legacy research presets", "authorityTier": 4 },
+    { "id": "SIZES_RESEARCH", "title": "Sizes.com indexed research", "authorityTier": 3, "url": "https://www.sizes.com/" }
+  ],
+  "warnings": ["Never load this pack into the runtime converter."],
+  "outputRecipes": [],
+  "qaIssues": [
+    { "id": "QA_ASSAM_LEGACY", "severity": "blocker", "message": "Legacy Assam 20×5 hierarchy conflicts with the Assam Lessa–Katha–Bigha official relation." },
+    { "id": "QA_GENERIC_BIGHA", "severity": "blocker", "message": "Bigha has no global factor." },
+    { "id": "QA_JAREEB_POLYSEMY", "severity": "blocker", "message": "Jareeb can denote length, area or a non-geometric assessment." }
+  ]
+}

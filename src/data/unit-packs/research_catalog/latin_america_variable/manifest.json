@@ -1,0 +1,28 @@
+{
+  "id": "latin_america_variable",
+  "name": "Latin America Variable Land Units",
+  "version": "1.0.0",
+  "tier": "research",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [
+    { "countryCode": "AR" },
+    { "countryCode": "BZ" },
+    { "countryCode": "BO" },
+    { "countryCode": "CR" },
+    { "countryCode": "CU" },
+    { "countryCode": "DO" },
+    { "countryCode": "GT" },
+    { "countryCode": "HN" },
+    { "countryCode": "NI" },
+    { "countryCode": "SV" },
+    { "countryCode": "VE" }
+  ],
+  "evidenceGrade": "historical_secondary_and_conflicting",
+  "sourceIds": ["SIZES_MANZANA", "SIZES_TAREA"],
+  "ownerApproval": { "status": "not_eligible" },
+  "checksum": "cb76ac6a58911e3016d67dcce3a40dd0dec598fd6fad8421d8b293fa6dac10c6",
+  "dependencies": [],
+  "supersedes": null
+}

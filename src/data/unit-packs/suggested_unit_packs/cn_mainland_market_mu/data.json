@@ -1,0 +1,11 @@
+{
+  "concepts": [{ "id": "concept.mu", "canonicalName": "Mu", "aliases": ["Mou", "Shimu"], "dimensions": ["area"] }],
+  "variants": [{ "id": "CN_MARKET_MU", "conceptId": "concept.mu", "name": "Market Mu (Mainland China suggestion)", "symbol": "亩", "dimension": "area", "suggestedFactorToBase": "666.6666666666666666666666667", "exactness": "exact", "system": "china_market_system", "warnings": ["Do not confuse with Gongmu, Taiwan Mu or historical Mu."] }],
+  "relationships": [],
+  "familyTemplates": [{ "id": "CN_MARKET_MU_FAMILY", "name": "Mainland China Market Mu", "unitIds": ["CN_MARKET_MU"], "relationshipIds": [], "calibrationRequired": true }],
+  "tools": [],
+  "sources": [{ "id": "SIZES_MU", "title": "Sizes.com Mu research page", "authorityTier": 3, "url": "https://www.sizes.com/units/mu.htm" }],
+  "warnings": ["System and period must be explicit; this is not a generic Mu."],
+  "outputRecipes": [],
+  "qaIssues": []
+}

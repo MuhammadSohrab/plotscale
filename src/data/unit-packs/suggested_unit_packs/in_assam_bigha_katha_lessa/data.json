@@ -1,0 +1,22 @@
+{
+  "concepts": [
+    { "id": "concept.bigha", "canonicalName": "Bigha", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.katha", "canonicalName": "Katha", "aliases": ["Kattha"], "dimensions": ["area"] },
+    { "id": "concept.lessa", "canonicalName": "Lessa", "aliases": ["Lecha"], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "IN_AS_BIGHA", "conceptId": "concept.bigha", "name": "Bigha (Assam suggestion)", "symbol": "bigha", "dimension": "area", "suggestedFactorToBase": "267.5607552", "exactness": "exact", "system": "assam_land", "warnings": ["Confirm the family ratios and one known local size before use."] },
+    { "id": "IN_AS_KATHA", "conceptId": "concept.katha", "name": "Katha (Assam suggestion)", "symbol": "katha", "dimension": "area", "suggestedFactorToBase": "66.8901888", "exactness": "exact", "system": "assam_land" },
+    { "id": "IN_AS_LESSA", "conceptId": "concept.lessa", "name": "Lessa (Assam suggestion)", "symbol": "lessa", "dimension": "area", "suggestedFactorToBase": "13.37803776", "exactness": "exact", "system": "assam_land" }
+  ],
+  "relationships": [
+    { "id": "IN_AS_BIGHA_TO_KATHA", "familyId": "IN_AS_BIGHA_FAMILY", "parentUnitId": "IN_AS_BIGHA", "childUnitId": "IN_AS_KATHA", "multiplier": "4", "editable": true },
+    { "id": "IN_AS_KATHA_TO_LESSA", "familyId": "IN_AS_BIGHA_FAMILY", "parentUnitId": "IN_AS_KATHA", "childUnitId": "IN_AS_LESSA", "multiplier": "5", "editable": true }
+  ],
+  "familyTemplates": [{ "id": "IN_AS_BIGHA_FAMILY", "name": "Assam Bigha family", "unitIds": ["IN_AS_BIGHA", "IN_AS_KATHA", "IN_AS_LESSA"], "relationshipIds": ["IN_AS_BIGHA_TO_KATHA", "IN_AS_KATHA_TO_LESSA"], "calibrationRequired": true }],
+  "tools": [],
+  "sources": [{ "id": "INDIA_MDDS", "title": "India MDDS land record area units", "authorityTier": 1, "url": "https://docs.apisetu.gov.in/document-central/mdds/Annexure.html" }],
+  "warnings": ["This corrects the quarantined legacy 20-Lessa-per-Katha assumption."],
+  "outputRecipes": [{ "id": "IN_AS_MIXED", "name": "Bigha, Katha & Lessa", "dimension": "area", "unitIds": ["IN_AS_BIGHA", "IN_AS_KATHA", "IN_AS_LESSA"], "precision": 2 }],
+  "qaIssues": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "historical_and_nongeometric",
+  "name": "Historical, Variable & Non-geometric Land Measures",
+  "version": "1.0.0",
+  "tier": "research",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["length", "area"],
+  "regions": [{ "countryCode": "GLOBAL" }],
+  "evidenceGrade": "historical_variable_or_nongeometric",
+  "sourceIds": ["PLOTSCALE_WORLD_RESEARCH"],
+  "ownerApproval": { "status": "not_eligible" },
+  "checksum": "1e5fbd147688ee6702f8ccd3ef0d329f643abae42c5bdd62c1507c3b2e939bbb",
+  "dependencies": [],
+  "supersedes": null
+}

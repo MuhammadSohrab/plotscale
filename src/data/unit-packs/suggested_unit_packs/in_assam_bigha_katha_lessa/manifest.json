@@ -1,0 +1,16 @@
+{
+  "id": "in_assam_bigha_katha_lessa",
+  "name": "Assam Bigha–Katha–Lessa",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [{ "countryCode": "IN", "admin1Code": "AS" }],
+  "evidenceGrade": "official_reference_pending_owner_review",
+  "sourceIds": ["INDIA_MDDS"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "8de6a0ab24d8513062cc10346e5378765865e0b6a854db4d5af623bbd95220bf",
+  "dependencies": ["global_si_metric", "global_international_imperial"],
+  "supersedes": null
+}

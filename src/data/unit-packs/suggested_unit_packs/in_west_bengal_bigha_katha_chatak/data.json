@@ -1,0 +1,22 @@
+{
+  "concepts": [
+    { "id": "concept.bigha", "canonicalName": "Bigha", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.katha", "canonicalName": "Katha", "aliases": ["Kottah", "Cottah"], "dimensions": ["area"] },
+    { "id": "concept.chatak", "canonicalName": "Chatak", "aliases": ["Chittauk"], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "IN_WB_BIGHA", "conceptId": "concept.bigha", "name": "Bigha (West Bengal suggestion)", "symbol": "bigha", "dimension": "area", "suggestedFactorToBase": "1337.803776", "exactness": "exact", "system": "west_bengal_land" },
+    { "id": "IN_WB_KATHA", "conceptId": "concept.katha", "name": "Katha (West Bengal suggestion)", "symbol": "katha", "dimension": "area", "suggestedFactorToBase": "66.8901888", "exactness": "exact", "system": "west_bengal_land" },
+    { "id": "IN_WB_CHATAK", "conceptId": "concept.chatak", "name": "Chatak (West Bengal suggestion)", "symbol": "chatak", "dimension": "area", "suggestedFactorToBase": "4.1806368", "exactness": "exact", "system": "west_bengal_land" }
+  ],
+  "relationships": [
+    { "id": "IN_WB_BIGHA_TO_KATHA", "familyId": "IN_WB_BIGHA_FAMILY", "parentUnitId": "IN_WB_BIGHA", "childUnitId": "IN_WB_KATHA", "multiplier": "20", "editable": true },
+    { "id": "IN_WB_KATHA_TO_CHATAK", "familyId": "IN_WB_BIGHA_FAMILY", "parentUnitId": "IN_WB_KATHA", "childUnitId": "IN_WB_CHATAK", "multiplier": "16", "editable": true }
+  ],
+  "familyTemplates": [{ "id": "IN_WB_BIGHA_FAMILY", "name": "West Bengal Bigha family", "unitIds": ["IN_WB_BIGHA", "IN_WB_KATHA", "IN_WB_CHATAK"], "relationshipIds": ["IN_WB_BIGHA_TO_KATHA", "IN_WB_KATHA_TO_CHATAK"], "calibrationRequired": true }],
+  "tools": [],
+  "sources": [{ "id": "NGDRS_GAP", "title": "NGDRS Gap Analysis Report", "authorityTier": 1, "url": "https://ngdrs.gov.in/NGDRS_Website/assets/files/downloads/NGDRS-GapAnalysisReport.pdf" }],
+  "warnings": ["Confirm ratios and one known local size before activation."],
+  "outputRecipes": [{ "id": "IN_WB_MIXED", "name": "Bigha, Katha & Chatak", "dimension": "area", "unitIds": ["IN_WB_BIGHA", "IN_WB_KATHA", "IN_WB_CHATAK"], "precision": 2 }],
+  "qaIssues": []
+}

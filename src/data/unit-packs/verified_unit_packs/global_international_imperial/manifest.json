@@ -1,0 +1,20 @@
+{
+  "id": "global_international_imperial",
+  "name": "International Imperial/US Customary Units",
+  "version": "1.0.0",
+  "tier": "verified",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["length", "area"],
+  "regions": [{ "countryCode": "GLOBAL" }],
+  "evidenceGrade": "international_standard",
+  "sourceIds": ["NIST_HB44"],
+  "ownerApproval": {
+    "status": "approved",
+    "reviewedBy": "PlotScale Owner",
+    "reviewedAt": "2026-07-26"
+  },
+  "checksum": "040aced4bc1316b34af08f7958923fe4f585a80a6f33277111ce8a7cb80d89c1",
+  "dependencies": ["global_si_metric"],
+  "supersedes": null
+}

@@ -1,0 +1,20 @@
+{
+  "id": "global_international_survey",
+  "name": "International Survey Units",
+  "version": "1.0.0",
+  "tier": "verified",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["length", "area"],
+  "regions": [{ "countryCode": "GLOBAL" }],
+  "evidenceGrade": "exact_derived_standard",
+  "sourceIds": ["NIST_HB44"],
+  "ownerApproval": {
+    "status": "approved",
+    "reviewedBy": "PlotScale Owner",
+    "reviewedAt": "2026-07-26"
+  },
+  "checksum": "dfa1aec095e1f9e4ace4a45a8e7ca89d0dc7b51ceeeb3831396ae4880f606e4c",
+  "dependencies": ["global_international_imperial"],
+  "supersedes": null
+}

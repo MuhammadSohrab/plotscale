@@ -1,0 +1,11 @@
+{
+  "concepts": [{ "id": "concept.stremma", "canonicalName": "Stremma", "aliases": [], "dimensions": ["area"] }],
+  "variants": [{ "id": "GR_MODERN_STREMMA", "conceptId": "concept.stremma", "name": "Modern Stremma (Greece suggestion)", "symbol": "στρ", "dimension": "area", "suggestedFactorToBase": "1000", "exactness": "exact", "system": "modern_greek_metric" }],
+  "relationships": [],
+  "familyTemplates": [{ "id": "GR_STREMMA_FAMILY", "name": "Modern Greek Stremma", "unitIds": ["GR_MODERN_STREMMA"], "relationshipIds": [], "calibrationRequired": true }],
+  "tools": [],
+  "sources": [{ "id": "SIZES_STREMMA", "title": "Sizes.com Stremma research page", "authorityTier": 3, "url": "https://www.sizes.com/units/stremma.htm" }],
+  "warnings": ["Historical and Byzantine Stremma variants are excluded."],
+  "outputRecipes": [],
+  "qaIssues": []
+}

@@ -1,0 +1,24 @@
+{
+  "concepts": [
+    { "id": "concept.karam", "canonicalName": "Karam", "aliases": ["Karm"], "dimensions": ["length"] },
+    { "id": "concept.marla", "canonicalName": "Marla", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.kanal", "canonicalName": "Kanal", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.acre", "canonicalName": "Acre", "aliases": [], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "IN_PH_KARAM_66", "conceptId": "concept.karam", "name": "Karam (66-inch suggestion)", "symbol": "karam", "dimension": "length", "suggestedFactorToBase": "1.6764", "exactness": "exact", "system": "punjab_66in_karam" },
+    { "id": "IN_PH_MARLA_66", "conceptId": "concept.marla", "name": "Marla (66-inch Karam suggestion)", "symbol": "marla", "dimension": "area", "suggestedFactorToBase": "25.29285264", "exactness": "exact", "system": "punjab_66in_karam" },
+    { "id": "IN_PH_KANAL_66", "conceptId": "concept.kanal", "name": "Kanal (66-inch Karam suggestion)", "symbol": "kanal", "dimension": "area", "suggestedFactorToBase": "505.8570528", "exactness": "exact", "system": "punjab_66in_karam" },
+    { "id": "IN_PH_ACRE_66", "conceptId": "concept.acre", "name": "Acre (66-inch Karam family)", "symbol": "acre", "dimension": "area", "suggestedFactorToBase": "4046.8564224", "exactness": "exact", "system": "punjab_66in_karam" }
+  ],
+  "relationships": [
+    { "id": "IN_PH_ACRE_TO_KANAL", "familyId": "IN_PH_KANAL_FAMILY", "parentUnitId": "IN_PH_ACRE_66", "childUnitId": "IN_PH_KANAL_66", "multiplier": "8", "editable": true },
+    { "id": "IN_PH_KANAL_TO_MARLA", "familyId": "IN_PH_KANAL_FAMILY", "parentUnitId": "IN_PH_KANAL_66", "childUnitId": "IN_PH_MARLA_66", "multiplier": "20", "editable": true }
+  ],
+  "familyTemplates": [{ "id": "IN_PH_KANAL_FAMILY", "name": "66-inch Karam Kanal family", "unitIds": ["IN_PH_ACRE_66", "IN_PH_KANAL_66", "IN_PH_MARLA_66"], "relationshipIds": ["IN_PH_ACRE_TO_KANAL", "IN_PH_KANAL_TO_MARLA"], "calibrationRequired": true, "toolIds": ["IN_PH_KARAM_TOOL"] }],
+  "tools": [{ "id": "IN_PH_KARAM_TOOL", "name": "Karam (66-inch suggestion)", "symbol": "karam", "dimension": "length", "suggestedFactorToBase": "1.6764", "isFlexible": true, "derivedArea": { "unitId": "IN_PH_MARLA_66", "power": 2, "multiplier": "9" } }],
+  "sources": [{ "id": "SIZES_MARLA", "title": "Sizes.com Marla research page", "authorityTier": 3, "url": "https://www.sizes.com/units/marla.htm" }],
+  "warnings": ["Marla usage is not invariant; confirm the 66-inch Karam standard locally."],
+  "outputRecipes": [{ "id": "IN_PH_MIXED", "name": "Acre, Kanal & Marla", "dimension": "area", "unitIds": ["IN_PH_ACRE_66", "IN_PH_KANAL_66", "IN_PH_MARLA_66"], "precision": 2 }],
+  "qaIssues": []
+}

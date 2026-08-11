@@ -1,0 +1,1247 @@
+[
+  {
+    "countryCode": "AF",
+    "recordCount": 5,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "AL",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "DZ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AS",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AD",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AO",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AI",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AQ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AR",
+    "recordCount": 6,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "AM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AW",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AU",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AT",
+    "recordCount": 4,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "AZ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BS",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BH",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BD",
+    "recordCount": 51,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "BB",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BY",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BE",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BZ",
+    "recordCount": 5,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "BJ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BT",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BO",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BQ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BA",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BW",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BV",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BR",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "IO",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BN",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BG",
+    "recordCount": 2,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "BF",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BI",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CV",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "KH",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CA",
+    "recordCount": 4,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "KY",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CF",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TD",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CL",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CN",
+    "recordCount": 18,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "CX",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CC",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CO",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "KM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CD",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CK",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CR",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "HR",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CU",
+    "recordCount": 5,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "CW",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CY",
+    "recordCount": 7,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "CZ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "CI",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "DK",
+    "recordCount": 44,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "DJ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "DM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "DO",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "EC",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "EG",
+    "recordCount": 23,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "SV",
+    "recordCount": 2,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "GQ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "ER",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "EE",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SZ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "ET",
+    "recordCount": 7,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "FK",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "FO",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "FJ",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "FI",
+    "recordCount": 20,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "FR",
+    "recordCount": 33,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "GF",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "PF",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TF",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GA",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GE",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "DE",
+    "recordCount": 21,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "GH",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GI",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GR",
+    "recordCount": 21,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "GL",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GD",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GP",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GU",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GT",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "GG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GN",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GW",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GY",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "HT",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "HM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "VA",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "HN",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "HK",
+    "recordCount": 4,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "HU",
+    "recordCount": 8,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "IS",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "IN",
+    "recordCount": 219,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "ID",
+    "recordCount": 2,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "IR",
+    "recordCount": 4,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "IQ",
+    "recordCount": 4,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "IE",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "IM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "IL",
+    "recordCount": 9,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "IT",
+    "recordCount": 8,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "JM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "JP",
+    "recordCount": 55,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "JE",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "JO",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "KZ",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "KE",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "KI",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "KP",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "KR",
+    "recordCount": 5,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "KW",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "KG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LA",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LV",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LB",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LS",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LR",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LY",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LI",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LT",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LU",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MO",
+    "recordCount": 4,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "MG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MW",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MY",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MV",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "ML",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MT",
+    "recordCount": 2,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "MH",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MQ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MR",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MU",
+    "recordCount": 12,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "YT",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MX",
+    "recordCount": 13,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "FM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MD",
+    "recordCount": 5,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "MC",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MN",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "ME",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MS",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MA",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MZ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MM",
+    "recordCount": 2,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "NA",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "NR",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "NP",
+    "recordCount": 74,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "NL",
+    "recordCount": 15,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "NC",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "NZ",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "NI",
+    "recordCount": 8,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "NE",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "NG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "NU",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "NF",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MK",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MP",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "NO",
+    "recordCount": 17,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "OM",
+    "recordCount": 4,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "PK",
+    "recordCount": 55,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "PW",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "PS",
+    "recordCount": 9,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "PA",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "PG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "PY",
+    "recordCount": 3,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "PE",
+    "recordCount": 3,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "PH",
+    "recordCount": 7,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "PN",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "PL",
+    "recordCount": 11,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "PT",
+    "recordCount": 7,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "PR",
+    "recordCount": 9,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "QA",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "RO",
+    "recordCount": 32,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "RU",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "RW",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "RE",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "BL",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SH",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "KN",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "LC",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "MF",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "PM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "VC",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "WS",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "ST",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SA",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SN",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "RS",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SC",
+    "recordCount": 10,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "SL",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SX",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SK",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SI",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SB",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SO",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "ZA",
+    "recordCount": 7,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "GS",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SS",
+    "recordCount": 4,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "ES",
+    "recordCount": 24,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "LK",
+    "recordCount": 2,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "SD",
+    "recordCount": 4,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "SR",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SJ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "SE",
+    "recordCount": 47,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "CH",
+    "recordCount": 14,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "SY",
+    "recordCount": 7,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "TW",
+    "recordCount": 13,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "TJ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TZ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TH",
+    "recordCount": 23,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "TL",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TK",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TO",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TT",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TN",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "TM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TC",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TV",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "TR",
+    "recordCount": 13,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "UG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "UA",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "AE",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "GB",
+    "recordCount": 94,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "US",
+    "recordCount": 22,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "UM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "UY",
+    "recordCount": 1,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "UZ",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "VU",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "VE",
+    "recordCount": 2,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "VN",
+    "recordCount": 21,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "VG",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "VI",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "WF",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "EH",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "YE",
+    "recordCount": 3,
+    "hasResearchSuggestions": true
+  },
+  {
+    "countryCode": "ZM",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "ZW",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  },
+  {
+    "countryCode": "AX",
+    "recordCount": 0,
+    "hasResearchSuggestions": false
+  }
+]

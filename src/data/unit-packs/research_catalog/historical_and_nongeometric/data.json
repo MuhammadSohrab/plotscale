@@ -1,0 +1,22 @@
+{
+  "concepts": [
+    { "id": "concept.arpent", "canonicalName": "Arpent", "aliases": [], "dimensions": ["length", "area"] },
+    { "id": "concept.morgen", "canonicalName": "Morgen", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.dunam", "canonicalName": "Dunam", "aliases": ["Dönüm"], "dimensions": ["area"] },
+    { "id": "concept.mu", "canonicalName": "Mu", "aliases": ["Mou"], "dimensions": ["area"] },
+    { "id": "concept.pyeong", "canonicalName": "Pyeong", "aliases": ["Pyong", "Ping"], "dimensions": ["area"] },
+    { "id": "concept.hartkorn", "canonicalName": "Hartkorn", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.tunnland", "canonicalName": "Tunnland", "aliases": [], "dimensions": ["area"] }
+  ],
+  "variants": [],
+  "relationships": [],
+  "familyTemplates": [],
+  "tools": [],
+  "sources": [{ "id": "PLOTSCALE_WORLD_RESEARCH", "title": "PlotScale worldwide unit research workbook", "authorityTier": 4 }],
+  "warnings": ["Some records measure productivity, seed, value or taxation rather than geometric area."],
+  "outputRecipes": [],
+  "qaIssues": [
+    { "id": "QA_NONGEOMETRIC", "severity": "blocker", "message": "Non-geometric assessments must have no scale-to-sqm value." },
+    { "id": "QA_PERIOD", "severity": "blocker", "message": "Historical variants require period and named standard." }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "pk_jareeb_22yd_length_484sqyd_area",
+  "name": "Pakistan 22-yard Jareeb Length & Area",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["length", "area"],
+  "regions": [{ "countryCode": "PK" }],
+  "evidenceGrade": "historical_handbook_pending_current_review",
+  "sourceIds": ["SIZES_JAREEB"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "db85e99d7674b83236b3a03faeb1e3d390c3b380e2d5c1714d0e321599405532",
+  "dependencies": ["global_international_imperial"],
+  "supersedes": null
+}

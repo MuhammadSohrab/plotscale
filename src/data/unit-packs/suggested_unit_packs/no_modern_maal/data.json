@@ -1,0 +1,11 @@
+{
+  "concepts": [{ "id": "concept.maal", "canonicalName": "Mål", "aliases": ["Maal"], "dimensions": ["area"] }],
+  "variants": [{ "id": "NO_MODERN_MAAL", "conceptId": "concept.maal", "name": "Modern Mål (Norway suggestion)", "symbol": "mål", "dimension": "area", "suggestedFactorToBase": "1000", "exactness": "exact", "system": "norway_modern_metric" }],
+  "relationships": [],
+  "familyTemplates": [{ "id": "NO_MAAL_FAMILY", "name": "Modern Norwegian Mål", "unitIds": ["NO_MODERN_MAAL"], "relationshipIds": [], "calibrationRequired": true }],
+  "tools": [],
+  "sources": [{ "id": "SIZES_MAAL", "title": "Sizes.com Mål research page", "authorityTier": 3, "url": "https://www.sizes.com/units/maal.htm" }],
+  "warnings": ["Old Norwegian Mål variants are excluded."],
+  "outputRecipes": [],
+  "qaIssues": []
+}

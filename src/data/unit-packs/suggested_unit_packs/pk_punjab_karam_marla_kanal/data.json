@@ -1,0 +1,24 @@
+{
+  "concepts": [
+    { "id": "concept.karam", "canonicalName": "Karam", "aliases": [], "dimensions": ["length"] },
+    { "id": "concept.marla", "canonicalName": "Marla", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.kanal", "canonicalName": "Kanal", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.acre", "canonicalName": "Acre", "aliases": [], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "PK_PB_KARAM_66", "conceptId": "concept.karam", "name": "Karam (Pakistan Punjab suggestion)", "symbol": "karam", "dimension": "length", "suggestedFactorToBase": "1.6764", "exactness": "exact", "system": "pk_punjab_66in_karam" },
+    { "id": "PK_PB_MARLA_66", "conceptId": "concept.marla", "name": "Marla (Pakistan Punjab suggestion)", "symbol": "marla", "dimension": "area", "suggestedFactorToBase": "25.29285264", "exactness": "exact", "system": "pk_punjab_66in_karam" },
+    { "id": "PK_PB_KANAL_66", "conceptId": "concept.kanal", "name": "Kanal (Pakistan Punjab suggestion)", "symbol": "kanal", "dimension": "area", "suggestedFactorToBase": "505.8570528", "exactness": "exact", "system": "pk_punjab_66in_karam" },
+    { "id": "PK_PB_ACRE_66", "conceptId": "concept.acre", "name": "Acre (Pakistan Punjab family)", "symbol": "acre", "dimension": "area", "suggestedFactorToBase": "4046.8564224", "exactness": "exact", "system": "pk_punjab_66in_karam" }
+  ],
+  "relationships": [
+    { "id": "PK_PB_ACRE_TO_KANAL", "familyId": "PK_PB_KANAL_FAMILY", "parentUnitId": "PK_PB_ACRE_66", "childUnitId": "PK_PB_KANAL_66", "multiplier": "8", "editable": true },
+    { "id": "PK_PB_KANAL_TO_MARLA", "familyId": "PK_PB_KANAL_FAMILY", "parentUnitId": "PK_PB_KANAL_66", "childUnitId": "PK_PB_MARLA_66", "multiplier": "20", "editable": true }
+  ],
+  "familyTemplates": [{ "id": "PK_PB_KANAL_FAMILY", "name": "Pakistan Punjab Kanal family", "unitIds": ["PK_PB_ACRE_66", "PK_PB_KANAL_66", "PK_PB_MARLA_66"], "relationshipIds": ["PK_PB_ACRE_TO_KANAL", "PK_PB_KANAL_TO_MARLA"], "calibrationRequired": true, "toolIds": ["PK_PB_KARAM_TOOL"] }],
+  "tools": [{ "id": "PK_PB_KARAM_TOOL", "name": "Karam (Pakistan Punjab suggestion)", "symbol": "karam", "dimension": "length", "suggestedFactorToBase": "1.6764", "isFlexible": true, "derivedArea": { "unitId": "PK_PB_MARLA_66", "power": 2, "multiplier": "9" } }],
+  "sources": [{ "id": "SIZES_MARLA", "title": "Sizes.com Marla research page", "authorityTier": 3, "url": "https://www.sizes.com/units/marla.htm" }],
+  "warnings": ["Confirm the local Karam length, hierarchy ratios and one known size."],
+  "outputRecipes": [{ "id": "PK_PB_MIXED", "name": "Acre, Kanal & Marla", "dimension": "area", "unitIds": ["PK_PB_ACRE_66", "PK_PB_KANAL_66", "PK_PB_MARLA_66"], "precision": 2 }],
+  "qaIssues": []
+}

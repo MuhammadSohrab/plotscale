@@ -1,0 +1,1903 @@
+[
+  {
+    "id": "research_af_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "AF"
+    ],
+    "locationLabels": [
+      "Afghanistan"
+    ],
+    "name": "Additional researched unit candidates — AF",
+    "candidateCount": 5,
+    "roleCounts": {
+      "relationship_candidate": 4,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ar_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "AR"
+    ],
+    "locationLabels": [
+      "AR",
+      "Argentina"
+    ],
+    "name": "Additional researched unit candidates — AR",
+    "candidateCount": 6,
+    "roleCounts": {
+      "family_member_candidate": 6
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_at_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "AT"
+    ],
+    "locationLabels": [
+      "Austria",
+      "Austria | Bohemia",
+      "Bohemia | Austria"
+    ],
+    "name": "Additional researched unit candidates — AT",
+    "candidateCount": 4,
+    "roleCounts": {
+      "historical_geometric_candidate": 2,
+      "family_member_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_bd_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "BD"
+    ],
+    "locationLabels": [
+      "BD",
+      "Bangladesh",
+      "Bangladesh/West Bengal",
+      "Bangladesh/West Bengal/Kolkata"
+    ],
+    "name": "Additional researched unit candidates — BD",
+    "candidateCount": 38,
+    "roleCounts": {
+      "family_member_candidate": 20,
+      "alias_candidate": 4,
+      "ambiguous_reference_only": 1,
+      "relationship_candidate": 11,
+      "standalone_local_unit_candidate": 2
+    },
+    "hasConflicts": true,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_bg_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "BG"
+    ],
+    "locationLabels": [
+      "Bulgaria"
+    ],
+    "name": "Additional researched unit candidates — BG",
+    "candidateCount": 2,
+    "roleCounts": {
+      "family_member_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_bz_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "BZ"
+    ],
+    "locationLabels": [
+      "BZ",
+      "Belize"
+    ],
+    "name": "Additional researched unit candidates — BZ",
+    "candidateCount": 5,
+    "roleCounts": {
+      "family_member_candidate": 5
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ch_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "CH"
+    ],
+    "locationLabels": [
+      "Switzerland"
+    ],
+    "name": "Additional researched unit candidates — CH",
+    "candidateCount": 8,
+    "roleCounts": {
+      "family_member_candidate": 8
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_cn_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "CN"
+    ],
+    "locationLabels": [
+      "CN",
+      "China",
+      "People's Republic of China"
+    ],
+    "name": "Additional researched unit candidates — CN",
+    "candidateCount": 17,
+    "roleCounts": {
+      "family_member_candidate": 6,
+      "historical_geometric_candidate": 3,
+      "alias_candidate": 4,
+      "relationship_candidate": 4
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_co_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "CO"
+    ],
+    "locationLabels": [
+      "Colombia"
+    ],
+    "name": "Additional researched unit candidates — CO",
+    "candidateCount": 1,
+    "roleCounts": {
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_cr_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "CR"
+    ],
+    "locationLabels": [
+      "Costa Rica"
+    ],
+    "name": "Additional researched unit candidates — CR",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_cu_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "CU"
+    ],
+    "locationLabels": [
+      "Cuba"
+    ],
+    "name": "Additional researched unit candidates — CU",
+    "candidateCount": 5,
+    "roleCounts": {
+      "historical_geometric_candidate": 4,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_de_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "DE"
+    ],
+    "locationLabels": [
+      "DE",
+      "Germany"
+    ],
+    "name": "Additional researched unit candidates — DE",
+    "candidateCount": 15,
+    "roleCounts": {
+      "historical_geometric_candidate": 15
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_dk_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "DK"
+    ],
+    "locationLabels": [
+      "Denmark"
+    ],
+    "name": "Additional researched unit candidates — DK",
+    "candidateCount": 44,
+    "roleCounts": {
+      "historical_geometric_candidate": 29,
+      "family_member_candidate": 6,
+      "non_geometric_reference_only": 5,
+      "relationship_candidate": 3,
+      "measuring_tool_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_eg_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "EG"
+    ],
+    "locationLabels": [
+      "Ancient Egypt",
+      "EG",
+      "Egypt",
+      "Egypt/Arabic contexts"
+    ],
+    "name": "Additional researched unit candidates — EG",
+    "candidateCount": 19,
+    "roleCounts": {
+      "historical_geometric_candidate": 6,
+      "family_member_candidate": 7,
+      "measuring_tool_candidate": 3,
+      "relationship_candidate": 3
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_es_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "ES"
+    ],
+    "locationLabels": [
+      "Spain",
+      "Spain/Latin America"
+    ],
+    "name": "Additional researched unit candidates — ES",
+    "candidateCount": 22,
+    "roleCounts": {
+      "family_member_candidate": 10,
+      "historical_geometric_candidate": 12
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_et_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "ET"
+    ],
+    "locationLabels": [
+      "Ethiopia"
+    ],
+    "name": "Additional researched unit candidates — ET",
+    "candidateCount": 6,
+    "roleCounts": {
+      "family_member_candidate": 2,
+      "historical_geometric_candidate": 3,
+      "measuring_tool_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_fi_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "FI"
+    ],
+    "locationLabels": [
+      "Finland"
+    ],
+    "name": "Additional researched unit candidates — FI",
+    "candidateCount": 20,
+    "roleCounts": {
+      "historical_geometric_candidate": 17,
+      "family_member_candidate": 3
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_fj_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "FJ"
+    ],
+    "locationLabels": [
+      "Fiji"
+    ],
+    "name": "Additional researched unit candidates — FJ",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_fr_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "FR"
+    ],
+    "locationLabels": [
+      "FR",
+      "France"
+    ],
+    "name": "Additional researched unit candidates — FR",
+    "candidateCount": 25,
+    "roleCounts": {
+      "family_member_candidate": 4,
+      "historical_geometric_candidate": 20,
+      "measuring_tool_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_gb_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "GB"
+    ],
+    "locationLabels": [
+      "England",
+      "Haryana/Punjab/Rajasthan/UK/HP",
+      "Scotland/England",
+      "UK/Commonwealth",
+      "UK/US",
+      "UK/US/Commonwealth",
+      "United Kingdom"
+    ],
+    "name": "Additional researched unit candidates — GB",
+    "candidateCount": 94,
+    "roleCounts": {
+      "family_member_candidate": 15,
+      "historical_geometric_candidate": 57,
+      "alias_candidate": 12,
+      "relationship_candidate": 2,
+      "standalone_local_unit_candidate": 4,
+      "measuring_tool_candidate": 4
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_gr_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "GR"
+    ],
+    "locationLabels": [
+      "Ancient Greece",
+      "Greece",
+      "Greece/Byzantine/Ottoman"
+    ],
+    "name": "Additional researched unit candidates — GR",
+    "candidateCount": 14,
+    "roleCounts": {
+      "family_member_candidate": 2,
+      "historical_geometric_candidate": 12
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_gt_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "GT"
+    ],
+    "locationLabels": [
+      "Guatemala"
+    ],
+    "name": "Additional researched unit candidates — GT",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_hu_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "HU"
+    ],
+    "locationLabels": [
+      "Hungary",
+      "Kingdom of Hungary"
+    ],
+    "name": "Additional researched unit candidates — HU",
+    "candidateCount": 8,
+    "roleCounts": {
+      "family_member_candidate": 2,
+      "alias_candidate": 1,
+      "historical_geometric_candidate": 5
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_id_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "ID"
+    ],
+    "locationLabels": [
+      "Indonesia"
+    ],
+    "name": "Additional researched unit candidates — ID",
+    "candidateCount": 2,
+    "roleCounts": {
+      "historical_geometric_candidate": 1,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ie_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "IE"
+    ],
+    "locationLabels": [
+      "Ireland"
+    ],
+    "name": "Additional researched unit candidates — IE",
+    "candidateCount": 1,
+    "roleCounts": {
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_in_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "IN"
+    ],
+    "locationLabels": [
+      "East India/Odisha/WB/Bihar",
+      "IN",
+      "India",
+      "India-General",
+      "India/Bengal",
+      "North India/general",
+      "South India"
+    ],
+    "name": "Additional researched unit candidates — IN",
+    "candidateCount": 153,
+    "roleCounts": {
+      "family_member_candidate": 74,
+      "historical_geometric_candidate": 27,
+      "alias_candidate": 15,
+      "relationship_candidate": 33,
+      "ambiguous_reference_only": 1,
+      "standalone_local_unit_candidate": 1,
+      "measuring_tool_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_iq_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "IQ"
+    ],
+    "locationLabels": [
+      "Iraq"
+    ],
+    "name": "Additional researched unit candidates — IQ",
+    "candidateCount": 4,
+    "roleCounts": {
+      "family_member_candidate": 4
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_it_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "IT"
+    ],
+    "locationLabels": [
+      "Italy"
+    ],
+    "name": "Additional researched unit candidates — IT",
+    "candidateCount": 7,
+    "roleCounts": {
+      "historical_geometric_candidate": 4,
+      "family_member_candidate": 3
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_jp_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "JP"
+    ],
+    "locationLabels": [
+      "JP",
+      "Japan"
+    ],
+    "name": "Additional researched unit candidates — JP",
+    "candidateCount": 43,
+    "roleCounts": {
+      "family_member_candidate": 22,
+      "alias_candidate": 8,
+      "relationship_candidate": 13
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_kr_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "KR"
+    ],
+    "locationLabels": [
+      "KR",
+      "Korea",
+      "South Korea"
+    ],
+    "name": "Additional researched unit candidates — KR",
+    "candidateCount": 3,
+    "roleCounts": {
+      "family_member_candidate": 2,
+      "alias_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_kz_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "KZ"
+    ],
+    "locationLabels": [
+      "Kazakhstan"
+    ],
+    "name": "Additional researched unit candidates — KZ",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_lk_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "LK"
+    ],
+    "locationLabels": [
+      "LK"
+    ],
+    "name": "Additional researched unit candidates — LK",
+    "candidateCount": 2,
+    "roleCounts": {
+      "alias_candidate": 1,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_mm_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "MM"
+    ],
+    "locationLabels": [
+      "Myanmar"
+    ],
+    "name": "Additional researched unit candidates — MM",
+    "candidateCount": 2,
+    "roleCounts": {
+      "family_member_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_mt_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "MT"
+    ],
+    "locationLabels": [
+      "Malta"
+    ],
+    "name": "Additional researched unit candidates — MT",
+    "candidateCount": 2,
+    "roleCounts": {
+      "historical_geometric_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_mu_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "MU"
+    ],
+    "locationLabels": [
+      "Mauritius"
+    ],
+    "name": "Additional researched unit candidates — MU",
+    "candidateCount": 2,
+    "roleCounts": {
+      "family_member_candidate": 1,
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_bangladesh_india",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "BD",
+      "IN"
+    ],
+    "locationLabels": [
+      "Bangladesh | India"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 1,
+    "roleCounts": {
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_canada_usa",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "CA",
+      "US"
+    ],
+    "locationLabels": [
+      "Canada/USA"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 4,
+    "roleCounts": {
+      "historical_geometric_candidate": 3,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_egypt_sudan_south_sudan_syria_oman",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "EG",
+      "OM",
+      "SD",
+      "SS",
+      "SY"
+    ],
+    "locationLabels": [
+      "Egypt/Sudan/South Sudan/Syria/Oman"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 4,
+    "roleCounts": {
+      "relationship_candidate": 3,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_ethiopia_vietnam",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "ET",
+      "VN"
+    ],
+    "locationLabels": [
+      "Ethiopia | Vietnam"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_france_switzerland_portugal",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "CH",
+      "FR",
+      "PT"
+    ],
+    "locationLabels": [
+      "France/Switzerland/Portugal"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 6,
+    "roleCounts": {
+      "historical_geometric_candidate": 6
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_germany_czech_republic_france",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "DE",
+      "FR"
+    ],
+    "locationLabels": [
+      "Germany | Czech Republic | France"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_germany_netherlands_south_africa",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "DE",
+      "NL",
+      "ZA"
+    ],
+    "locationLabels": [
+      "Germany/Netherlands/South Africa"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 5,
+    "roleCounts": {
+      "historical_geometric_candidate": 5
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_greece_cyprus",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "CY",
+      "GR"
+    ],
+    "locationLabels": [
+      "Greece/Cyprus"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 7,
+    "roleCounts": {
+      "relationship_candidate": 6,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_haiti_france",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "FR",
+      "HT"
+    ],
+    "locationLabels": [
+      "Haiti | France"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_hong_kong_macau",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "HK",
+      "MO"
+    ],
+    "locationLabels": [
+      "Hong Kong/Macau"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 4,
+    "roleCounts": {
+      "alias_candidate": 3,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_india_bangladesh",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "BD",
+      "IN"
+    ],
+    "locationLabels": [
+      "India/Bangladesh"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 12,
+    "roleCounts": {
+      "relationship_candidate": 10,
+      "family_member_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_india_nepal",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "IN",
+      "NP"
+    ],
+    "locationLabels": [
+      "India/Nepal"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 5,
+    "roleCounts": {
+      "alias_candidate": 4,
+      "measuring_tool_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_india_pakistan",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "IN",
+      "PK"
+    ],
+    "locationLabels": [
+      "India / Pakistan",
+      "India | Pakistan",
+      "India/Pakistan"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 48,
+    "roleCounts": {
+      "measuring_tool_candidate": 2,
+      "family_member_candidate": 11,
+      "historical_geometric_candidate": 10,
+      "relationship_candidate": 25
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_iran_turkey",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "IR",
+      "TR"
+    ],
+    "locationLabels": [
+      "Iran/Turkey"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 4,
+    "roleCounts": {
+      "alias_candidate": 3,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_japan_people_s_republic_of_china",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "CN",
+      "JP"
+    ],
+    "locationLabels": [
+      "Japan | People's Republic of China"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_japan_taiwan",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "JP",
+      "TW"
+    ],
+    "locationLabels": [
+      "Japan/Taiwan"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 5,
+    "roleCounts": {
+      "relationship_candidate": 4,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_korea_japan_taiwan",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "JP",
+      "KR",
+      "TW"
+    ],
+    "locationLabels": [
+      "Korea | Japan | Taiwan"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 2,
+    "roleCounts": {
+      "family_member_candidate": 1,
+      "alias_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_mauritius_seychelles",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "MU",
+      "SC"
+    ],
+    "locationLabels": [
+      "Mauritius/Seychelles"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 10,
+    "roleCounts": {
+      "family_member_candidate": 4,
+      "ambiguous_reference_only": 5,
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": true,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_palestine_israel",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "IL",
+      "PS"
+    ],
+    "locationLabels": [
+      "Palestine/Israel"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 4,
+    "roleCounts": {
+      "historical_geometric_candidate": 3,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_romania_moldavia",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "MD",
+      "RO"
+    ],
+    "locationLabels": [
+      "Romania/Moldavia"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 5,
+    "roleCounts": {
+      "historical_geometric_candidate": 5
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_spain_italy",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "ES",
+      "IT"
+    ],
+    "locationLabels": [
+      "Spain | Italy"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_spain_portugal",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "ES",
+      "PT"
+    ],
+    "locationLabels": [
+      "Spain | Portugal"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_taiwan_japan",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "JP",
+      "TW"
+    ],
+    "locationLabels": [
+      "Taiwan/Japan"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 4,
+    "roleCounts": {
+      "alias_candidate": 3,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_turkey_israel_palestine_levant",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "IL",
+      "PS",
+      "TR"
+    ],
+    "locationLabels": [
+      "Turkey/Israel/Palestine/Levant"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 5,
+    "roleCounts": {
+      "relationship_candidate": 4,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_multi_region_usa_mexico",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "MX",
+      "US"
+    ],
+    "locationLabels": [
+      "USA/Mexico"
+    ],
+    "name": "Additional researched multi-region unit candidates",
+    "candidateCount": 8,
+    "roleCounts": {
+      "historical_geometric_candidate": 6,
+      "family_member_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_mx_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "MX"
+    ],
+    "locationLabels": [
+      "Mexico"
+    ],
+    "name": "Additional researched unit candidates — MX",
+    "candidateCount": 5,
+    "roleCounts": {
+      "family_member_candidate": 4,
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ni_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "NI"
+    ],
+    "locationLabels": [
+      "NI",
+      "Nicaragua"
+    ],
+    "name": "Additional researched unit candidates — NI",
+    "candidateCount": 8,
+    "roleCounts": {
+      "family_member_candidate": 8
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_nl_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "NL"
+    ],
+    "locationLabels": [
+      "Netherlands"
+    ],
+    "name": "Additional researched unit candidates — NL",
+    "candidateCount": 10,
+    "roleCounts": {
+      "family_member_candidate": 6,
+      "historical_geometric_candidate": 2,
+      "alias_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_no_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "NO"
+    ],
+    "locationLabels": [
+      "Norway"
+    ],
+    "name": "Additional researched unit candidates — NO",
+    "candidateCount": 17,
+    "roleCounts": {
+      "family_member_candidate": 7,
+      "alias_candidate": 5,
+      "historical_geometric_candidate": 5
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_np_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "NP"
+    ],
+    "locationLabels": [
+      "NP",
+      "Nepal",
+      "Nepal Hills",
+      "Nepal Terai"
+    ],
+    "name": "Additional researched unit candidates — NP",
+    "candidateCount": 69,
+    "roleCounts": {
+      "family_member_candidate": 29,
+      "alias_candidate": 7,
+      "relationship_candidate": 32,
+      "standalone_local_unit_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_nz_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "NZ"
+    ],
+    "locationLabels": [
+      "New Zealand"
+    ],
+    "name": "Additional researched unit candidates — NZ",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_pe_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "PE"
+    ],
+    "locationLabels": [
+      "Peru"
+    ],
+    "name": "Additional researched unit candidates — PE",
+    "candidateCount": 3,
+    "roleCounts": {
+      "historical_geometric_candidate": 3
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ph_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "PH"
+    ],
+    "locationLabels": [
+      "Philippines"
+    ],
+    "name": "Additional researched unit candidates — PH",
+    "candidateCount": 7,
+    "roleCounts": {
+      "ambiguous_reference_only": 1,
+      "family_member_candidate": 2,
+      "historical_geometric_candidate": 4
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_pk_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "PK"
+    ],
+    "locationLabels": [
+      "PK",
+      "Pakistan"
+    ],
+    "name": "Additional researched unit candidates — PK",
+    "candidateCount": 7,
+    "roleCounts": {
+      "family_member_candidate": 6,
+      "ambiguous_reference_only": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_pl_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "PL"
+    ],
+    "locationLabels": [
+      "Poland"
+    ],
+    "name": "Additional researched unit candidates — PL",
+    "candidateCount": 11,
+    "roleCounts": {
+      "family_member_candidate": 9,
+      "historical_geometric_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_pr_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "PR"
+    ],
+    "locationLabels": [
+      "PR",
+      "Puerto Rico"
+    ],
+    "name": "Additional researched unit candidates — PR",
+    "candidateCount": 9,
+    "roleCounts": {
+      "family_member_candidate": 3,
+      "alias_candidate": 3,
+      "historical_geometric_candidate": 3
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_py_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "PY"
+    ],
+    "locationLabels": [
+      "Paraguay"
+    ],
+    "name": "Additional researched unit candidates — PY",
+    "candidateCount": 3,
+    "roleCounts": {
+      "family_member_candidate": 2,
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ro_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "RO"
+    ],
+    "locationLabels": [
+      "Romania"
+    ],
+    "name": "Additional researched unit candidates — RO",
+    "candidateCount": 27,
+    "roleCounts": {
+      "historical_geometric_candidate": 26,
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ru_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "RU"
+    ],
+    "locationLabels": [
+      "Russia"
+    ],
+    "name": "Additional researched unit candidates — RU",
+    "candidateCount": 1,
+    "roleCounts": {
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_se_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "SE"
+    ],
+    "locationLabels": [
+      "Sweden"
+    ],
+    "name": "Additional researched unit candidates — SE",
+    "candidateCount": 47,
+    "roleCounts": {
+      "historical_geometric_candidate": 29,
+      "family_member_candidate": 11,
+      "relationship_candidate": 7
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_sv_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "SV"
+    ],
+    "locationLabels": [
+      "El Salvador"
+    ],
+    "name": "Additional researched unit candidates — SV",
+    "candidateCount": 2,
+    "roleCounts": {
+      "family_member_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_sy_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "SY"
+    ],
+    "locationLabels": [
+      "Syria"
+    ],
+    "name": "Additional researched unit candidates — SY",
+    "candidateCount": 3,
+    "roleCounts": {
+      "family_member_candidate": 3
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_th_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "TH"
+    ],
+    "locationLabels": [
+      "TH",
+      "Thailand"
+    ],
+    "name": "Additional researched unit candidates — TH",
+    "candidateCount": 23,
+    "roleCounts": {
+      "family_member_candidate": 2,
+      "alias_candidate": 6,
+      "relationship_candidate": 12,
+      "measuring_tool_candidate": 3
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_tn_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "TN"
+    ],
+    "locationLabels": [
+      "Tunisia"
+    ],
+    "name": "Additional researched unit candidates — TN",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_tr_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "TR"
+    ],
+    "locationLabels": [
+      "Turkey"
+    ],
+    "name": "Additional researched unit candidates — TR",
+    "candidateCount": 4,
+    "roleCounts": {
+      "family_member_candidate": 3,
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_tw_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "TW"
+    ],
+    "locationLabels": [
+      "TW",
+      "Taiwan"
+    ],
+    "name": "Additional researched unit candidates — TW",
+    "candidateCount": 2,
+    "roleCounts": {
+      "historical_geometric_candidate": 1,
+      "alias_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ua_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "UA"
+    ],
+    "locationLabels": [
+      "Ukraine"
+    ],
+    "name": "Additional researched unit candidates — UA",
+    "candidateCount": 1,
+    "roleCounts": {
+      "family_member_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_unscoped_reference_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [],
+    "locationLabels": [
+      "Andhra Pradesh",
+      "Andhra Pradesh/Karnataka",
+      "Andhra/Karnataka",
+      "App domain rule",
+      "Assam",
+      "Assam Goalpara",
+      "Central America",
+      "Free City of Frankfurt",
+      "GLOBAL",
+      "Grand Duchy of Hesse",
+      "Gujarat/Rajasthan",
+      "International",
+      "International / Ottoman-influenced",
+      "Kingdom of Bavaria",
+      "Kingdom of Holland",
+      "Kingdom of Naples",
+      "Kingdom of Valencia",
+      "LATAM",
+      "Latin America",
+      "Madhya Pradesh",
+      "Madras",
+      "Maharashtra/Karnataka/AP",
+      "Mesopotamia",
+      "Middle East",
+      "Middle East/Southwest Asia",
+      "Odisha",
+      "Ottoman Empire",
+      "Principality of Catalonia",
+      "Prussia",
+      "Punjab",
+      "Punjab/Haryana/J&K/HP",
+      "Rajasthan/Bihar",
+      "Roman Empire",
+      "Russian Empire",
+      "South Asia",
+      "South Asia/Middle East",
+      "Sumer",
+      "Tamil Nadu",
+      "Tripura",
+      "UP/Bihar/Jharkhand",
+      "US/CA",
+      "West Bengal"
+    ],
+    "name": "Unscoped historical and ambiguous unit references",
+    "candidateCount": 1773,
+    "roleCounts": {
+      "family_member_candidate": 1231,
+      "measuring_tool_candidate": 31,
+      "historical_geometric_candidate": 248,
+      "non_geometric_reference_only": 5,
+      "ambiguous_reference_only": 7,
+      "alias_candidate": 188,
+      "relationship_candidate": 51,
+      "standalone_local_unit_candidate": 12
+    },
+    "hasConflicts": true,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_us_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "US"
+    ],
+    "locationLabels": [
+      "US",
+      "United States"
+    ],
+    "name": "Additional researched unit candidates — US",
+    "candidateCount": 10,
+    "roleCounts": {
+      "family_member_candidate": 7,
+      "measuring_tool_candidate": 2,
+      "alias_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_uy_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "UY"
+    ],
+    "locationLabels": [
+      "Uruguay"
+    ],
+    "name": "Additional researched unit candidates — UY",
+    "candidateCount": 1,
+    "roleCounts": {
+      "historical_geometric_candidate": 1
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ve_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "VE"
+    ],
+    "locationLabels": [
+      "Venezuela"
+    ],
+    "name": "Additional researched unit candidates — VE",
+    "candidateCount": 2,
+    "roleCounts": {
+      "historical_geometric_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_vn_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "VN"
+    ],
+    "locationLabels": [
+      "Vietnam"
+    ],
+    "name": "Additional researched unit candidates — VN",
+    "candidateCount": 20,
+    "roleCounts": {
+      "historical_geometric_candidate": 12,
+      "family_member_candidate": 8
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_ye_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "YE"
+    ],
+    "locationLabels": [
+      "Yemen"
+    ],
+    "name": "Additional researched unit candidates — YE",
+    "candidateCount": 3,
+    "roleCounts": {
+      "family_member_candidate": 3
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  },
+  {
+    "id": "research_za_candidates",
+    "version": "1.0.0",
+    "tier": "suggested",
+    "runtimeBehavior": "user_setup_only",
+    "countryCodes": [
+      "ZA"
+    ],
+    "locationLabels": [
+      "South Africa"
+    ],
+    "name": "Additional researched unit candidates — ZA",
+    "candidateCount": 2,
+    "roleCounts": {
+      "historical_geometric_candidate": 2
+    },
+    "hasConflicts": false,
+    "warning": "Names and possible relationships only. Research factors are not available to the conversion engine."
+  }
+]

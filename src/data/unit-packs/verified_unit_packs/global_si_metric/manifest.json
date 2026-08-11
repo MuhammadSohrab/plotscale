@@ -1,0 +1,20 @@
+{
+  "id": "global_si_metric",
+  "name": "Global SI & Metric Units",
+  "version": "1.0.0",
+  "tier": "verified",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["length", "area"],
+  "regions": [{ "countryCode": "GLOBAL" }],
+  "evidenceGrade": "international_standard",
+  "sourceIds": ["BIPM_SI_9"],
+  "ownerApproval": {
+    "status": "approved",
+    "reviewedBy": "PlotScale Owner",
+    "reviewedAt": "2026-07-26"
+  },
+  "checksum": "da424011ddc2eb93a411895e464839ac63d23238086902ffdf86724d62ea8ba5",
+  "dependencies": [],
+  "supersedes": null
+}

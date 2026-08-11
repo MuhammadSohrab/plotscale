@@ -1,0 +1,16 @@
+{
+  "id": "in_west_bengal_bigha_katha_chatak",
+  "name": "West Bengal Bigha–Katha–Chatak",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [{ "countryCode": "IN", "admin1Code": "WB" }],
+  "evidenceGrade": "official_reference_pending_owner_review",
+  "sourceIds": ["NGDRS_GAP"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "c053985c092471af676f1abedf2e3fd21ca8e61dd3b4074c57812ba2f11ee99b",
+  "dependencies": ["global_international_imperial"],
+  "supersedes": null
+}

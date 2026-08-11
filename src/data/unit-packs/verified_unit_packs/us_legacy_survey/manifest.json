@@ -1,0 +1,20 @@
+{
+  "id": "us_legacy_survey",
+  "name": "Legacy U.S. Survey Units",
+  "version": "1.0.0",
+  "tier": "verified",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["length", "area"],
+  "regions": [{ "countryCode": "US" }],
+  "evidenceGrade": "official_historical",
+  "sourceIds": ["NIST_SURVEY_FOOT"],
+  "ownerApproval": {
+    "status": "approved",
+    "reviewedBy": "PlotScale Owner",
+    "reviewedAt": "2026-07-26"
+  },
+  "checksum": "e2418cb6e724d0ec6b85076967419252cd161713850f1fc2f0e4ff7e74c91ab6",
+  "dependencies": ["global_si_metric"],
+  "supersedes": null
+}

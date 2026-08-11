@@ -1,0 +1,2492 @@
+[
+  {
+    "code": "AF",
+    "iso3": "AFG",
+    "numericCode": "004",
+    "name": "Afghanistan",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AL",
+    "iso3": "ALB",
+    "numericCode": "008",
+    "name": "Albania",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "DZ",
+    "iso3": "DZA",
+    "numericCode": "012",
+    "name": "Algeria",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AS",
+    "iso3": "ASM",
+    "numericCode": "016",
+    "name": "American Samoa",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AD",
+    "iso3": "AND",
+    "numericCode": "020",
+    "name": "Andorra",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AO",
+    "iso3": "AGO",
+    "numericCode": "024",
+    "name": "Angola",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AI",
+    "iso3": "AIA",
+    "numericCode": "660",
+    "name": "Anguilla",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AQ",
+    "iso3": "ATA",
+    "numericCode": "010",
+    "name": "Antarctica",
+    "continent": "Antarctica",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AG",
+    "iso3": "ATG",
+    "numericCode": "028",
+    "name": "Antigua and Barbuda",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AR",
+    "iso3": "ARG",
+    "numericCode": "032",
+    "name": "Argentina",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AM",
+    "iso3": "ARM",
+    "numericCode": "051",
+    "name": "Armenia",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AW",
+    "iso3": "ABW",
+    "numericCode": "533",
+    "name": "Aruba",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AU",
+    "iso3": "AUS",
+    "numericCode": "036",
+    "name": "Australia",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AT",
+    "iso3": "AUT",
+    "numericCode": "040",
+    "name": "Austria",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 6,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AZ",
+    "iso3": "AZE",
+    "numericCode": "031",
+    "name": "Azerbaijan",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BS",
+    "iso3": "BHS",
+    "numericCode": "044",
+    "name": "Bahamas",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BH",
+    "iso3": "BHR",
+    "numericCode": "048",
+    "name": "Bahrain",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BD",
+    "iso3": "BGD",
+    "numericCode": "050",
+    "name": "Bangladesh",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 14,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BB",
+    "iso3": "BRB",
+    "numericCode": "052",
+    "name": "Barbados",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BY",
+    "iso3": "BLR",
+    "numericCode": "112",
+    "name": "Belarus",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BE",
+    "iso3": "BEL",
+    "numericCode": "056",
+    "name": "Belgium",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BZ",
+    "iso3": "BLZ",
+    "numericCode": "084",
+    "name": "Belize",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BJ",
+    "iso3": "BEN",
+    "numericCode": "204",
+    "name": "Benin",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BM",
+    "iso3": "BMU",
+    "numericCode": "060",
+    "name": "Bermuda",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BT",
+    "iso3": "BTN",
+    "numericCode": "064",
+    "name": "Bhutan",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BO",
+    "iso3": "BOL",
+    "numericCode": "068",
+    "name": "Bolivia, Plurinational State of",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BQ",
+    "iso3": "BES",
+    "numericCode": "535",
+    "name": "Bonaire, Sint Eustatius and Saba",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BA",
+    "iso3": "BIH",
+    "numericCode": "070",
+    "name": "Bosnia and Herzegovina",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BW",
+    "iso3": "BWA",
+    "numericCode": "072",
+    "name": "Botswana",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BV",
+    "iso3": "BVT",
+    "numericCode": "074",
+    "name": "Bouvet Island",
+    "continent": "Antarctica",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BR",
+    "iso3": "BRA",
+    "numericCode": "076",
+    "name": "Brazil",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "IO",
+    "iso3": "IOT",
+    "numericCode": "086",
+    "name": "British Indian Ocean Territory",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BN",
+    "iso3": "BRN",
+    "numericCode": "096",
+    "name": "Brunei Darussalam",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BG",
+    "iso3": "BGR",
+    "numericCode": "100",
+    "name": "Bulgaria",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BF",
+    "iso3": "BFA",
+    "numericCode": "854",
+    "name": "Burkina Faso",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BI",
+    "iso3": "BDI",
+    "numericCode": "108",
+    "name": "Burundi",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CV",
+    "iso3": "CPV",
+    "numericCode": "132",
+    "name": "Cabo Verde",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KH",
+    "iso3": "KHM",
+    "numericCode": "116",
+    "name": "Cambodia",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CM",
+    "iso3": "CMR",
+    "numericCode": "120",
+    "name": "Cameroon",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CA",
+    "iso3": "CAN",
+    "numericCode": "124",
+    "name": "Canada",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KY",
+    "iso3": "CYM",
+    "numericCode": "136",
+    "name": "Cayman Islands",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CF",
+    "iso3": "CAF",
+    "numericCode": "140",
+    "name": "Central African Republic",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TD",
+    "iso3": "TCD",
+    "numericCode": "148",
+    "name": "Chad",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CL",
+    "iso3": "CHL",
+    "numericCode": "152",
+    "name": "Chile",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CN",
+    "iso3": "CHN",
+    "numericCode": "156",
+    "name": "China",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 11,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CX",
+    "iso3": "CXR",
+    "numericCode": "162",
+    "name": "Christmas Island",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CC",
+    "iso3": "CCK",
+    "numericCode": "166",
+    "name": "Cocos (Keeling) Islands",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CO",
+    "iso3": "COL",
+    "numericCode": "170",
+    "name": "Colombia",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KM",
+    "iso3": "COM",
+    "numericCode": "174",
+    "name": "Comoros",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CG",
+    "iso3": "COG",
+    "numericCode": "178",
+    "name": "Congo",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CD",
+    "iso3": "COD",
+    "numericCode": "180",
+    "name": "Congo, The Democratic Republic of the",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CK",
+    "iso3": "COK",
+    "numericCode": "184",
+    "name": "Cook Islands",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CR",
+    "iso3": "CRI",
+    "numericCode": "188",
+    "name": "Costa Rica",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "HR",
+    "iso3": "HRV",
+    "numericCode": "191",
+    "name": "Croatia",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CU",
+    "iso3": "CUB",
+    "numericCode": "192",
+    "name": "Cuba",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CW",
+    "iso3": "CUW",
+    "numericCode": "531",
+    "name": "Curaçao",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CY",
+    "iso3": "CYP",
+    "numericCode": "196",
+    "name": "Cyprus",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CZ",
+    "iso3": "CZE",
+    "numericCode": "203",
+    "name": "Czechia",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CI",
+    "iso3": "CIV",
+    "numericCode": "384",
+    "name": "Côte d'Ivoire",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "DK",
+    "iso3": "DNK",
+    "numericCode": "208",
+    "name": "Denmark",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 7,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "DJ",
+    "iso3": "DJI",
+    "numericCode": "262",
+    "name": "Djibouti",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "DM",
+    "iso3": "DMA",
+    "numericCode": "212",
+    "name": "Dominica",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "DO",
+    "iso3": "DOM",
+    "numericCode": "214",
+    "name": "Dominican Republic",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "EC",
+    "iso3": "ECU",
+    "numericCode": "218",
+    "name": "Ecuador",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "EG",
+    "iso3": "EGY",
+    "numericCode": "818",
+    "name": "Egypt",
+    "continent": "Africa",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 7,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SV",
+    "iso3": "SLV",
+    "numericCode": "222",
+    "name": "El Salvador",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GQ",
+    "iso3": "GNQ",
+    "numericCode": "226",
+    "name": "Equatorial Guinea",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ER",
+    "iso3": "ERI",
+    "numericCode": "232",
+    "name": "Eritrea",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "EE",
+    "iso3": "EST",
+    "numericCode": "233",
+    "name": "Estonia",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SZ",
+    "iso3": "SWZ",
+    "numericCode": "748",
+    "name": "Eswatini",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ET",
+    "iso3": "ETH",
+    "numericCode": "231",
+    "name": "Ethiopia",
+    "continent": "Africa",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 3,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "FK",
+    "iso3": "FLK",
+    "numericCode": "238",
+    "name": "Falkland Islands (Malvinas)",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "FO",
+    "iso3": "FRO",
+    "numericCode": "234",
+    "name": "Faroe Islands",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "FJ",
+    "iso3": "FJI",
+    "numericCode": "242",
+    "name": "Fiji",
+    "continent": "Oceania",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "FI",
+    "iso3": "FIN",
+    "numericCode": "246",
+    "name": "Finland",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 20,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "FR",
+    "iso3": "FRA",
+    "numericCode": "250",
+    "name": "France",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 11,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GF",
+    "iso3": "GUF",
+    "numericCode": "254",
+    "name": "French Guiana",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PF",
+    "iso3": "PYF",
+    "numericCode": "258",
+    "name": "French Polynesia",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TF",
+    "iso3": "ATF",
+    "numericCode": "260",
+    "name": "French Southern Territories",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GA",
+    "iso3": "GAB",
+    "numericCode": "266",
+    "name": "Gabon",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GM",
+    "iso3": "GMB",
+    "numericCode": "270",
+    "name": "Gambia",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GE",
+    "iso3": "GEO",
+    "numericCode": "268",
+    "name": "Georgia",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "DE",
+    "iso3": "DEU",
+    "numericCode": "276",
+    "name": "Germany",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 16,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GH",
+    "iso3": "GHA",
+    "numericCode": "288",
+    "name": "Ghana",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GI",
+    "iso3": "GIB",
+    "numericCode": "292",
+    "name": "Gibraltar",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GR",
+    "iso3": "GRC",
+    "numericCode": "300",
+    "name": "Greece",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 8,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GL",
+    "iso3": "GRL",
+    "numericCode": "304",
+    "name": "Greenland",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GD",
+    "iso3": "GRD",
+    "numericCode": "308",
+    "name": "Grenada",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GP",
+    "iso3": "GLP",
+    "numericCode": "312",
+    "name": "Guadeloupe",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GU",
+    "iso3": "GUM",
+    "numericCode": "316",
+    "name": "Guam",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GT",
+    "iso3": "GTM",
+    "numericCode": "320",
+    "name": "Guatemala",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GG",
+    "iso3": "GGY",
+    "numericCode": "831",
+    "name": "Guernsey",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GN",
+    "iso3": "GIN",
+    "numericCode": "324",
+    "name": "Guinea",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GW",
+    "iso3": "GNB",
+    "numericCode": "624",
+    "name": "Guinea-Bissau",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GY",
+    "iso3": "GUY",
+    "numericCode": "328",
+    "name": "Guyana",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "HT",
+    "iso3": "HTI",
+    "numericCode": "332",
+    "name": "Haiti",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "HM",
+    "iso3": "HMD",
+    "numericCode": "334",
+    "name": "Heard Island and McDonald Islands",
+    "continent": "Antarctica",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "VA",
+    "iso3": "VAT",
+    "numericCode": "336",
+    "name": "Holy See (Vatican City State)",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "HN",
+    "iso3": "HND",
+    "numericCode": "340",
+    "name": "Honduras",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "HK",
+    "iso3": "HKG",
+    "numericCode": "344",
+    "name": "Hong Kong",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 5,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "HU",
+    "iso3": "HUN",
+    "numericCode": "348",
+    "name": "Hungary",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "IS",
+    "iso3": "ISL",
+    "numericCode": "352",
+    "name": "Iceland",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "IN",
+    "iso3": "IND",
+    "numericCode": "356",
+    "name": "India",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 45,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ID",
+    "iso3": "IDN",
+    "numericCode": "360",
+    "name": "Indonesia",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "IR",
+    "iso3": "IRN",
+    "numericCode": "364",
+    "name": "Iran, Islamic Republic of",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "IQ",
+    "iso3": "IRQ",
+    "numericCode": "368",
+    "name": "Iraq",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "IE",
+    "iso3": "IRL",
+    "numericCode": "372",
+    "name": "Ireland",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "IM",
+    "iso3": "IMN",
+    "numericCode": "833",
+    "name": "Isle of Man",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "IL",
+    "iso3": "ISR",
+    "numericCode": "376",
+    "name": "Israel",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "IT",
+    "iso3": "ITA",
+    "numericCode": "380",
+    "name": "Italy",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 11,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "JM",
+    "iso3": "JAM",
+    "numericCode": "388",
+    "name": "Jamaica",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "JP",
+    "iso3": "JPN",
+    "numericCode": "392",
+    "name": "Japan",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 20,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "JE",
+    "iso3": "JEY",
+    "numericCode": "832",
+    "name": "Jersey",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "JO",
+    "iso3": "JOR",
+    "numericCode": "400",
+    "name": "Jordan",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KZ",
+    "iso3": "KAZ",
+    "numericCode": "398",
+    "name": "Kazakhstan",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KE",
+    "iso3": "KEN",
+    "numericCode": "404",
+    "name": "Kenya",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KI",
+    "iso3": "KIR",
+    "numericCode": "296",
+    "name": "Kiribati",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KP",
+    "iso3": "PRK",
+    "numericCode": "408",
+    "name": "Korea, Democratic People's Republic of",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KR",
+    "iso3": "KOR",
+    "numericCode": "410",
+    "name": "Korea, Republic of",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KW",
+    "iso3": "KWT",
+    "numericCode": "414",
+    "name": "Kuwait",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KG",
+    "iso3": "KGZ",
+    "numericCode": "417",
+    "name": "Kyrgyzstan",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LA",
+    "iso3": "LAO",
+    "numericCode": "418",
+    "name": "Lao People's Democratic Republic",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LV",
+    "iso3": "LVA",
+    "numericCode": "428",
+    "name": "Latvia",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LB",
+    "iso3": "LBN",
+    "numericCode": "422",
+    "name": "Lebanon",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LS",
+    "iso3": "LSO",
+    "numericCode": "426",
+    "name": "Lesotho",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LR",
+    "iso3": "LBR",
+    "numericCode": "430",
+    "name": "Liberia",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LY",
+    "iso3": "LBY",
+    "numericCode": "434",
+    "name": "Libya",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LI",
+    "iso3": "LIE",
+    "numericCode": "438",
+    "name": "Liechtenstein",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LT",
+    "iso3": "LTU",
+    "numericCode": "440",
+    "name": "Lithuania",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LU",
+    "iso3": "LUX",
+    "numericCode": "442",
+    "name": "Luxembourg",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MO",
+    "iso3": "MAC",
+    "numericCode": "446",
+    "name": "Macao",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MG",
+    "iso3": "MDG",
+    "numericCode": "450",
+    "name": "Madagascar",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MW",
+    "iso3": "MWI",
+    "numericCode": "454",
+    "name": "Malawi",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MY",
+    "iso3": "MYS",
+    "numericCode": "458",
+    "name": "Malaysia",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MV",
+    "iso3": "MDV",
+    "numericCode": "462",
+    "name": "Maldives",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ML",
+    "iso3": "MLI",
+    "numericCode": "466",
+    "name": "Mali",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MT",
+    "iso3": "MLT",
+    "numericCode": "470",
+    "name": "Malta",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MH",
+    "iso3": "MHL",
+    "numericCode": "584",
+    "name": "Marshall Islands",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MQ",
+    "iso3": "MTQ",
+    "numericCode": "474",
+    "name": "Martinique",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MR",
+    "iso3": "MRT",
+    "numericCode": "478",
+    "name": "Mauritania",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MU",
+    "iso3": "MUS",
+    "numericCode": "480",
+    "name": "Mauritius",
+    "continent": "Africa",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "YT",
+    "iso3": "MYT",
+    "numericCode": "175",
+    "name": "Mayotte",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MX",
+    "iso3": "MEX",
+    "numericCode": "484",
+    "name": "Mexico",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 5,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "FM",
+    "iso3": "FSM",
+    "numericCode": "583",
+    "name": "Micronesia, Federated States of",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MD",
+    "iso3": "MDA",
+    "numericCode": "498",
+    "name": "Moldova, Republic of",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MC",
+    "iso3": "MCO",
+    "numericCode": "492",
+    "name": "Monaco",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MN",
+    "iso3": "MNG",
+    "numericCode": "496",
+    "name": "Mongolia",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ME",
+    "iso3": "MNE",
+    "numericCode": "499",
+    "name": "Montenegro",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MS",
+    "iso3": "MSR",
+    "numericCode": "500",
+    "name": "Montserrat",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MA",
+    "iso3": "MAR",
+    "numericCode": "504",
+    "name": "Morocco",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MZ",
+    "iso3": "MOZ",
+    "numericCode": "508",
+    "name": "Mozambique",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MM",
+    "iso3": "MMR",
+    "numericCode": "104",
+    "name": "Myanmar",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 3,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NA",
+    "iso3": "NAM",
+    "numericCode": "516",
+    "name": "Namibia",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NR",
+    "iso3": "NRU",
+    "numericCode": "520",
+    "name": "Nauru",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NP",
+    "iso3": "NPL",
+    "numericCode": "524",
+    "name": "Nepal",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 6,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NL",
+    "iso3": "NLD",
+    "numericCode": "528",
+    "name": "Netherlands",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 9,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NC",
+    "iso3": "NCL",
+    "numericCode": "540",
+    "name": "New Caledonia",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NZ",
+    "iso3": "NZL",
+    "numericCode": "554",
+    "name": "New Zealand",
+    "continent": "Oceania",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NI",
+    "iso3": "NIC",
+    "numericCode": "558",
+    "name": "Nicaragua",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 3,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NE",
+    "iso3": "NER",
+    "numericCode": "562",
+    "name": "Niger",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NG",
+    "iso3": "NGA",
+    "numericCode": "566",
+    "name": "Nigeria",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NU",
+    "iso3": "NIU",
+    "numericCode": "570",
+    "name": "Niue",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NF",
+    "iso3": "NFK",
+    "numericCode": "574",
+    "name": "Norfolk Island",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MK",
+    "iso3": "MKD",
+    "numericCode": "807",
+    "name": "North Macedonia",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MP",
+    "iso3": "MNP",
+    "numericCode": "580",
+    "name": "Northern Mariana Islands",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "NO",
+    "iso3": "NOR",
+    "numericCode": "578",
+    "name": "Norway",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "OM",
+    "iso3": "OMN",
+    "numericCode": "512",
+    "name": "Oman",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PK",
+    "iso3": "PAK",
+    "numericCode": "586",
+    "name": "Pakistan",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 6,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PW",
+    "iso3": "PLW",
+    "numericCode": "585",
+    "name": "Palau",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PS",
+    "iso3": "PSE",
+    "numericCode": "275",
+    "name": "Palestine, State of",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PA",
+    "iso3": "PAN",
+    "numericCode": "591",
+    "name": "Panama",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PG",
+    "iso3": "PNG",
+    "numericCode": "598",
+    "name": "Papua New Guinea",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PY",
+    "iso3": "PRY",
+    "numericCode": "600",
+    "name": "Paraguay",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PE",
+    "iso3": "PER",
+    "numericCode": "604",
+    "name": "Peru",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 3,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PH",
+    "iso3": "PHL",
+    "numericCode": "608",
+    "name": "Philippines",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PN",
+    "iso3": "PCN",
+    "numericCode": "612",
+    "name": "Pitcairn",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PL",
+    "iso3": "POL",
+    "numericCode": "616",
+    "name": "Poland",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 10,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PT",
+    "iso3": "PRT",
+    "numericCode": "620",
+    "name": "Portugal",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 3,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PR",
+    "iso3": "PRI",
+    "numericCode": "630",
+    "name": "Puerto Rico",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "QA",
+    "iso3": "QAT",
+    "numericCode": "634",
+    "name": "Qatar",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "RO",
+    "iso3": "ROU",
+    "numericCode": "642",
+    "name": "Romania",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 4,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "RU",
+    "iso3": "RUS",
+    "numericCode": "643",
+    "name": "Russian Federation",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "RW",
+    "iso3": "RWA",
+    "numericCode": "646",
+    "name": "Rwanda",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "RE",
+    "iso3": "REU",
+    "numericCode": "638",
+    "name": "Réunion",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "BL",
+    "iso3": "BLM",
+    "numericCode": "652",
+    "name": "Saint Barthélemy",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SH",
+    "iso3": "SHN",
+    "numericCode": "654",
+    "name": "Saint Helena, Ascension and Tristan da Cunha",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "KN",
+    "iso3": "KNA",
+    "numericCode": "659",
+    "name": "Saint Kitts and Nevis",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LC",
+    "iso3": "LCA",
+    "numericCode": "662",
+    "name": "Saint Lucia",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "MF",
+    "iso3": "MAF",
+    "numericCode": "663",
+    "name": "Saint Martin (French part)",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "PM",
+    "iso3": "SPM",
+    "numericCode": "666",
+    "name": "Saint Pierre and Miquelon",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "VC",
+    "iso3": "VCT",
+    "numericCode": "670",
+    "name": "Saint Vincent and the Grenadines",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "WS",
+    "iso3": "WSM",
+    "numericCode": "882",
+    "name": "Samoa",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SM",
+    "iso3": "SMR",
+    "numericCode": "674",
+    "name": "San Marino",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ST",
+    "iso3": "STP",
+    "numericCode": "678",
+    "name": "Sao Tome and Principe",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SA",
+    "iso3": "SAU",
+    "numericCode": "682",
+    "name": "Saudi Arabia",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SN",
+    "iso3": "SEN",
+    "numericCode": "686",
+    "name": "Senegal",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "RS",
+    "iso3": "SRB",
+    "numericCode": "688",
+    "name": "Serbia",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SC",
+    "iso3": "SYC",
+    "numericCode": "690",
+    "name": "Seychelles",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SL",
+    "iso3": "SLE",
+    "numericCode": "694",
+    "name": "Sierra Leone",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SG",
+    "iso3": "SGP",
+    "numericCode": "702",
+    "name": "Singapore",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SX",
+    "iso3": "SXM",
+    "numericCode": "534",
+    "name": "Sint Maarten (Dutch part)",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SK",
+    "iso3": "SVK",
+    "numericCode": "703",
+    "name": "Slovakia",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SI",
+    "iso3": "SVN",
+    "numericCode": "705",
+    "name": "Slovenia",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SB",
+    "iso3": "SLB",
+    "numericCode": "090",
+    "name": "Solomon Islands",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SO",
+    "iso3": "SOM",
+    "numericCode": "706",
+    "name": "Somalia",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ZA",
+    "iso3": "ZAF",
+    "numericCode": "710",
+    "name": "South Africa",
+    "continent": "Africa",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 3,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GS",
+    "iso3": "SGS",
+    "numericCode": "239",
+    "name": "South Georgia and the South Sandwich Islands",
+    "continent": "Antarctica",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SS",
+    "iso3": "SSD",
+    "numericCode": "728",
+    "name": "South Sudan",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ES",
+    "iso3": "ESP",
+    "numericCode": "724",
+    "name": "Spain",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 23,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "LK",
+    "iso3": "LKA",
+    "numericCode": "144",
+    "name": "Sri Lanka",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SD",
+    "iso3": "SDN",
+    "numericCode": "729",
+    "name": "Sudan",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SR",
+    "iso3": "SUR",
+    "numericCode": "740",
+    "name": "Suriname",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SJ",
+    "iso3": "SJM",
+    "numericCode": "744",
+    "name": "Svalbard and Jan Mayen",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SE",
+    "iso3": "SWE",
+    "numericCode": "752",
+    "name": "Sweden",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 6,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "CH",
+    "iso3": "CHE",
+    "numericCode": "756",
+    "name": "Switzerland",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 5,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "SY",
+    "iso3": "SYR",
+    "numericCode": "760",
+    "name": "Syrian Arab Republic",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TW",
+    "iso3": "TWN",
+    "numericCode": "158",
+    "name": "Taiwan, Province of China",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TJ",
+    "iso3": "TJK",
+    "numericCode": "762",
+    "name": "Tajikistan",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TZ",
+    "iso3": "TZA",
+    "numericCode": "834",
+    "name": "Tanzania, United Republic of",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TH",
+    "iso3": "THA",
+    "numericCode": "764",
+    "name": "Thailand",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TL",
+    "iso3": "TLS",
+    "numericCode": "626",
+    "name": "Timor-Leste",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TG",
+    "iso3": "TGO",
+    "numericCode": "768",
+    "name": "Togo",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TK",
+    "iso3": "TKL",
+    "numericCode": "772",
+    "name": "Tokelau",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TO",
+    "iso3": "TON",
+    "numericCode": "776",
+    "name": "Tonga",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TT",
+    "iso3": "TTO",
+    "numericCode": "780",
+    "name": "Trinidad and Tobago",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TN",
+    "iso3": "TUN",
+    "numericCode": "788",
+    "name": "Tunisia",
+    "continent": "Africa",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TM",
+    "iso3": "TKM",
+    "numericCode": "795",
+    "name": "Turkmenistan",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TC",
+    "iso3": "TCA",
+    "numericCode": "796",
+    "name": "Turks and Caicos Islands",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TV",
+    "iso3": "TUV",
+    "numericCode": "798",
+    "name": "Tuvalu",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "TR",
+    "iso3": "TUR",
+    "numericCode": "792",
+    "name": "Türkiye",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "UG",
+    "iso3": "UGA",
+    "numericCode": "800",
+    "name": "Uganda",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "UA",
+    "iso3": "UKR",
+    "numericCode": "804",
+    "name": "Ukraine",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AE",
+    "iso3": "ARE",
+    "numericCode": "784",
+    "name": "United Arab Emirates",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "GB",
+    "iso3": "GBR",
+    "numericCode": "826",
+    "name": "United Kingdom",
+    "continent": "Europe",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 36,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "US",
+    "iso3": "USA",
+    "numericCode": "840",
+    "name": "United States",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 8,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "UM",
+    "iso3": "UMI",
+    "numericCode": "581",
+    "name": "United States Minor Outlying Islands",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "UY",
+    "iso3": "URY",
+    "numericCode": "858",
+    "name": "Uruguay",
+    "continent": "America",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 1,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "UZ",
+    "iso3": "UZB",
+    "numericCode": "860",
+    "name": "Uzbekistan",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "VU",
+    "iso3": "VUT",
+    "numericCode": "548",
+    "name": "Vanuatu",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "VE",
+    "iso3": "VEN",
+    "numericCode": "862",
+    "name": "Venezuela, Bolivarian Republic of",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "VN",
+    "iso3": "VNM",
+    "numericCode": "704",
+    "name": "Viet Nam",
+    "continent": "Asia",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "VG",
+    "iso3": "VGB",
+    "numericCode": "092",
+    "name": "Virgin Islands, British",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "VI",
+    "iso3": "VIR",
+    "numericCode": "850",
+    "name": "Virgin Islands, U.S.",
+    "continent": "America",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "WF",
+    "iso3": "WLF",
+    "numericCode": "876",
+    "name": "Wallis and Futuna",
+    "continent": "Oceania",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "EH",
+    "iso3": "ESH",
+    "numericCode": "732",
+    "name": "Western Sahara",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "YE",
+    "iso3": "YEM",
+    "numericCode": "887",
+    "name": "Yemen",
+    "continent": "Asia",
+    "coverageStatus": "curated rows present",
+    "researchRecordCount": 2,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ZM",
+    "iso3": "ZMB",
+    "numericCode": "894",
+    "name": "Zambia",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "ZW",
+    "iso3": "ZWE",
+    "numericCode": "716",
+    "name": "Zimbabwe",
+    "continent": "Africa",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  },
+  {
+    "code": "AX",
+    "iso3": "ALA",
+    "numericCode": "248",
+    "name": "Åland Islands",
+    "continent": "Europe",
+    "coverageStatus": "catalog placeholder—no country-specific row found in this pass",
+    "researchRecordCount": 0,
+    "source": "Worldwide_Land_Measurement_Database.xlsx#Country_Coverage"
+  }
+]

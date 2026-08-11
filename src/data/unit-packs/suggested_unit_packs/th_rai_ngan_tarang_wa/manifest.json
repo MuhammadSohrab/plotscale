@@ -1,0 +1,16 @@
+{
+  "id": "th_rai_ngan_tarang_wa",
+  "name": "Thailand Rai–Ngan–Square Wah",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [{ "countryCode": "TH" }],
+  "evidenceGrade": "official_practice_pending_owner_review",
+  "sourceIds": ["TH_DOL"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "9eed2d6c64c4b63e6002e3c38013de8ff871222e1833f55543ef1e83b9cbebc8",
+  "dependencies": ["global_si_metric"],
+  "supersedes": null
+}

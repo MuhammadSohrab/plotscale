@@ -1,0 +1,22 @@
+{
+  "concepts": [
+    { "id": "concept.rai", "canonicalName": "Rai", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.ngan", "canonicalName": "Ngan", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.square_wah", "canonicalName": "Square Wah", "aliases": ["Tarang wa"], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "TH_RAI", "conceptId": "concept.rai", "name": "Rai (Thailand suggestion)", "symbol": "rai", "dimension": "area", "suggestedFactorToBase": "1600", "exactness": "exact", "system": "thai_land" },
+    { "id": "TH_NGAN", "conceptId": "concept.ngan", "name": "Ngan (Thailand suggestion)", "symbol": "ngan", "dimension": "area", "suggestedFactorToBase": "400", "exactness": "exact", "system": "thai_land" },
+    { "id": "TH_SQUARE_WAH", "conceptId": "concept.square_wah", "name": "Square Wah (Thailand suggestion)", "symbol": "wa²", "dimension": "area", "suggestedFactorToBase": "4", "exactness": "exact", "system": "thai_land" }
+  ],
+  "relationships": [
+    { "id": "TH_RAI_TO_NGAN", "familyId": "TH_RAI_FAMILY", "parentUnitId": "TH_RAI", "childUnitId": "TH_NGAN", "multiplier": "4", "editable": true },
+    { "id": "TH_NGAN_TO_SQUARE_WAH", "familyId": "TH_RAI_FAMILY", "parentUnitId": "TH_NGAN", "childUnitId": "TH_SQUARE_WAH", "multiplier": "100", "editable": true }
+  ],
+  "familyTemplates": [{ "id": "TH_RAI_FAMILY", "name": "Thailand Rai family", "unitIds": ["TH_RAI", "TH_NGAN", "TH_SQUARE_WAH"], "relationshipIds": ["TH_RAI_TO_NGAN", "TH_NGAN_TO_SQUARE_WAH"], "calibrationRequired": true }],
+  "tools": [],
+  "sources": [{ "id": "TH_DOL", "title": "Thailand Department of Lands measurement practice", "authorityTier": 1, "url": "https://www.dol.go.th/" }],
+  "warnings": ["Owner approval and user confirmation are required before activation."],
+  "outputRecipes": [{ "id": "TH_MIXED", "name": "Rai, Ngan & Square Wah", "dimension": "area", "unitIds": ["TH_RAI", "TH_NGAN", "TH_SQUARE_WAH"], "precision": 2 }],
+  "qaIssues": []
+}

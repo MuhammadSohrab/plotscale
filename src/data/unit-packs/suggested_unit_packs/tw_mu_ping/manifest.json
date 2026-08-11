@@ -1,0 +1,16 @@
+{
+  "id": "tw_mu_ping",
+  "name": "Taiwan Mu–Ping",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [{ "countryCode": "TW" }],
+  "evidenceGrade": "specialist_secondary_pending_primary_review",
+  "sourceIds": ["SIZES_MU"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "91ff26df45162f21a6788ca8f831e75921ff43828777cb369d7f76c462f686d7",
+  "dependencies": ["global_si_metric"],
+  "supersedes": null
+}

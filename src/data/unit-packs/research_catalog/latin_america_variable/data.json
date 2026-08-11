@@ -1,0 +1,22 @@
+{
+  "concepts": [
+    { "id": "concept.manzana", "canonicalName": "Manzana", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.tarea", "canonicalName": "Tarea", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.caballeria", "canonicalName": "Caballería", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.cuerda", "canonicalName": "Cuerda", "aliases": [], "dimensions": ["area"] }
+  ],
+  "variants": [],
+  "relationships": [],
+  "familyTemplates": [],
+  "tools": [],
+  "sources": [
+    { "id": "SIZES_MANZANA", "title": "Sizes.com Manzana research page", "authorityTier": 3, "url": "https://www.sizes.com/units/manzana.htm" },
+    { "id": "SIZES_TAREA", "title": "Sizes.com Tarea research page", "authorityTier": 3, "url": "https://www.sizes.com/units/tarea.htm" }
+  ],
+  "warnings": ["Country alone may not resolve these units; locality and period can be required."],
+  "outputRecipes": [],
+  "qaIssues": [
+    { "id": "QA_NI_MANZANA_RANGE", "severity": "blocker", "message": "Nicaragua Manzana sources conflict; keep an interval/candidate set." },
+    { "id": "QA_TAREA_POLYSEMY", "severity": "blocker", "message": "Tarea can vary by town and can also denote mass." }
+  ]
+}

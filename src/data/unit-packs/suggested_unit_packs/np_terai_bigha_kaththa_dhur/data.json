@@ -1,0 +1,22 @@
+{
+  "concepts": [
+    { "id": "concept.bigha", "canonicalName": "Bigha", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.katha", "canonicalName": "Kaththa", "aliases": ["Katha"], "dimensions": ["area"] },
+    { "id": "concept.dhur", "canonicalName": "Dhur", "aliases": [], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "NP_TERAI_BIGHA", "conceptId": "concept.bigha", "name": "Bigha (Nepal Terai suggestion)", "symbol": "bigha", "dimension": "area", "suggestedFactorToBase": "6773", "exactness": "approximate", "system": "nepal_terai_land" },
+    { "id": "NP_TERAI_KATHTHA", "conceptId": "concept.katha", "name": "Kaththa (Nepal Terai suggestion)", "symbol": "kaththa", "dimension": "area", "suggestedFactorToBase": "338.65", "exactness": "approximate", "system": "nepal_terai_land" },
+    { "id": "NP_TERAI_DHUR", "conceptId": "concept.dhur", "name": "Dhur (Nepal Terai suggestion)", "symbol": "dhur", "dimension": "area", "suggestedFactorToBase": "16.9325", "exactness": "approximate", "system": "nepal_terai_land" }
+  ],
+  "relationships": [
+    { "id": "NP_TERAI_BIGHA_TO_KATHTHA", "familyId": "NP_TERAI_BIGHA_FAMILY", "parentUnitId": "NP_TERAI_BIGHA", "childUnitId": "NP_TERAI_KATHTHA", "multiplier": "20", "editable": true },
+    { "id": "NP_TERAI_KATHTHA_TO_DHUR", "familyId": "NP_TERAI_BIGHA_FAMILY", "parentUnitId": "NP_TERAI_KATHTHA", "childUnitId": "NP_TERAI_DHUR", "multiplier": "20", "editable": true }
+  ],
+  "familyTemplates": [{ "id": "NP_TERAI_BIGHA_FAMILY", "name": "Nepal Terai Bigha family", "unitIds": ["NP_TERAI_BIGHA", "NP_TERAI_KATHTHA", "NP_TERAI_DHUR"], "relationshipIds": ["NP_TERAI_BIGHA_TO_KATHTHA", "NP_TERAI_KATHTHA_TO_DHUR"], "calibrationRequired": true }],
+  "tools": [],
+  "sources": [{ "id": "NEPAL_NSO", "title": "Nepal National Statistics Office land conversion metadata", "authorityTier": 1, "url": "https://microdata.nsonepal.gov.np/" }],
+  "warnings": ["The supplied metric values are approximate; user calibration is required."],
+  "outputRecipes": [{ "id": "NP_TERAI_MIXED", "name": "Bigha, Kaththa & Dhur", "dimension": "area", "unitIds": ["NP_TERAI_BIGHA", "NP_TERAI_KATHTHA", "NP_TERAI_DHUR"], "precision": 2 }],
+  "qaIssues": []
+}

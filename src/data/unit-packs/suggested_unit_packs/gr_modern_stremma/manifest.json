@@ -1,0 +1,16 @@
+{
+  "id": "gr_modern_stremma",
+  "name": "Modern Greek Stremma",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [{ "countryCode": "GR" }],
+  "evidenceGrade": "metrified_definition_pending_owner_review",
+  "sourceIds": ["SIZES_STREMMA"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "733545b313bb1dfe23881365c888bc3c7a4f6a3c1c27bb063bbf96f4029ae911",
+  "dependencies": ["global_si_metric"],
+  "supersedes": null
+}

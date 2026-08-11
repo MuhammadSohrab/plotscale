@@ -1,0 +1,16 @@
+{
+  "id": "np_terai_bigha_kaththa_dhur",
+  "name": "Nepal Terai Bigha–Kaththa–Dhur",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [{ "countryCode": "NP", "admin1Code": "TERAI" }],
+  "evidenceGrade": "official_statistics_pending_owner_review",
+  "sourceIds": ["NEPAL_NSO"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "caa4ff8a56ac8aed48f22c4576e4b10fc74e66f6e0485735bf82aa328d5ef87e",
+  "dependencies": ["global_si_metric"],
+  "supersedes": null
+}

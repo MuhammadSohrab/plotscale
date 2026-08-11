@@ -1,0 +1,36 @@
+{
+  "concepts": [
+    { "id": "concept.metre", "canonicalName": "Metre", "aliases": ["meter"], "dimensions": ["length"] },
+    { "id": "concept.kilometre", "canonicalName": "Kilometre", "aliases": ["kilometer"], "dimensions": ["length"] },
+    { "id": "concept.centimetre", "canonicalName": "Centimetre", "aliases": ["centimeter"], "dimensions": ["length"] },
+    { "id": "concept.millimetre", "canonicalName": "Millimetre", "aliases": ["millimeter"], "dimensions": ["length"] },
+    { "id": "concept.square_metre", "canonicalName": "Square metre", "aliases": ["square meter"], "dimensions": ["area"] },
+    { "id": "concept.square_kilometre", "canonicalName": "Square kilometre", "aliases": ["square kilometer"], "dimensions": ["area"] },
+    { "id": "concept.centiare", "canonicalName": "Centiare", "aliases": ["centi-are"], "dimensions": ["area"] },
+    { "id": "concept.are", "canonicalName": "Are", "aliases": [], "dimensions": ["area"] },
+    { "id": "concept.hectare", "canonicalName": "Hectare", "aliases": [], "dimensions": ["area"] }
+  ],
+  "variants": [
+    { "id": "METER", "conceptId": "concept.metre", "name": "Metre", "symbol": "m", "dimension": "length", "factorToBase": "1", "exactness": "exact", "system": "metric", "visibility": "default" },
+    { "id": "KILOMETER", "conceptId": "concept.kilometre", "name": "Kilometre", "symbol": "km", "dimension": "length", "factorToBase": "1000", "exactness": "exact", "system": "metric", "visibility": "default" },
+    { "id": "CENTIMETER", "conceptId": "concept.centimetre", "name": "Centimetre", "symbol": "cm", "dimension": "length", "factorToBase": "0.01", "exactness": "exact", "system": "metric", "visibility": "default" },
+    { "id": "MILLIMETER", "conceptId": "concept.millimetre", "name": "Millimetre", "symbol": "mm", "dimension": "length", "factorToBase": "0.001", "exactness": "exact", "system": "metric", "visibility": "default" },
+    { "id": "SQM", "conceptId": "concept.square_metre", "name": "Square metre", "symbol": "m²", "dimension": "area", "factorToBase": "1", "exactness": "exact", "system": "metric", "visibility": "default", "compositeLabel": "Sq m" },
+    { "id": "SQKM", "conceptId": "concept.square_kilometre", "name": "Square kilometre", "symbol": "km²", "dimension": "area", "factorToBase": "1000000", "exactness": "exact", "system": "metric", "visibility": "default" },
+    { "id": "CENTIARE", "conceptId": "concept.centiare", "name": "Centiare", "symbol": "ca", "dimension": "area", "factorToBase": "1", "exactness": "exact", "system": "metric", "visibility": "advanced" },
+    { "id": "ARE", "conceptId": "concept.are", "name": "Are", "symbol": "a", "dimension": "area", "factorToBase": "100", "exactness": "exact", "system": "metric", "visibility": "default" },
+    { "id": "HECTARE", "conceptId": "concept.hectare", "name": "Hectare", "symbol": "ha", "dimension": "area", "factorToBase": "10000", "exactness": "exact", "system": "metric", "visibility": "default", "compositeLabel": "Hectare" }
+  ],
+  "relationships": [
+    { "id": "METRIC_HECTARE_TO_ARE", "familyId": "METRIC_AREA", "parentUnitId": "HECTARE", "childUnitId": "ARE", "multiplier": "100", "editable": false },
+    { "id": "METRIC_ARE_TO_SQM", "familyId": "METRIC_AREA", "parentUnitId": "ARE", "childUnitId": "SQM", "multiplier": "100", "editable": false }
+  ],
+  "familyTemplates": [],
+  "tools": [],
+  "sources": [
+    { "id": "BIPM_SI_9", "title": "SI Brochure, 9th edition", "authorityTier": 1, "url": "https://www.bipm.org/en/publications/si-brochure" }
+  ],
+  "warnings": [],
+  "outputRecipes": [],
+  "qaIssues": []
+}

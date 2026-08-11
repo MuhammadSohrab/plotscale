@@ -1,0 +1,19 @@
+{
+  "id": "in_punjab_haryana_66in_karam_marla_kanal",
+  "name": "India Punjab/Haryana 66-inch Karam–Marla–Kanal",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["length", "area"],
+  "regions": [
+    { "countryCode": "IN", "admin1Code": "PB" },
+    { "countryCode": "IN", "admin1Code": "HR" }
+  ],
+  "evidenceGrade": "historical_official_reference_pending_owner_review",
+  "sourceIds": ["SIZES_MARLA"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "44f0738ef6542e70b6ee8f2488494e1c83d2118f54a35878f8b2b8cf1b0397cc",
+  "dependencies": ["global_international_imperial"],
+  "supersedes": null
+}

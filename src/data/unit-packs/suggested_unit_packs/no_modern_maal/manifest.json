@@ -1,0 +1,16 @@
+{
+  "id": "no_modern_maal",
+  "name": "Modern Norwegian Mål",
+  "version": "1.0.0",
+  "tier": "suggested",
+  "schemaVersion": "1.0",
+  "minimumAppVersion": "0.1.0",
+  "dimensions": ["area"],
+  "regions": [{ "countryCode": "NO" }],
+  "evidenceGrade": "metrified_definition_pending_owner_review",
+  "sourceIds": ["SIZES_MAAL"],
+  "ownerApproval": { "status": "pending" },
+  "checksum": "219fdb4766f1c43e202162da1c16b4528d8cca46d126cd16c73ca1f78a5087c8",
+  "dependencies": ["global_si_metric"],
+  "supersedes": null
+}
