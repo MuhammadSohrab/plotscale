@@ -60,14 +60,7 @@ export function DashboardPage() {
     {
       icon: MapPinned,
       title: "Map Measurement",
-      description: "Measure a plot from satellite imagery",
-      tone: "blue",
-      to: "/calculator?mode=map",
-    },
-    {
-      icon: MapPinned,
-      title: "Map Mode (RND)",
-      description: "Full-featured map surveying tool with autocomplete & GeoJSON/KML export",
+      description: "Full-featured satellite map surveying tool with entrance point & GeoJSON/KML export",
       tone: "green",
       to: "/calculator?mode=map_mode",
     },

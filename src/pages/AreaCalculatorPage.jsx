@@ -20,9 +20,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Brand } from "../components/Brand";
 import { FeatureCard } from "../components/FeatureCard";
-import { MapMeasurementMode } from "../components/map/MapMeasurementMode";
 import { PlotActionDialog } from "../components/calculator/PlotActionDialog";
 import { PlotDiagram } from "../components/calculator/PlotDiagram";
+import { CrosshairPointMarker } from "../components/common/PointMarker";
 import {
   calculateCustomShape,
   calculateIrregularPlot,
@@ -390,19 +390,14 @@ function IrregularSingleCanvasCalculator({
 
           {/* Corner Rotary Joint Nodes */}
           {[c1, c2, c3, c4].map((pt) => (
-            <g key={pt.label}>
-              <circle cx={pt.x} cy={pt.y} r="7.5" fill="#16a34a" stroke="#ffffff" strokeWidth="3" className="shadow-md" />
-              <text
-                x={pt.x}
-                y={pt.y > 160 ? pt.y + 18 : pt.y - 11}
-                textAnchor="middle"
-                fill="#0f172a"
-                fontSize="12"
-                fontWeight="black"
-              >
-                {pt.label}
-              </text>
-            </g>
+            <CrosshairPointMarker
+              key={pt.label}
+              cx={pt.x}
+              cy={pt.y}
+              scale={1}
+              color="#22c55e"
+              label={pt.label}
+            />
           ))}
         </svg>
       </div>
@@ -1210,30 +1205,15 @@ function AreaCalculationWorkspace({ requestedMode, editId }) {
           </section>
         )}
 
-        {mode === "map" && (
-          <MapMeasurementMode
-            points={mapPoints}
-            onPointsChange={setMapPoints}
-            navigationPoint={mapNavigationPoint}
-            onNavigationPointChange={setMapNavigationPoint}
-            diagonalGroups={mapDiagonalGroups}
-            onDiagonalGroupsChange={setMapDiagonalGroups}
-            lengthUnit={lengthUnit}
-            areaUnit={areaUnit}
-            areaUnits={areaUnits}
-            onResultChange={updateMapResult}
-            onSave={() => setActionDialog("save")}
-            onExportPdf={() => setActionDialog("pdf")}
-          />
-        )}
-
-        {mode === "map_mode" && (
+        {(mode === "map" || mode === "map_mode") && (
           <MapDrawMode
             initialPoints={mapPoints}
             onPointsChange={setMapPoints}
+            navigationPoint={mapNavigationPoint}
+            onNavigationPointChange={setMapNavigationPoint}
             areaOutputUnit={areaUnit.id}
             onAreaOutputUnitChange={(uId) => {
-              const found = areaUnits.find((x) => x.id === uId);
+              const found = areaUnits.find((x) => x.id === uId || x.unit_id === uId);
               if (found) setAreaUnitId(found.id);
             }}
             onSave={() => setActionDialog("save")}

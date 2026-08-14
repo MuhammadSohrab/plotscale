@@ -5,7 +5,7 @@
  *           GeoJSON/KML export & import, save, conversions panel.
  */
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { Trash2, Undo2, MapPin, Maximize2, Minimize2, Eye, EyeOff, Ruler, Square, BookMarked, FileDown, FileText, Upload, ChevronDown, ChevronUp, Layers, Satellite, Mountain, Map as MapIcon, Tag, ZoomIn, Lock, Unlock, Crosshair, Check, SlidersHorizontal, X, Eraser } from 'lucide-react';
+import { Trash2, Undo2, MapPin, Maximize2, Minimize2, Eye, EyeOff, Ruler, Square, BookMarked, FileDown, FileText, Upload, ChevronDown, ChevronUp, Layers, Satellite, Mountain, Map as MapIcon, Tag, ZoomIn, Lock, Unlock, Crosshair, Check, SlidersHorizontal, X, Eraser, Navigation } from 'lucide-react';
 import { BUILTIN_LENGTH_UNITS, BUILTIN_AREA_UNITS, mergeUnits, sortUnits, sqmToUnit, formatValue } from '../../lib/unitConversion';
 import { exportToGeoJSON, exportToKML, parseGeoJSON, parseKML, getGeoJSONBlob, getKMLBlob } from '../../lib/geoExport';
 import { exportMapModePDF } from '../../lib/mapPdfExport';
@@ -14,6 +14,8 @@ import UnitDropdown from '../units/UnitDropdown';
 import AreaConversionList from '../calculator/AreaConversionList.jsx';
 import MapShareDialog from '../calculator/MapShareDialog.jsx';
 import PlotActionModal from '../calculator/PlotActionModal.jsx';
+import { getCrosshairSvgUrl } from '../common/PointMarker';
+import { OffsetDragHandleOverlay } from '../common/OffsetDragHandle';
 
 let gmapsLoaded = false;
 let gmapsLoading = false;
@@ -42,7 +44,7 @@ function loadGoogleMaps(apiKey) {
   });
 }
 
-export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, areaOutputUnit: propAreaOutputUnit, onAreaOutputUnitChange, initialPoints, onFullscreenChange, initialPlotInfo }) {
+export default function MapDrawMode({ onAreaChange, onPointsChange, onNavigationPointChange, onSave, areaOutputUnit: propAreaOutputUnit, onAreaOutputUnitChange, initialPoints, navigationPoint, initialNavigationPoint, initialEntrancePoint, onFullscreenChange, initialPlotInfo }) {
   const [points, setPoints] = useState([]);
   const [areaSqft, setAreaSqft] = useState(0);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -73,6 +75,14 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
   const [diagGroups, setDiagGroups] = useState([]);
   const [activeGroupId, setActiveGroupId] = useState(null);
   const [avgElevation, setAvgElevation] = useState(null);
+  const [entrancePoint, setEntrancePoint] = useState(initialNavigationPoint || initialEntrancePoint || navigationPoint || null);
+  const [entranceMode, setEntranceMode] = useState(false);
+  const [selectedPointIndex, setSelectedPointIndex] = useState(null);
+  const selectedPointIndexRef = useRef(null);
+  const overlayViewRef = useRef(null);
+  const [mapViewportKey, setMapViewportKey] = useState(0);
+
+  useEffect(() => { selectedPointIndexRef.current = selectedPointIndex; }, [selectedPointIndex]);
 
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
@@ -94,6 +104,18 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
   const magnifierPolygonRef = useRef(null);
   const magnifierIdleListenerRef = useRef(null);
   const diagPolylinesRef = useRef([]);
+  const entrancePointRef = useRef(entrancePoint);
+  const entranceModeRef = useRef(entranceMode);
+  const entranceMarkerRef = useRef(null);
+
+  const updateEntrancePoint = useCallback((pt) => {
+    setEntrancePoint(pt);
+    onNavigationPointChange?.(pt);
+  }, [onNavigationPointChange]);
+
+  useEffect(() => { entrancePointRef.current = entrancePoint; }, [entrancePoint]);
+  useEffect(() => { entranceModeRef.current = entranceMode; }, [entranceMode]);
+  useEffect(() => { if (navigationPoint) setEntrancePoint(navigationPoint); }, [navigationPoint]);
 
   const allLengthUnits = useMemo(() => sortUnits(mergeUnits(dbUnits.filter((u) => u.unit_type === 'length'), BUILTIN_LENGTH_UNITS)), [dbUnits]);
   const allAreaUnits = useMemo(() => sortUnits(mergeUnits(dbUnits.filter((u) => u.unit_type === 'area'), BUILTIN_AREA_UNITS)), [dbUnits]);
@@ -184,51 +206,44 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
 
   const createMarker = useCallback((maps, pt, map) => {
     const marker = new maps.Marker({
-      position: pt, map, draggable: true,
-      icon: { path: maps.SymbolPath.CIRCLE, scale: 7, fillColor: '#22c55e', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
+      position: pt,
+      map,
+      draggable: false,
+      icon: {
+        url: getCrosshairSvgUrl('#22c55e'),
+        scaledSize: new maps.Size(16, 16),
+        anchor: new maps.Point(8, 8),
+      },
     });
-    marker.addListener('dragstart', () => {
-      setShowMagnifier(true);
-    });
-    marker.addListener('drag', (e) => {
-      if (e.latLng && magnifierMapRef.current) magnifierMapRef.current.setCenter(e.latLng);
-    });
-    marker.addListener('dragend', (e) => {
-      if (!e.latLng) return;
-      const newPt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+
+    marker.addListener('click', () => {
+      if (baseDiagModeRef.current) {
+        const idx = markersRef.current.indexOf(marker);
+        if (idx < 0) return;
+        const activeId = activeGroupIdRef.current;
+        if (activeId === null) {
+          const id = ++groupCounterRef.current;
+          setActiveGroupId(id);
+          setDiagGroups(prev => [...prev, { id, base: idx, connected: [] }]);
+        } else {
+          setDiagGroups(prev => {
+            const active = prev.find(g => g.id === activeId);
+            if (!active || idx === active.base) return prev;
+            return prev.map(g => g.id !== activeId ? g : {
+              ...g,
+              connected: g.connected.includes(idx) ? g.connected.filter(c => c !== idx) : [...g.connected, idx]
+            });
+          });
+        }
+        return;
+      }
       const idx = markersRef.current.indexOf(marker);
       if (idx >= 0) {
-        setPoints((prev) => {
-          const next = [...prev];
-          next[idx] = newPt;
-          updatePolygon(next);
-          setTimeout(() => onPointsChange?.(next), 0);
-          return next;
-        });
-      }
-    });
-    marker.addListener('click', () => {
-      if (!baseDiagModeRef.current) return;
-      const idx = markersRef.current.indexOf(marker);
-      if (idx < 0) return;
-      const activeId = activeGroupIdRef.current;
-      if (activeId === null) {
-        const id = ++groupCounterRef.current;
-        setActiveGroupId(id);
-        setDiagGroups(prev => [...prev, { id, base: idx, connected: [] }]);
-      } else {
-        setDiagGroups(prev => {
-          const active = prev.find(g => g.id === activeId);
-          if (!active || idx === active.base) return prev;
-          return prev.map(g => g.id !== activeId ? g : {
-            ...g,
-            connected: g.connected.includes(idx) ? g.connected.filter(c => c !== idx) : [...g.connected, idx]
-          });
-        });
+        setSelectedPointIndex((curr) => (curr === idx ? null : idx));
       }
     });
     return marker;
-  }, [updatePolygon, onPointsChange]);
+  }, []);
 
   useEffect(() => {
     if (!mapLoaded || !window.google) return;
@@ -270,18 +285,72 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
 
   useEffect(() => {
     if (!mapLoaded || !window.google) return;
-    const maps = window.google.maps;
     markersRef.current.forEach((marker, i) => {
       let color = '#22c55e';
       if (pointStatus.baseSet.has(i)) color = '#3b82f6';
       else if (pointStatus.connSet.has(i)) color = '#8b5cf6';
+      else if (selectedPointIndex === i) color = '#3b82f6';
       marker.setIcon({
-        path: maps.SymbolPath.CIRCLE, scale: markerScale,
-        fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2
+        url: getCrosshairSvgUrl(color),
+        scaledSize: new window.google.maps.Size(16, 16),
+        anchor: new window.google.maps.Point(8, 8),
       });
-      marker.setDraggable(!baseDiagMode);
+      marker.setDraggable(false);
     });
-  }, [pointStatus, mapLoaded, baseDiagMode, points, markerScale]);
+  }, [pointStatus, mapLoaded, baseDiagMode, points, selectedPointIndex]);
+
+  const selectedPointScreenPos = useMemo(() => {
+    if (selectedPointIndex === null || !points[selectedPointIndex] || !mapLoaded || !overlayViewRef.current || !window.google) return null;
+    const proj = overlayViewRef.current.getProjection();
+    if (!proj) return null;
+    const pt = points[selectedPointIndex];
+    const pixel = proj.fromLatLngToContainerPixel(new window.google.maps.LatLng(pt.lat, pt.lng));
+    return pixel ? { x: pixel.x, y: pixel.y } : null;
+  }, [selectedPointIndex, points, mapLoaded, mapViewportKey]);
+
+  const dragStartPixelRef = useRef(null);
+
+  const handleDragStart = useCallback(() => {
+    if (selectedPointIndex === null || !points[selectedPointIndex] || !overlayViewRef.current || !window.google) return;
+    const proj = overlayViewRef.current.getProjection();
+    if (!proj) return;
+    const origPt = points[selectedPointIndex];
+    const origPixel = proj.fromLatLngToContainerPixel(new window.google.maps.LatLng(origPt.lat, origPt.lng));
+    if (origPixel) {
+      dragStartPixelRef.current = { x: origPixel.x, y: origPixel.y };
+    }
+    if (showMagnifier) setShowMagnifier(true);
+  }, [selectedPointIndex, points, showMagnifier]);
+
+  const handleDragPoint = useCallback(({ dx, dy }) => {
+    if (selectedPointIndex === null || !dragStartPixelRef.current || !overlayViewRef.current || !window.google) return;
+    const proj = overlayViewRef.current.getProjection();
+    if (!proj) return;
+    const startPixel = dragStartPixelRef.current;
+    const newPixel = new window.google.maps.Point(startPixel.x + dx, startPixel.y + dy);
+    const newLatLng = proj.fromContainerPixelToLatLng(newPixel);
+    if (!newLatLng) return;
+    const newPt = { lat: newLatLng.lat(), lng: newLatLng.lng() };
+
+    if (markersRef.current[selectedPointIndex]) {
+      markersRef.current[selectedPointIndex].setPosition(newLatLng);
+    }
+    if (magnifierMapRef.current) {
+      magnifierMapRef.current.setCenter(newLatLng);
+    }
+
+    setPoints((prev) => {
+      const next = [...prev];
+      next[selectedPointIndex] = newPt;
+      updatePolygon(next);
+      setTimeout(() => onPointsChange?.(next), 0);
+      return next;
+    });
+  }, [selectedPointIndex, updatePolygon, onPointsChange]);
+
+  const handleDragEnd = useCallback(() => {
+    dragStartPixelRef.current = null;
+  }, []);
 
   // ── Render live diagonal polylines & diagonal length labels on the map ──
   useEffect(() => {
@@ -382,6 +451,15 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
       });
       mapInstanceRef.current = map;
 
+      const overlay = new maps.OverlayView();
+      overlay.draw = function() {};
+      overlay.setMap(map);
+      overlayViewRef.current = overlay;
+
+      map.addListener('bounds_changed', () => {
+        setMapViewportKey((k) => k + 1);
+      });
+
       if (navigator.geolocation && !(initialPoints && initialPoints.length >= 3)) {
         navigator.geolocation.getCurrentPosition(
           (pos) => { if (!cancelled) map.setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude }); },
@@ -390,8 +468,18 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
       }
 
       map.addListener('click', (e) => {
-        if (lockedRef.current) return;
+        if (selectedPointIndexRef.current !== null) {
+          setSelectedPointIndex(null);
+          return;
+        }
+        if (!e.latLng) return;
         const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+        if (entranceModeRef.current) {
+          updateEntrancePoint(pt);
+          setEntranceMode(false);
+          return;
+        }
+        if (lockedRef.current) return;
         const marker = createMarker(maps, pt, map);
         markersRef.current.push(marker);
         setPoints((prev) => {
@@ -408,13 +496,54 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
 
     return () => {
       cancelled = true;
+      if (overlayViewRef.current) {
+        overlayViewRef.current.setMap(null);
+        overlayViewRef.current = null;
+      }
       if (polygonRef.current) polygonRef.current.setMap(null);
       if (polylineRef.current) polylineRef.current.setMap(null);
+      if (entranceMarkerRef.current) { entranceMarkerRef.current.setMap(null); entranceMarkerRef.current = null; }
       markersRef.current.forEach((m) => m.setMap(null));
       labelMarkersRef.current.forEach((m) => m.setMap(null));
       if (magnifierMapRef.current) { magnifierMapRef.current = null; }
     };
-  }, [createMarker, onPointsChange]);
+  }, [createMarker, onPointsChange, updateEntrancePoint]);
+
+  // ── Render & update Vehicle Entrance / Navigation Marker ──
+  useEffect(() => {
+    if (!mapLoaded || !window.google || !mapInstanceRef.current) return;
+    const maps = window.google.maps;
+
+    if (entranceMarkerRef.current) {
+      entranceMarkerRef.current.setMap(null);
+      entranceMarkerRef.current = null;
+    }
+
+    if (entrancePoint) {
+      const marker = new maps.Marker({
+        position: entrancePoint,
+        map: mapInstanceRef.current,
+        draggable: true,
+        title: 'Vehicle Entrance / Navigation Point',
+        icon: {
+          path: maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+          scale: 6,
+          fillColor: '#f59e0b',
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 2,
+        },
+      });
+
+      marker.addListener('dragend', (e) => {
+        if (e.latLng) {
+          updateEntrancePoint({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+        }
+      });
+
+      entranceMarkerRef.current = marker;
+    }
+  }, [mapLoaded, entrancePoint, updateEntrancePoint]);
 
   useEffect(() => {
     if (!mapLoaded || !window.google || !searchInputRef.current || !mapInstanceRef.current) return;
@@ -449,9 +578,15 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
     return () => input.removeEventListener('keydown', handleKeyDown);
   }, [mapLoaded]);
 
+  const initialPointsRef = useRef(initialPoints);
+
   useEffect(() => {
     if (!mapLoaded || initialPointsDrawn.current) return;
-    if (!initialPoints || initialPoints.length < 3) return;
+    const pts = initialPointsRef.current;
+    if (!pts || pts.length < 3) {
+      initialPointsDrawn.current = true;
+      return;
+    }
     initialPointsDrawn.current = true;
     const maps = window.google.maps;
 
@@ -460,19 +595,18 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
     if (polygonRef.current) { polygonRef.current.setMap(null); polygonRef.current = null; }
     if (polylineRef.current) { polylineRef.current.setMap(null); polylineRef.current = null; }
 
-    initialPoints.forEach((pt) => {
+    pts.forEach((pt) => {
       markersRef.current.push(createMarker(maps, pt, mapInstanceRef.current));
     });
 
-    setPoints(initialPoints);
-    updatePolygon(initialPoints);
-    onPointsChange?.(initialPoints);
-    setLocked(true);
+    setPoints(pts);
+    updatePolygon(pts);
+    onPointsChange?.(pts);
 
     const bounds = new maps.LatLngBounds();
-    initialPoints.forEach((pt) => bounds.extend(pt));
+    pts.forEach((pt) => bounds.extend(pt));
     mapInstanceRef.current.fitBounds(bounds);
-  }, [mapLoaded, initialPoints, updatePolygon, onPointsChange, createMarker]);
+  }, [mapLoaded, updatePolygon, onPointsChange, createMarker]);
 
   useEffect(() => {
     if (!mapLoaded || !window.google || !showMagnifier || !magnifierRef.current) return;
@@ -529,12 +663,17 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
       let color = '#22c55e';
       if (pointStatus.baseSet.has(i)) color = '#3b82f6';
       else if (pointStatus.connSet.has(i)) color = '#8b5cf6';
+      else if (selectedPointIndex === i) color = '#3b82f6';
       magnifierMarkersRef.current.push(new maps.Marker({
         position: pt, map: mMap, draggable: false,
-        icon: { path: maps.SymbolPath.CIRCLE, scale: markerScale, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
+        icon: {
+          url: getCrosshairSvgUrl(color),
+          scaledSize: new window.google.maps.Size(16 * magnifierScale, 16 * magnifierScale),
+          anchor: new window.google.maps.Point(8 * magnifierScale, 8 * magnifierScale),
+        }
       }));
     });
-  }, [points, showMagnifier, pointStatus, markerScale]);
+  }, [points, showMagnifier, pointStatus, markerScale, magnifierScale, selectedPointIndex]);
 
   const toggleFullscreen = () => {
     setIsFullscreen((prev) => {
@@ -583,6 +722,7 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
   };
 
   const handleUndo = () => {
+    setSelectedPointIndex(null);
     const last = markersRef.current.pop();
     if (last) last.setMap(null);
     setPoints((prev) => {
@@ -598,12 +738,16 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
   };
 
   const handleReset = () => {
+    setSelectedPointIndex(null);
     markersRef.current.forEach((m) => m.setMap(null));
     markersRef.current = [];
     if (polygonRef.current) { polygonRef.current.setMap(null); polygonRef.current = null; }
     if (polylineRef.current) { polylineRef.current.setMap(null); polylineRef.current = null; }
+    if (entranceMarkerRef.current) { entranceMarkerRef.current.setMap(null); entranceMarkerRef.current = null; }
     setPoints([]); setAreaSqft(0);
     onAreaChange?.(0); onPointsChange?.([]);
+    updateEntrancePoint(null);
+    setEntranceMode(false);
     setDiagGroups([]);
     setActiveGroupId(null);
     groupCounterRef.current = 0;
@@ -862,6 +1006,24 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
               </div>
             }
 
+            {/* Entrance Point Placement Banner — shown at top during entrance setup */}
+            {entranceMode && (
+              <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1001] flex items-center gap-2 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-white px-3.5 py-2 rounded-2xl shadow-xl border border-white/20 font-sans">
+                <Navigation className="w-4 h-4 animate-bounce" />
+                <span className="text-[11px] font-bold whitespace-nowrap">
+                  Tap on the map to set vehicle entrance / navigation point
+                </span>
+                {entrancePoint && (
+                  <button onClick={() => { updateEntrancePoint(null); setEntranceMode(false); }} className="flex items-center gap-1 px-2 py-0.5 bg-red-500/90 hover:bg-red-600 rounded-lg text-[10px] font-bold transition-all whitespace-nowrap">
+                    Clear
+                  </button>
+                )}
+                <button onClick={() => setEntranceMode(false)} className="px-2 py-0.5 bg-white/20 hover:bg-white/30 rounded-lg text-[10px] font-bold transition-all">
+                  Cancel
+                </button>
+              </div>
+            )}
+
             {/* Diagonal Grouping Controls — shown at top during diagonal setup */}
             {baseDiagMode && (
               <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1001] flex items-center gap-2 bg-gradient-to-r from-[#1e3a8a] via-[#2563eb] to-[#1e3a8a] text-white px-3.5 py-2 rounded-2xl shadow-xl border border-white/20 font-sans">
@@ -907,6 +1069,18 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
                   </div>
                 ))}
               </div>
+            )}
+
+            {/* Tap-to-Reveal Offset Drag Handle Overlay */}
+            {selectedPointScreenPos && (
+              <OffsetDragHandleOverlay
+                point={selectedPointScreenPos}
+                containerRect={mapContainerRef.current?.getBoundingClientRect()}
+                onDragStart={handleDragStart}
+                onDrag={handleDragPoint}
+                onDragEnd={handleDragEnd}
+                onDeselect={() => setSelectedPointIndex(null)}
+              />
             )}
 
             {/* Status Bar */}
@@ -969,21 +1143,24 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
           <button onClick={toggleBaseDiagMode} disabled={points.length < 3} className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${baseDiagMode ? 'bg-[#2563eb] text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'} disabled:opacity-40`} title="Diagonal Setup — select base + connected point groups for PDF">
             <Crosshair className="w-3.5 h-3.5" />
           </button>
+          <button onClick={() => { setEntranceMode(v => { const next = !v; if (next) setBaseDiagMode(false); return next; }); }} className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${entranceMode || entrancePoint ? 'bg-amber-500 text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'}`} title={entrancePoint ? 'Vehicle Entrance Set (click to relocate or clear)' : 'Set Vehicle Entrance / Navigation Point'}>
+            <Navigation className="w-3.5 h-3.5" />
+          </button>
         </div>
       }
 
       {/* ─── Action Bar ─── */}
-      {mapLoaded && (points.length >= 3 || isFullscreen) &&
+      {mapLoaded && (
         <div className="grid grid-cols-5 gap-1.5 bg-gradient-to-r from-[#1e3a8a] via-[#2563eb] to-[#1e3a8a] text-white px-2.5 py-1.5 rounded-b-2xl flex-shrink-0 font-sans shadow-md">
           <button onClick={() => openPlotActionModal('save')} disabled={points.length < 3} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-40">
             <BookMarked className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold">Save</span>
           </button>
-          <button onClick={handleShareGeoJSON} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all">
+          <button onClick={handleShareGeoJSON} disabled={points.length < 3} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-40">
             <FileDown className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold">GeoJSON</span>
           </button>
-          <button onClick={handleShareKML} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all">
+          <button onClick={handleShareKML} disabled={points.length < 3} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-40">
             <FileDown className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold">KML</span>
           </button>
@@ -997,7 +1174,7 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
           </button>
           <input ref={fileInputRef} type="file" accept=".geojson,.json,.kml,application/geo+json,application/vnd.google-earth.kml+xml" className="hidden" onChange={handleImportFile} />
         </div>
-      }
+      )}
 
       {/* ─── Conversions Toggle + Panel ─── */}
       {mapLoaded && areaSqft > 0 && (points.length >= 3 || isFullscreen) && (
@@ -1038,6 +1215,7 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onSave, area
           area_sqm: areaSqm,
           is_map_mode: true,
           map_points: JSON.stringify(points),
+          navigation_point: entrancePoint ? JSON.stringify(entrancePoint) : null,
           ...(livePlotInfo?.id ? { id: livePlotInfo.id } : {}),
         }}
         onSaved={(savedRecord) => {

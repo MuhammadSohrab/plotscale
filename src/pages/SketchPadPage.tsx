@@ -43,6 +43,8 @@ import {
 } from "lucide-react";
 import { Brand } from "../components/Brand";
 import { localDatabaseService } from "../services/LocalDatabaseService";
+import { CrosshairPointMarker } from "../components/common/PointMarker";
+import { OffsetDragHandleOverlay } from "../components/common/OffsetDragHandle";
 import {
   adjustSideCanvasLength,
   calculateHeronArea,
@@ -102,8 +104,9 @@ export default function SketchPadPage() {
   const [diagonals, setDiagonals] = useState<DiagonalMeasurement[]>([]);
   const [calibrationScale, setCalibrationScale] = useState<number | null>(null);
 
-  // Dragging vertex state
-  const [draggedVertexIndex, setDraggedVertexIndex] = useState<number | null>(null);
+  // Selected vertex state for tap-to-reveal drag handle
+  const [selectedVertexIndex, setSelectedVertexIndex] = useState<number | null>(null);
+  const dragStartPointRef = useRef<Point | null>(null);
 
   // Custom Diagonal Group Pivot Base & Multi-Selected Target Indices
   const [pivotBaseIndex, setPivotBaseIndex] = useState<number | null>(null);
@@ -749,7 +752,7 @@ export default function SketchPadPage() {
       setClosed(isStillClosed);
       setOuterSides(newOuterSides);
       setDiagonals(updatedDiags);
-      setDraggedVertexIndex(null);
+      setSelectedVertexIndex(null);
       pushHistory(newPoints, isStillClosed, newOuterSides, updatedDiags);
       notify(`Vertex V${targetIdx + 1} deleted!`);
     },
@@ -839,21 +842,24 @@ export default function SketchPadPage() {
       return;
     }
 
-    // Drag vertex node
+    // Tap to select vertex for offset dragging
     if (hitIdx >= 0) {
-      setDraggedVertexIndex(hitIdx);
+      setSelectedVertexIndex((prev) => (prev === hitIdx ? null : hitIdx));
       return;
     }
 
-    // If touched empty space on canvas (hitIdx === -1), enable 1-finger canvas panning!
-    if (hitIdx < 0 && (activeTool === "pan" || closed)) {
-      panStartRef.current = {
-        startX: event.clientX,
-        startY: event.clientY,
-        initX: transform.x,
-        initY: transform.y,
-      };
-      return;
+    // If touched empty space on canvas (hitIdx === -1), deselect vertex and enable 1-finger canvas panning!
+    if (hitIdx < 0) {
+      setSelectedVertexIndex(null);
+      if (activeTool === "pan" || closed) {
+        panStartRef.current = {
+          startX: event.clientX,
+          startY: event.clientY,
+          initX: transform.x,
+          initY: transform.y,
+        };
+        return;
+      }
     }
 
     if (activeTool === "draw" && !closed) {
@@ -865,6 +871,34 @@ export default function SketchPadPage() {
     }
   };
 
+  const handleDragStart = useCallback(() => {
+    if (selectedVertexIndex !== null && points[selectedVertexIndex]) {
+      dragStartPointRef.current = { ...points[selectedVertexIndex] };
+    }
+  }, [selectedVertexIndex, points]);
+
+  const handleDragPoint = useCallback(({ dx, dy }: { dx: number; dy: number }) => {
+    if (selectedVertexIndex === null || !dragStartPointRef.current) return;
+    const start = dragStartPointRef.current;
+    const rawX = start.x + dx / transform.scale;
+    const rawY = start.y + dy / transform.scale;
+    if (closed) {
+      const activeScale = calibrationScale ?? DEFAULT_SCALE;
+      const solved = solveLinkageDrag(points, selectedVertexIndex, { x: rawX, y: rawY }, outerSides, diagonals, activeScale);
+      setPoints(solved);
+    } else {
+      const nextPts = [...points];
+      nextPts[selectedVertexIndex] = { x: rawX, y: rawY };
+      setPoints(nextPts);
+    }
+  }, [selectedVertexIndex, closed, calibrationScale, outerSides, diagonals, transform.scale, points]);
+
+  const handleDragEnd = useCallback(() => {
+    dragStartPointRef.current = null;
+    pushHistory(points, closed, outerSides, diagonals);
+    setSelectedVertexIndex(null);
+  }, [points, closed, outerSides, diagonals, pushHistory]);
+
   const handlePointerMove = (event: ReactPointerEvent<SVGSVGElement>) => {
     if (panStartRef.current) {
       const { startX, startY, initX, initY } = panStartRef.current;
@@ -873,30 +907,10 @@ export default function SketchPadPage() {
       setTransform((t) => ({ ...t, x: initX + dx, y: initY + dy }));
       return;
     }
-
-    if (draggedVertexIndex !== null) {
-      const rect = viewerRef.current!.getBoundingClientRect();
-      const rawX = (event.clientX - rect.left - transform.x) / transform.scale;
-      const rawY = (event.clientY - rect.top - transform.y) / transform.scale;
-
-      if (closed) {
-        const activeScale = calibrationScale ?? DEFAULT_SCALE;
-        const solved = solveLinkageDrag(points, draggedVertexIndex, { x: rawX, y: rawY }, outerSides, diagonals, activeScale);
-        setPoints(solved);
-      } else {
-        const nextPts = [...points];
-        nextPts[draggedVertexIndex] = { x: rawX, y: rawY };
-        setPoints(nextPts);
-      }
-    }
   };
 
   const handlePointerUp = () => {
     panStartRef.current = null;
-    if (draggedVertexIndex !== null) {
-      pushHistory(points, closed, outerSides, diagonals);
-      setDraggedVertexIndex(null);
-    }
   };
 
   // Mobile Touch Gestures (1-finger Pan & 2-finger Pinch Zoom)
@@ -1210,14 +1224,14 @@ export default function SketchPadPage() {
               )}
 
               {/* Temporary Rotational Arc Guide Overlay during Vertex Drag */}
-              {draggedVertexIndex !== null && closed && (() => {
+              {selectedVertexIndex !== null && closed && (() => {
                 const N = points.length;
-                const prevIdx = (draggedVertexIndex - 1 + N) % N;
-                const nextIdx = (draggedVertexIndex + 1) % N;
+                const prevIdx = (selectedVertexIndex - 1 + N) % N;
+                const nextIdx = (selectedVertexIndex + 1) % N;
                 const pPrev = points[prevIdx];
                 const pNext = points[nextIdx];
-                const r1 = Math.hypot(points[draggedVertexIndex].x - pPrev.x, points[draggedVertexIndex].y - pPrev.y);
-                const r2 = Math.hypot(pNext.x - points[draggedVertexIndex].x, pNext.y - points[draggedVertexIndex].y);
+                const r1 = Math.hypot(points[selectedVertexIndex].x - pPrev.x, points[selectedVertexIndex].y - pPrev.y);
+                const r2 = Math.hypot(pNext.x - points[selectedVertexIndex].x, pNext.y - points[selectedVertexIndex].y);
                 return (
                   <g key="rotary-arc-guides">
                     <circle cx={pPrev.x} cy={pPrev.y} r={r1} fill="none" stroke="#eab308" strokeWidth={1.5 / transform.scale} strokeDasharray="4 4" />
@@ -1384,30 +1398,51 @@ export default function SketchPadPage() {
               {points.map((p, idx) => {
                 const isPivot = pivotBaseIndex === idx;
                 const isGroupTarget = selectedGroupTargets.includes(idx);
+                const isSelected = selectedVertexIndex === idx;
+                let color = "#22c55e";
+                if (isPivot) color = "#eab308";
+                else if (isGroupTarget) color = "#8b5cf6";
+                else if (isSelected) color = "#3b82f6";
+                else if (idx === 0) color = "#22c55e";
+
                 return (
-                  <g
+                  <CrosshairPointMarker
                     key={`v-${idx}`}
-                    style={{ cursor: "pointer" }}
-                    onDoubleClick={(e) => {
+                    cx={p.x}
+                    cy={p.y}
+                    scale={transform.scale}
+                    color={color}
+                    selected={isSelected}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (activeTool === "customDiagonal" && customDiagSubMode === "add") return;
+                      setSelectedVertexIndex((prev) => (prev === idx ? null : idx));
+                    }}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
                       e.stopPropagation();
                       deletePointAtIndex(idx);
                     }}
-                  >
-                    {/* Invisible Wide Hit Area for Double Tap/Click */}
-                    <circle cx={p.x} cy={p.y} r={18 / transform.scale} fill="transparent" />
-                    <circle
-                      cx={p.x}
-                      cy={p.y}
-                      r={(isPivot || isGroupTarget ? 10 : 7) / transform.scale}
-                      fill={isPivot ? "#eab308" : isGroupTarget ? "#22c55e" : idx === 0 ? "#22c55e" : "#1e3a8a"}
-                      stroke="#ffffff"
-                      strokeWidth={2 / transform.scale}
-                    />
-                  </g>
+                  />
                 );
               })}
             </g>
           </svg>
+
+          {/* Tap-to-Reveal Offset Drag Handle Overlay */}
+          {selectedVertexIndex !== null && points[selectedVertexIndex] && viewerRef.current && (
+            <OffsetDragHandleOverlay
+              point={{
+                x: points[selectedVertexIndex].x * transform.scale + transform.x,
+                y: points[selectedVertexIndex].y * transform.scale + transform.y,
+              }}
+              containerRect={viewerRef.current.getBoundingClientRect()}
+              onDragStart={handleDragStart}
+              onDrag={handleDragPoint}
+              onDragEnd={handleDragEnd}
+              onDeselect={() => setSelectedVertexIndex(null)}
+            />
+          )}
         </div>
 
         {/* Collapsible Group Diagonals Setup Dock */}

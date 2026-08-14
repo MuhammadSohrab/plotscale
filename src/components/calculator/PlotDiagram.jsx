@@ -1,3 +1,5 @@
+import { CrosshairPointMarker } from "../common/PointMarker";
+
 function fitVertices(vertices, width, height, padding = 42) {
   const xs = vertices.map((point) => point.x);
   const ys = vertices.map((point) => point.y);
@@ -44,7 +46,7 @@ export function PlotDiagram({
           const next = points[(index + 1) % points.length];
           return (
             <g key={`point-${index}`}>
-              <circle className="plot-diagram__point" cx={point.x} cy={point.y} r="6" />
+              <CrosshairPointMarker cx={point.x} cy={point.y} scale={1} color="#22c55e" />
               <text className="plot-diagram__point-label" x={point.x + 10} y={point.y - 10}>
                 P{index + 1}
               </text>

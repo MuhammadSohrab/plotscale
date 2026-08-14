@@ -8,6 +8,7 @@ import {
   useState,
   type ChangeEvent,
   type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
   type WheelEvent as ReactWheelEvent,
@@ -69,6 +70,8 @@ import { pickContainingShape, removeSelectionId, updateSelection } from "../serv
 import { nearestInkCentroid, type LineSeedVectorizationResult, type SeedVectorizationResult, type VectorizationResult } from "../services/imageTrace/vector-engine";
 import { boundsForPoints, fitGeometryBounds, pinchTransform, visibleWorldBounds, zoomTransformAt } from "../services/imageTrace/viewport-engine";
 import { mergeAdjacentPlots } from "../services/imageTrace/plot-merge-engine";
+import { CrosshairPointMarker } from "../components/common/PointMarker";
+import { OffsetDragHandleOverlay } from "../components/common/OffsetDragHandle";
 
 const EMPTY_DOCUMENT_W = 1000;
 const EMPTY_DOCUMENT_H = 700;
@@ -1246,8 +1249,88 @@ export default function Home() {
     setSelectedSegment({ shapeId: shape.id, index: segmentIndex });
   };
 
+  const vertexDragStartRef = useRef<{
+    shapeId: string;
+    index: number;
+    sourceNodeId: string;
+    startPoint: Point;
+    linked: boolean;
+    before: EditorSnapshot;
+  } | null>(null);
+
+  const handleVertexDragStart = useCallback(() => {
+    if (!selectedVertex) return;
+    const shape = shapes.find((s) => s.id === selectedVertex.shapeId);
+    if (!shape || !shape.points[selectedVertex.index]) return;
+    const linked = snapSettings.linkedEdit === "all";
+    vertexDragStartRef.current = {
+      shapeId: shape.id,
+      index: selectedVertex.index,
+      sourceNodeId: shape.nodeIds[selectedVertex.index],
+      startPoint: { ...shape.points[selectedVertex.index] },
+      linked,
+      before: captureEditorSnapshot(),
+    };
+    if (magnifierEnabled) {
+      setMagnifier({
+        raw: shape.points[selectedVertex.index],
+        snapped: shape.points[selectedVertex.index],
+        kind: "vertex",
+      });
+    }
+  }, [selectedVertex, shapes, snapSettings.linkedEdit, magnifierEnabled, captureEditorSnapshot]);
+
+  const handleVertexDrag = useCallback(({ dx, dy }: { dx: number; dy: number }) => {
+    const drag = vertexDragStartRef.current;
+    if (!drag) return;
+    const rawWorldX = drag.startPoint.x + dx / transform.scale;
+    const rawWorldY = drag.startPoint.y + dy / transform.scale;
+    const world = { x: rawWorldX, y: rawWorldY };
+
+    const resolved = resolveSmartSnap(world, {
+      excludeShapeId: drag.shapeId,
+      excludeNodeId: drag.sourceNodeId,
+    });
+
+    setShapes((current) => {
+      const moved = moveTopologyVertex(
+        current,
+        drag.shapeId,
+        drag.index,
+        resolved.point,
+        drag.linked,
+        resolved.topology?.kind === "vertex" ? resolved.topology.nodeId : undefined,
+      ) as Shape[];
+      const movedShape = moved.find((shape) => shape.id === drag.shapeId);
+      const replacementNodeId = movedShape?.nodeIds[drag.index];
+      if (!replacementNodeId || replacementNodeId === drag.sourceNodeId) return moved;
+      return moved.map((shape) => {
+        if (!drag.linked && shape.id !== drag.shapeId) return shape;
+        return {
+          ...shape,
+          diagonals: shape.diagonals.map((diagonal) => ({
+            ...diagonal,
+            aNodeId: diagonal.aNodeId === drag.sourceNodeId ? replacementNodeId : diagonal.aNodeId,
+            bNodeId: diagonal.bNodeId === drag.sourceNodeId ? replacementNodeId : diagonal.bNodeId,
+          })),
+        };
+      });
+    });
+    setSnapKind(resolved.kind);
+    if (magnifierEnabled) {
+      setMagnifier({ raw: world, snapped: resolved.point, kind: "vertex" });
+    }
+  }, [transform.scale, resolveSmartSnap, magnifierEnabled]);
+
+  const handleVertexDragEnd = useCallback(() => {
+    vertexDragStartRef.current = null;
+    setMagnifier(null);
+    pushHistory();
+    setSelectedVertex(null);
+  }, [pushHistory]);
+
   const handleVertexPointerDown = (event: ReactPointerEvent<SVGGElement>, shape: Shape, index: number) => {
-    event.stopPropagation(); event.currentTarget.setPointerCapture(event.pointerId);
+    event.stopPropagation();
     if (tool === "diagonal") { selectDiagonalVertex(shape, index); return; }
     if (linkSource) {
       const oldNodeId = shapes.find((candidate) => candidate.id === linkSource.shapeId)?.nodeIds[linkSource.index];
@@ -1264,22 +1347,10 @@ export default function Home() {
     if (tool === "calibrate" && calibrationMode === "manual") { captureCalibrationPoint(shape.points[index]); return; }
     if (tool === "delete") { deleteVertex(shape.id, index); return; }
     const key = `${shape.id}:${index}`; const now = event.timeStamp; const last = lastVertexTapRef.current;
-    if (last?.key === key && now - last.time <= 340) { lastVertexTapRef.current = null; vertexPressRef.current = null; deleteVertex(shape.id, index); return; }
+    if (last?.key === key && now - last.time <= 340) { lastVertexTapRef.current = null; deleteVertex(shape.id, index); return; }
     lastVertexTapRef.current = { key, time: now };
-    setSelectedId(shape.id); setSelectedSegment(null); setSelectedVertex({ shapeId: shape.id, index });
-    if (tool === "edit") {
-      const linked = (snapSettings.linkedEdit === "all") !== event.altKey;
-      vertexPressRef.current = {
-        shapeId: shape.id,
-        index,
-        client: { x: event.clientX, y: event.clientY },
-        moved: false,
-        before: captureEditorSnapshot(),
-        linked,
-        sourceNodeId: shape.nodeIds[index],
-      };
-      if (magnifierEnabled) setMagnifier({ raw: shape.points[index], snapped: shape.points[index], kind: "vertex" });
-    }
+    setSelectedId(shape.id); setSelectedSegment(null);
+    setSelectedVertex((prev) => (prev?.shapeId === shape.id && prev?.index === index ? null : { shapeId: shape.id, index }));
   };
 
   const beginCalibration = (mode: Exclude<CalibrationMode, null>) => {
@@ -2182,24 +2253,50 @@ export default function Home() {
                     </g>;
                   })}
                   {shape.closed && anySelected && labelVisibility.area && <g className="area-label" transform={`translate(${c.x} ${c.y})`}><rect x={-55 / transform.scale} y={-15 / transform.scale} width={110 / transform.scale} height={28 / transform.scale} /><text y={4 / transform.scale} fontSize={13 / transform.scale}>{formatArea(polygonArea(shape.points))}</text></g>}
-                  {verticesVisible && selected && (tool === "edit" || tool === "diagonal" || tool === "delete" || tool === "select" || (tool === "calibrate" && calibrationMode === "manual")) && shape.points.map((point, index) => <g key={`${shape.id}-v-${index}`} transform={`translate(${point.x} ${point.y})`} className={`vertex-handle ${extendAnchor?.shapeId === shape.id && ((extendAnchor.atStart && index === 0) || (!extendAnchor.atStart && index === shape.points.length - 1)) || diagonalStart?.shapeId === shape.id && diagonalStart.nodeId === shape.nodeIds[index] ? "is-armed" : ""}`} style={{ color: shape.color }} onPointerDown={(event) => handleVertexPointerDown(event, shape, index)} onContextMenu={(event) => { event.preventDefault(); event.stopPropagation(); deleteVertex(shape.id, index); }}>
-                    <circle className="vertex-hit" r={16 / transform.scale} />
-                    <circle className="vertex-ring" r={5 / transform.scale} />
-                    <path className="vertex-reticle" d={`M ${-9 / transform.scale} 0 H ${9 / transform.scale} M 0 ${-9 / transform.scale} V ${9 / transform.scale}`} />
-                    <rect className="vertex-pixel" x={-.5 / transform.scale} y={-.5 / transform.scale} width={1 / transform.scale} height={1 / transform.scale} />
-                  </g>)}
+                  {verticesVisible && selected && (tool === "edit" || tool === "diagonal" || tool === "delete" || tool === "select" || (tool === "calibrate" && calibrationMode === "manual")) && shape.points.map((point, index) => {
+                    const isSelected = selectedVertex?.shapeId === shape.id && selectedVertex.index === index;
+                    const isArmed = Boolean(
+                      (extendAnchor?.shapeId === shape.id && ((extendAnchor.atStart && index === 0) || (!extendAnchor.atStart && index === shape.points.length - 1))) ||
+                      (diagonalStart?.shapeId === shape.id && diagonalStart.nodeId === shape.nodeIds[index])
+                    );
+
+                    return (
+                      <CrosshairPointMarker
+                        key={`${shape.id}-v-${index}`}
+                        cx={point.x}
+                        cy={point.y}
+                        scale={transform.scale}
+                        color={shape.color || "#22c55e"}
+                        selected={isSelected}
+                        isArmed={isArmed}
+                        onPointerDown={(event: ReactPointerEvent<SVGGElement>) => handleVertexPointerDown(event, shape, index)}
+                        onContextMenu={(event: ReactMouseEvent<SVGGElement>) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          deleteVertex(shape.id, index);
+                        }}
+                      />
+                    );
+                  })}
                 </g>;
               })}
 
               {manualPoints.length > 0 && <g className="manual-draft">
                 <polyline points={manualPoints.map((p) => `${p.x},${p.y}`).join(" ")} />
-                {manualPoints.map((point, index) => <g key={index} transform={`translate(${point.x} ${point.y})`} className={`manual-vertex vertex-handle ${index === 0 ? "is-start" : ""}`} onPointerDown={(event) => { event.stopPropagation(); handleTraceVertex(index); }}>
-                  <circle className="vertex-hit" r={16 / transform.scale} />
-                  {index === 0 && <circle className="closure-ring" r={8 / transform.scale} />}
-                  <circle className="vertex-ring" r={5 / transform.scale} />
-                  <path className="vertex-reticle" d={`M ${-9 / transform.scale} 0 H ${9 / transform.scale} M 0 ${-9 / transform.scale} V ${9 / transform.scale}`} />
-                  <rect className="vertex-pixel" x={-.5 / transform.scale} y={-.5 / transform.scale} width={1 / transform.scale} height={1 / transform.scale} />
-                </g>)}
+                {manualPoints.map((point, index) => (
+                  <CrosshairPointMarker
+                    key={index}
+                    cx={point.x}
+                    cy={point.y}
+                    scale={transform.scale}
+                    color="#22c55e"
+                    isArmed={index === 0}
+                    onPointerDown={(event: ReactPointerEvent<SVGGElement>) => {
+                      event.stopPropagation();
+                      handleTraceVertex(index);
+                    }}
+                  />
+                ))}
                 {snapPreview && <>
                   <line x1={manualPoints.at(-1)!.x} y1={manualPoints.at(-1)!.y} x2={snapPreview.x} y2={snapPreview.y} />
                   <g className={`snap-target kind-${snapKind.toLowerCase()}`} transform={`translate(${snapPreview.x} ${snapPreview.y})`}>
@@ -2211,6 +2308,28 @@ export default function Home() {
               </g>}
             </g>
           </svg>
+
+          {/* Tap-to-Reveal Offset Drag Handle Overlay */}
+          {selectedVertex && tool === "edit" && (() => {
+            const shape = shapes.find((s) => s.id === selectedVertex.shapeId);
+            const pt = shape?.points[selectedVertex.index];
+            if (!pt || !viewerRef.current) return null;
+            return (
+              <OffsetDragHandleOverlay
+                point={{
+                  x: pt.x * transform.scale + transform.x,
+                  y: pt.y * transform.scale + transform.y,
+                }}
+                containerRect={viewerRef.current.getBoundingClientRect()}
+                onDragStart={handleVertexDragStart}
+                onDrag={handleVertexDrag}
+                onDragEnd={handleVertexDragEnd}
+                onDeselect={() => setSelectedVertex(null)}
+                handleColor={shape.color || "#2563eb"}
+                connectorColor={shape.color || "#3b82f6"}
+              />
+            );
+          })()}
 
           {mapSource === "none" && !shapes.length && <div className="empty-workspace">
             <FileUp size={30} />
