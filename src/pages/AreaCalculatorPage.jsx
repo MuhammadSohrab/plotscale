@@ -6,6 +6,7 @@ import {
   Download,
   Grid3X3,
   Layers,
+  Lock,
   MapPinned,
   Plus,
   Save,
@@ -14,15 +15,17 @@ import {
   Square,
   Trash2,
   Triangle,
+  Unlock,
   WifiOff,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Brand } from "../components/Brand";
 import { FeatureCard } from "../components/FeatureCard";
 import { PlotActionDialog } from "../components/calculator/PlotActionDialog";
 import { PlotDiagram } from "../components/calculator/PlotDiagram";
 import { CrosshairPointMarker } from "../components/common/PointMarker";
+import { OffsetDragHandleOverlay } from "../components/common/OffsetDragHandle";
 import {
   calculateCustomShape,
   calculateIrregularPlot,
@@ -166,6 +169,54 @@ function computeDynamicVertices(result, defaultCorners) {
   return defaultCorners;
 }
 
+function solve4BarLinkage(corners, draggedIdx, targetPoint, sides, calibrationScale) {
+  const N = 4;
+  const pts = corners.map((p, idx) => (idx === draggedIdx ? { ...p, x: targetPoint.x, y: targetPoint.y } : { ...p }));
+
+  const targetPx = new Array(N);
+  for (let i = 0; i < N; i++) {
+    const nextIdx = (i + 1) % N;
+    const lenVal = sides[i] && Number(sides[i]) > 0 ? Number(sides[i]) : null;
+    if (lenVal && calibrationScale) {
+      targetPx[i] = lenVal * calibrationScale;
+    } else {
+      targetPx[i] = Math.hypot(corners[nextIdx].x - corners[i].x, corners[nextIdx].y - corners[i].y);
+    }
+  }
+
+  for (let iter = 0; iter < 40; iter++) {
+    for (let i = 0; i < N; i++) {
+      const nextIdx = (i + 1) % N;
+      const p1 = pts[i];
+      const p2 = pts[nextIdx];
+      const dx = p2.x - p1.x;
+      const dy = p2.y - p1.y;
+      const curDist = Math.hypot(dx, dy);
+      if (curDist < 1e-4) continue;
+
+      const diff = (curDist - targetPx[i]) / curDist;
+      const moveX = dx * 0.5 * diff;
+      const moveY = dy * 0.5 * diff;
+
+      if (i === draggedIdx) {
+        pts[nextIdx].x -= moveX * 2;
+        pts[nextIdx].y -= moveY * 2;
+      } else if (nextIdx === draggedIdx) {
+        pts[i].x += moveX * 2;
+        pts[i].y += moveY * 2;
+      } else {
+        pts[i].x += moveX;
+        pts[i].y += moveY;
+        pts[nextIdx].x -= moveX;
+        pts[nextIdx].y -= moveY;
+      }
+    }
+  }
+
+  pts[draggedIdx] = { ...pts[draggedIdx], x: targetPoint.x, y: targetPoint.y };
+  return pts;
+}
+
 function IrregularSingleCanvasCalculator({
   sides,
   onSidesChange,
@@ -186,15 +237,30 @@ function IrregularSingleCanvasCalculator({
 }) {
   const [editingTarget, setEditingTarget] = useState(null);
   const [compassAngle, setCompassAngle] = useState(0);
+  const [selectedCornerIndex, setSelectedCornerIndex] = useState(null);
+  const [calibrationScale, setCalibrationScale] = useState(null);
 
-  const defaultCorners = [
+  const defaultCorners = useMemo(() => [
     { x: 50, y: 265, label: "C1" },
     { x: 350, y: 265, label: "C2" },
     { x: 310, y: 45, label: "C3" },
     { x: 90, y: 65, label: "C4" },
-  ];
+  ], []);
 
-  const corners = computeDynamicVertices(result, defaultCorners);
+  const [localCorners, setLocalCorners] = useState(defaultCorners);
+  const dragStartPointRef = useRef(null);
+  const svgRef = useRef(null);
+  const containerRef = useRef(null);
+
+  const isLocked = Boolean(diagonalValue && Number(diagonalValue) > 0 && result);
+
+  const corners = useMemo(() => {
+    if (isLocked && result?.vertices?.length === 4) {
+      return computeDynamicVertices(result, defaultCorners);
+    }
+    return localCorners;
+  }, [isLocked, result, defaultCorners, localCorners]);
+
   const c1 = corners[0];
   const c2 = corners[1];
   const c3 = corners[2];
@@ -206,45 +272,147 @@ function IrregularSingleCanvasCalculator({
     setCompassAngle((prev) => (prev + 45) % 360);
   };
 
+  const getScreenPos = useCallback((pt) => {
+    if (!svgRef.current || !containerRef.current || !pt) return null;
+    const svg = svgRef.current;
+    const p = svg.createSVGPoint();
+    p.x = pt.x;
+    p.y = pt.y;
+    const ctm = svg.getScreenCTM();
+    if (!ctm) return null;
+    const screenP = p.matrixTransform(ctm);
+    const container = containerRef.current.getBoundingClientRect();
+    return {
+      x: screenP.x - container.left,
+      y: screenP.y - container.top,
+    };
+  }, []);
+
+  const handleCornerDragStart = useCallback(() => {
+    if (selectedCornerIndex === null || isLocked) return;
+    dragStartPointRef.current = { ...corners[selectedCornerIndex] };
+  }, [selectedCornerIndex, isLocked, corners]);
+
+  const handleCornerDrag = useCallback(({ dx, dy }) => {
+    if (selectedCornerIndex === null || !dragStartPointRef.current || isLocked) return;
+    let svgScale = 1;
+    if (svgRef.current) {
+      const ctm = svgRef.current.getScreenCTM();
+      if (ctm && ctm.a) svgScale = ctm.a;
+    }
+    const start = dragStartPointRef.current;
+    const targetPoint = {
+      x: Math.max(15, Math.min(385, start.x + dx / svgScale)),
+      y: Math.max(15, Math.min(305, start.y + dy / svgScale)),
+    };
+
+    const solved = solve4BarLinkage(corners, selectedCornerIndex, targetPoint, sides, calibrationScale);
+    setLocalCorners(solved);
+
+    if (calibrationScale) {
+      const next = [...sides];
+      for (let i = 0; i < 4; i++) {
+        const p1 = solved[i];
+        const p2 = solved[(i + 1) % 4];
+        const d = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        next[i] = String(Math.round(d / calibrationScale));
+      }
+      onSidesChange(next);
+    }
+  }, [selectedCornerIndex, isLocked, corners, sides, calibrationScale, onSidesChange]);
+
+  const handleCornerDragEnd = useCallback(() => {
+    dragStartPointRef.current = null;
+  }, []);
+
+  const handleSideSubmit = (index, value) => {
+    const num = Number(value);
+    if (num > 0) {
+      const p1 = corners[index];
+      const p2 = corners[(index + 1) % 4];
+      const pxDist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      const newScale = pxDist / num;
+      setCalibrationScale(newScale);
+
+      const next = [...sides];
+      next[index] = value;
+      for (let i = 0; i < 4; i++) {
+        if (i !== index && (!next[i] || Number(next[i]) <= 0)) {
+          const pa = corners[i];
+          const pb = corners[(i + 1) % 4];
+          const d = Math.hypot(pb.x - pa.x, pb.y - pa.y);
+          next[i] = String(Math.round(d / newScale));
+        }
+      }
+      onSidesChange(next);
+    } else {
+      onSidesChange(sides.map((v, i) => i === index ? value : v));
+    }
+    setEditingTarget(null);
+  };
+
   return (
     <div className="irregular-single-canvas-calculator flex flex-col gap-3">
-      {/* 1. Header Bar: Unit Selectors Only */}
-      <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm flex flex-row items-center justify-between gap-3">
-        <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-          <span>Input length:</span>
-          <select
-            value={lengthUnit.id}
-            onChange={(e) => onLengthUnitChange(e.target.value)}
-            className="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
-          >
-            {lengthUnits.map((u) => (
-              <option key={u.id} value={u.id}>{u.name} ({u.symbol})</option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-          <span>Output area:</span>
-          <select
-            value={areaUnit.id}
-            onChange={(e) => onAreaUnitChange(e.target.value)}
-            className="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
-          >
-            {areaUnits.map((u) => (
-              <option key={u.id} value={u.id}>{u.name} ({u.symbol})</option>
-            ))}
-          </select>
-        </label>
+      {/* 1. Header Bar: Unit Selectors & Linkage Mode Status */}
+      <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          {isLocked ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+              <Lock size={13} className="text-emerald-600" />
+              Locked to Diagonal Survey
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 shadow-sm">
+              <Unlock size={13} className="text-blue-600" />
+              4-Bar Linkage (Tap corners to drag)
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+            <span>Input length:</span>
+            <select
+              value={lengthUnit.id}
+              onChange={(e) => onLengthUnitChange(e.target.value)}
+              className="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
+            >
+              {lengthUnits.map((u) => (
+                <option key={u.id} value={u.id}>{u.name} ({u.symbol})</option>
+              ))}
+            </select>
+          </label>
+          <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+            <span>Output area:</span>
+            <select
+              value={areaUnit.id}
+              onChange={(e) => onAreaUnitChange(e.target.value)}
+              className="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
+            >
+              {areaUnits.map((u) => (
+                <option key={u.id} value={u.id}>{u.name} ({u.symbol})</option>
+              ))}
+            </select>
+          </label>
+        </div>
       </div>
 
       {/* 2. Stretched & Maximized Drawing Canvas */}
-      <div className="relative w-full bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-100 rounded-3xl p-3 sm:p-5 flex flex-col items-center justify-center overflow-hidden border border-slate-200 shadow-lg min-h-[440px] sm:min-h-[520px] h-[55vh] sm:h-[62vh]">
+      <div
+        ref={containerRef}
+        className="relative w-full bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-100 rounded-3xl p-3 sm:p-5 flex flex-col items-center justify-center overflow-hidden border border-slate-200 shadow-lg min-h-[440px] sm:min-h-[520px] h-[55vh] sm:h-[62vh]"
+        onClick={() => setSelectedCornerIndex(null)}
+      >
         {/* 360° Rotatable Compass Dial Only (Top-Right) */}
         <div
           className="absolute top-4 right-4 z-10 cursor-pointer group hover:scale-105 transition-transform"
-          onClick={rotateCompass}
+          onClick={(e) => {
+            e.stopPropagation();
+            rotateCompass();
+          }}
           title="Click to rotate compass (360°)"
         >
-          <svg viewBox="0 0 50 50" className="w-13 h-13 select-none">
+          <svg viewBox="0 0 50 50" className="w-12 h-12 sm:w-14 sm:h-14 select-none drop-shadow-md">
             <circle cx="25" cy="25" r="23" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1.5" className="shadow-md" />
             <circle cx="25" cy="25" r="20" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1" />
             <g style={{ transformOrigin: "25px 25px", transform: `rotate(${compassAngle}deg)`, transition: "transform 300ms ease" }}>
@@ -260,7 +428,7 @@ function IrregularSingleCanvasCalculator({
         </div>
 
         {/* Huge SVG Drawing Canvas */}
-        <svg viewBox="0 0 400 320" className="w-full h-full max-w-2xl select-none">
+        <svg ref={svgRef} viewBox="0 0 400 320" className="w-full h-full max-w-2xl select-none">
           <defs>
             <pattern id="light-grid" width="25" height="25" patternUnits="userSpaceOnUse">
               <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#e2e8f0" strokeWidth="0.8" />
@@ -295,7 +463,10 @@ function IrregularSingleCanvasCalculator({
               <g
                 key={`side-${idx}`}
                 className="cursor-pointer group"
-                onClick={() => setEditingTarget({ type: "side", index: idx, label })}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEditingTarget({ type: "side", index: idx, label });
+                }}
               >
                 {/* Thick Invisible Hitbox Line for Easy Tap */}
                 <line
@@ -333,7 +504,8 @@ function IrregularSingleCanvasCalculator({
           {/* Interactive Diagonal C1 ↔ C3 - CLEAN Line */}
           <g
             className="cursor-pointer group"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               onSelectDiagonalType("C1_C3");
               setEditingTarget({ type: "diagonal", typeKey: "C1_C3", label: "Diagonal C1 ↔ C3" });
             }}
@@ -362,7 +534,8 @@ function IrregularSingleCanvasCalculator({
           {/* Interactive Diagonal C2 ↔ C4 - CLEAN Line */}
           <g
             className="cursor-pointer group"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               onSelectDiagonalType("C2_C4");
               setEditingTarget({ type: "diagonal", typeKey: "C2_C4", label: "Diagonal C2 ↔ C4" });
             }}
@@ -389,17 +562,52 @@ function IrregularSingleCanvasCalculator({
           </g>
 
           {/* Corner Rotary Joint Nodes */}
-          {[c1, c2, c3, c4].map((pt) => (
-            <CrosshairPointMarker
+          {corners.map((pt, idx) => (
+            <g
               key={pt.label}
-              cx={pt.x}
-              cy={pt.y}
-              scale={1}
-              color="#22c55e"
-              label={pt.label}
-            />
+              className="cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!isLocked) {
+                  setSelectedCornerIndex(idx);
+                }
+              }}
+            >
+              <CrosshairPointMarker
+                cx={pt.x}
+                cy={pt.y}
+                scale={1}
+                color={selectedCornerIndex === idx ? "#3b82f6" : "#22c55e"}
+                selected={selectedCornerIndex === idx}
+                label={pt.label}
+              />
+            </g>
           ))}
         </svg>
+
+        {/* Tap-to-Reveal Offset Drag Handle Overlay */}
+        {selectedCornerIndex !== null && !isLocked && corners[selectedCornerIndex] && containerRef.current && (() => {
+          const curPt = corners[selectedCornerIndex];
+          const prevPt = corners[(selectedCornerIndex - 1 + 4) % 4];
+          const nextPt = corners[(selectedCornerIndex + 1) % 4];
+          const screenPos = getScreenPos(curPt);
+          const prevPos = getScreenPos(prevPt);
+          const nextPos = getScreenPos(nextPt);
+          if (!screenPos) return null;
+
+          return (
+            <OffsetDragHandleOverlay
+              point={screenPos}
+              prevPoint={prevPos}
+              nextPoint={nextPos}
+              containerRect={containerRef.current.getBoundingClientRect()}
+              onDragStart={handleCornerDragStart}
+              onDrag={handleCornerDrag}
+              onDragEnd={handleCornerDragEnd}
+              onDeselect={() => setSelectedCornerIndex(null)}
+            />
+          );
+        })()}
       </div>
 
       {/* 3. Compact Live Area Result Card & Actions */}
@@ -464,67 +672,77 @@ function IrregularSingleCanvasCalculator({
               <button
                 type="button"
                 onClick={() => setEditingTarget(null)}
-                className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold"
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
               >
                 ✕
               </button>
             </div>
 
-            <div className="mb-5">
-              <label className="text-xs font-semibold text-slate-600 block mb-1.5">
-                Length in {lengthUnit.name} ({lengthUnit.symbol}):
-              </label>
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  inputMode="decimal"
-                  min="0"
-                  step="any"
-                  autoFocus
-                  placeholder="Enter value..."
-                  value={
-                    editingTarget.type === "side"
-                      ? sides[editingTarget.index]
-                      : diagonalValue
-                  }
-                  onChange={(e) => {
-                    const val = e.target.value;
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="text-xs font-semibold text-slate-600 block mb-1">
+                  Enter measurement ({lengthUnit.name} - {lengthUnit.symbol}):
+                </label>
+                <div className="relative flex items-center">
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    step="any"
+                    autoFocus
+                    placeholder="e.g. 85.5"
+                    defaultValue={editingTarget.type === "side" ? sides[editingTarget.index] : diagonalValue}
+                    id="fly-input-val"
+                    className="w-full text-lg font-bold text-slate-900 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        const val = e.currentTarget.value;
+                        if (editingTarget.type === "side") {
+                          handleSideSubmit(editingTarget.index, val);
+                        } else {
+                          onDiagonalValueChange(val);
+                          setEditingTarget(null);
+                        }
+                      }
+                    }}
+                  />
+                  <span className="absolute right-3 text-xs font-bold text-slate-400">
+                    {lengthUnit.symbol}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
                     if (editingTarget.type === "side") {
-                      onSidesChange((curr) => curr.map((v, i) => (i === editingTarget.index ? val : v)));
+                      handleSideSubmit(editingTarget.index, "");
                     } else {
-                      onDiagonalValueChange(val);
+                      onDiagonalValueChange("");
+                      setEditingTarget(null);
                     }
                   }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") setEditingTarget(null);
+                  className="flex-1 py-2 px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors"
+                >
+                  Clear
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById("fly-input-val");
+                    const val = el ? el.value : "";
+                    if (editingTarget.type === "side") {
+                      handleSideSubmit(editingTarget.index, val);
+                    } else {
+                      onDiagonalValueChange(val);
+                      setEditingTarget(null);
+                    }
                   }}
-                  className="w-full text-center font-black text-xl text-slate-900 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
-                />
-                <span className="font-bold text-slate-500 text-sm shrink-0">{lengthUnit.symbol}</span>
+                  className="flex-1 py-2 px-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all flex items-center justify-center gap-1"
+                >
+                  Done ✓
+                </button>
               </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  if (editingTarget.type === "side") {
-                    onSidesChange((curr) => curr.map((v, i) => (i === editingTarget.index ? "" : v)));
-                  } else {
-                    onDiagonalValueChange("");
-                  }
-                }}
-                className="px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
-              >
-                Clear
-              </button>
-              <button
-                type="button"
-                onClick={() => setEditingTarget(null)}
-                className="flex-1 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow transition-all"
-              >
-                Done ✓
-              </button>
             </div>
           </div>
         </div>
