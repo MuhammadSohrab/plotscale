@@ -2313,13 +2313,24 @@ export default function Home() {
           {selectedVertex && tool === "edit" && (() => {
             const shape = shapes.find((s) => s.id === selectedVertex.shapeId);
             const pt = shape?.points[selectedVertex.index];
-            if (!pt || !viewerRef.current) return null;
+            if (!pt || !viewerRef.current || !shape) return null;
+            const N = shape.points.length;
+            const prevPt = N >= 2 ? shape.points[(selectedVertex.index - 1 + N) % N] : null;
+            const nextPt = N >= 2 ? shape.points[(selectedVertex.index + 1) % N] : null;
             return (
               <OffsetDragHandleOverlay
                 point={{
                   x: pt.x * transform.scale + transform.x,
                   y: pt.y * transform.scale + transform.y,
                 }}
+                prevPoint={prevPt ? {
+                  x: prevPt.x * transform.scale + transform.x,
+                  y: prevPt.y * transform.scale + transform.y,
+                } : null}
+                nextPoint={nextPt ? {
+                  x: nextPt.x * transform.scale + transform.x,
+                  y: nextPt.y * transform.scale + transform.y,
+                } : null}
                 containerRect={viewerRef.current.getBoundingClientRect()}
                 onDragStart={handleVertexDragStart}
                 onDrag={handleVertexDrag}

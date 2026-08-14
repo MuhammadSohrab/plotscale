@@ -16,32 +16,92 @@ export interface ContainerRectLike {
 }
 
 /**
- * Computes edge-aware handle offset relative to containerRect.
- * Nearest edge = top    -> dy = +70 (below)
- * Nearest edge = bottom -> dy = -70 (above)
- * Nearest edge = left   -> dx = +70 (to right)
- * Nearest edge = right  -> dx = -70 (to left)
+ * Computes Angle Bisector (Interior 1/2 degree) handle offset relative to connected neighbor vertices.
+ * If prevPoint and nextPoint are provided:
+ *   Calculates the normalized angle bisector vector between (prevPoint - point) and (nextPoint - point).
+ *   Places handle MAG (65px) along this bisector inside the corner angle.
+ * Fallback:
+ *   If only 1 neighbor is present (open polyline end), uses perpendicular normal vector.
+ *   If no neighbors are provided, falls back to top/edge-aware offset.
  */
-export function computeHandleOffset(point: OffsetPoint, containerRect?: ContainerRectLike | null): OffsetVector {
-  if (!containerRect || !containerRect.width || !containerRect.height) {
-    return { dx: 0, dy: -70 }; // default above
-  }
-  const distTop = point.y;
-  const distBottom = containerRect.height - point.y;
-  const distLeft = point.x;
-  const distRight = containerRect.width - point.x;
-  const minDist = Math.min(distTop, distBottom, distLeft, distRight);
-  const MAG = 70;
+export function computeHandleOffset(
+  point: OffsetPoint,
+  containerRect?: ContainerRectLike | null,
+  prevPoint?: OffsetPoint | null,
+  nextPoint?: OffsetPoint | null,
+  distance: number = 65
+): OffsetVector {
+  const MAG = distance;
 
-  if (minDist === distTop) return { dx: 0, dy: MAG };
-  if (minDist === distBottom) return { dx: 0, dy: -MAG };
-  if (minDist === distLeft) return { dx: MAG, dy: 0 };
-  return { dx: -MAG, dy: 0 };
+  // 1. If both neighbors are present, compute the angle bisector (half-angle)
+  if (prevPoint && nextPoint) {
+    const v1x = prevPoint.x - point.x;
+    const v1y = prevPoint.y - point.y;
+    const len1 = Math.hypot(v1x, v1y);
+
+    const v2x = nextPoint.x - point.x;
+    const v2y = nextPoint.y - point.y;
+    const len2 = Math.hypot(v2x, v2y);
+
+    if (len1 > 0.001 && len2 > 0.001) {
+      const u1x = v1x / len1;
+      const u1y = v1y / len1;
+      const u2x = v2x / len2;
+      const u2y = v2y / len2;
+
+      const bx = u1x + u2x;
+      const by = u1y + u2y;
+      const blen = Math.hypot(bx, by);
+
+      if (blen > 0.001) {
+        // Bisector vector pointing between both lines (1/2 angle interior direction)
+        const nx = bx / blen;
+        const ny = by / blen;
+        return { dx: Math.round(nx * MAG), dy: Math.round(ny * MAG) };
+      } else {
+        // Collinear / 180° straight line: use perpendicular normal
+        return { dx: Math.round(-u1y * MAG), dy: Math.round(u1x * MAG) };
+      }
+    }
+  }
+
+  // 2. If only one neighbor is present (e.g. open line endpoint)
+  const singleNeighbor = prevPoint || nextPoint;
+  if (singleNeighbor) {
+    const vx = singleNeighbor.x - point.x;
+    const vy = singleNeighbor.y - point.y;
+    const len = Math.hypot(vx, vy);
+    if (len > 0.001) {
+      const ux = vx / len;
+      const uy = vy / len;
+      // Perpendicular normal
+      return { dx: Math.round(-uy * MAG), dy: Math.round(ux * MAG) };
+    }
+  }
+
+  // 3. Fallback to default / edge-aware
+  if (containerRect && containerRect.width && containerRect.height) {
+    const distTop = point.y;
+    const distBottom = containerRect.height - point.y;
+    const distLeft = point.x;
+    const distRight = containerRect.width - point.x;
+    const minDist = Math.min(distTop, distBottom, distLeft, distRight);
+
+    if (minDist === distTop) return { dx: 0, dy: MAG };
+    if (minDist === distBottom) return { dx: 0, dy: -MAG };
+    if (minDist === distLeft) return { dx: MAG, dy: 0 };
+    return { dx: -MAG, dy: 0 };
+  }
+
+  return { dx: 0, dy: -MAG };
 }
 
 export interface OffsetDragHandleOverlayProps {
   point: OffsetPoint | null;
+  prevPoint?: OffsetPoint | null;
+  nextPoint?: OffsetPoint | null;
   containerRect?: ContainerRectLike | null;
+  distance?: number;
   onDragStart?: () => void;
   onDrag?: (delta: { dx: number; dy: number; clientX: number; clientY: number }) => void;
   onDragEnd?: () => void;
@@ -56,7 +116,10 @@ export interface OffsetDragHandleOverlayProps {
  */
 export const OffsetDragHandleOverlay: React.FC<OffsetDragHandleOverlayProps> = ({
   point,
+  prevPoint,
+  nextPoint,
   containerRect,
+  distance = 65,
   onDragStart,
   onDrag,
   onDragEnd,
@@ -69,18 +132,28 @@ export const OffsetDragHandleOverlay: React.FC<OffsetDragHandleOverlayProps> = (
   const dragStartRef = useRef({ clientX: 0, clientY: 0, pointX: 0, pointY: 0 });
   const isDraggingRef = useRef(false);
   const callbacksRef = useRef({ onDragStart, onDrag, onDragEnd, onDeselect });
-  const [offsetVec, setOffsetVec] = useState<OffsetVector>({ dx: 0, dy: -70 });
+  const [offsetVec, setOffsetVec] = useState<OffsetVector>({ dx: 0, dy: -65 });
 
   useEffect(() => {
     callbacksRef.current = { onDragStart, onDrag, onDragEnd, onDeselect };
   });
 
-  // Recompute offset when point or container changes while not dragging
+  // Recompute offset when point, neighbors, or container changes while not dragging
   useEffect(() => {
-    if (!isDraggingRef.current && point && containerRect) {
-      setOffsetVec(computeHandleOffset(point, containerRect));
+    if (!isDraggingRef.current && point) {
+      setOffsetVec(computeHandleOffset(point, containerRect, prevPoint, nextPoint, distance));
     }
-  }, [point?.x, point?.y, containerRect?.width, containerRect?.height]);
+  }, [
+    point?.x,
+    point?.y,
+    prevPoint?.x,
+    prevPoint?.y,
+    nextPoint?.x,
+    nextPoint?.y,
+    containerRect?.width,
+    containerRect?.height,
+    distance,
+  ]);
 
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (e.cancelable) {

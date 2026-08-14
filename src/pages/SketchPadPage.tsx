@@ -1425,19 +1425,32 @@ export default function SketchPadPage() {
           </svg>
 
           {/* Tap-to-Reveal Offset Drag Handle Overlay */}
-          {selectedVertexIndex !== null && points[selectedVertexIndex] && viewerRef.current && (
-            <OffsetDragHandleOverlay
-              point={{
-                x: points[selectedVertexIndex].x * transform.scale + transform.x,
-                y: points[selectedVertexIndex].y * transform.scale + transform.y,
-              }}
-              containerRect={viewerRef.current.getBoundingClientRect()}
-              onDragStart={handleDragStart}
-              onDrag={handleDragPoint}
-              onDragEnd={handleDragEnd}
-              onDeselect={() => setSelectedVertexIndex(null)}
-            />
-          )}
+          {selectedVertexIndex !== null && points[selectedVertexIndex] && viewerRef.current && (() => {
+            const N = points.length;
+            const prevPt = N >= 2 ? points[(selectedVertexIndex - 1 + N) % N] : null;
+            const nextPt = N >= 2 ? points[(selectedVertexIndex + 1) % N] : null;
+            return (
+              <OffsetDragHandleOverlay
+                point={{
+                  x: points[selectedVertexIndex].x * transform.scale + transform.x,
+                  y: points[selectedVertexIndex].y * transform.scale + transform.y,
+                }}
+                prevPoint={prevPt ? {
+                  x: prevPt.x * transform.scale + transform.x,
+                  y: prevPt.y * transform.scale + transform.y,
+                } : null}
+                nextPoint={nextPt ? {
+                  x: nextPt.x * transform.scale + transform.x,
+                  y: nextPt.y * transform.scale + transform.y,
+                } : null}
+                containerRect={viewerRef.current.getBoundingClientRect()}
+                onDragStart={handleDragStart}
+                onDrag={handleDragPoint}
+                onDragEnd={handleDragEnd}
+                onDeselect={() => setSelectedVertexIndex(null)}
+              />
+            );
+          })()}
         </div>
 
         {/* Collapsible Group Diagonals Setup Dock */}

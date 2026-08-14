@@ -308,6 +308,30 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onNavigation
     return pixel ? { x: pixel.x, y: pixel.y } : null;
   }, [selectedPointIndex, points, mapLoaded, mapViewportKey]);
 
+  const prevPointScreenPos = useMemo(() => {
+    if (selectedPointIndex === null || points.length < 2 || !mapLoaded || !overlayViewRef.current || !window.google) return null;
+    const proj = overlayViewRef.current.getProjection();
+    if (!proj) return null;
+    const N = points.length;
+    const prevIdx = (selectedPointIndex - 1 + N) % N;
+    const pt = points[prevIdx];
+    if (!pt) return null;
+    const pixel = proj.fromLatLngToContainerPixel(new window.google.maps.LatLng(pt.lat, pt.lng));
+    return pixel ? { x: pixel.x, y: pixel.y } : null;
+  }, [selectedPointIndex, points, mapLoaded, mapViewportKey]);
+
+  const nextPointScreenPos = useMemo(() => {
+    if (selectedPointIndex === null || points.length < 2 || !mapLoaded || !overlayViewRef.current || !window.google) return null;
+    const proj = overlayViewRef.current.getProjection();
+    if (!proj) return null;
+    const N = points.length;
+    const nextIdx = (selectedPointIndex + 1) % N;
+    const pt = points[nextIdx];
+    if (!pt) return null;
+    const pixel = proj.fromLatLngToContainerPixel(new window.google.maps.LatLng(pt.lat, pt.lng));
+    return pixel ? { x: pixel.x, y: pixel.y } : null;
+  }, [selectedPointIndex, points, mapLoaded, mapViewportKey]);
+
   const dragStartPixelRef = useRef(null);
 
   const handleDragStart = useCallback(() => {
@@ -1075,6 +1099,8 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onNavigation
             {selectedPointScreenPos && (
               <OffsetDragHandleOverlay
                 point={selectedPointScreenPos}
+                prevPoint={prevPointScreenPos}
+                nextPoint={nextPointScreenPos}
                 containerRect={mapContainerRef.current?.getBoundingClientRect()}
                 onDragStart={handleDragStart}
                 onDrag={handleDragPoint}
