@@ -299,23 +299,42 @@ export default function SketchPadPage() {
     [activeTool, diagonals]
   );
 
-  // Active Diagonals List
+  // Active Diagonals List with strict deduplication & unique keys
   const activeDiagonalsList = useMemo(() => {
     if (!closed || points.length < 4) return [];
-    const list: DiagonalMeasurement[] = [...diagonals];
-    const N = points.length;
+    const list: DiagonalMeasurement[] = [];
+    const seen = new Set<string>();
 
+    // Add user/locked diagonals first
+    for (const d of diagonals) {
+      const u = Math.min(d.fromIndex, d.toIndex);
+      const v = Math.max(d.fromIndex, d.toIndex);
+      const key = `${u}-${v}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        list.push({
+          ...d,
+          fromIndex: u,
+          toIndex: v,
+          id: `diag-${key}`,
+        });
+      }
+    }
+
+    const N = points.length;
     if (!hasCustomOrLockedDiags) {
       for (let i = 2; i < N - 1; i++) {
-        const existsIdx = list.findIndex((d) => (d.fromIndex === 0 && d.toIndex === i) || (d.fromIndex === i && d.toIndex === 0));
-        const p1 = points[0];
-        const p2 = points[i];
-        const distPx = Math.hypot(p2.x - p1.x, p2.y - p1.y);
-        const estimatedLen = calibrationScale ? Math.round(distPx / calibrationScale) : 0;
-
-        if (existsIdx < 0) {
+        const u = 0;
+        const v = i;
+        const key = `${u}-${v}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          const p1 = points[0];
+          const p2 = points[i];
+          const distPx = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+          const estimatedLen = calibrationScale ? Math.round(distPx / calibrationScale) : 0;
           list.push({
-            id: `diag-0-${i}`,
+            id: `diag-${key}`,
             fromIndex: 0,
             toIndex: i,
             length: estimatedLen,
@@ -1180,33 +1199,48 @@ export default function SketchPadPage() {
           </div>
         )}
 
-        {/* Main Toolbar (Bottom Dock on Mobile, Top Floating Toolbar on Desktop) */}
-        <nav className="sketch-toolbar">
-          <button type="button" className={`sketch-tool-btn ${activeTool === "draw" ? "is-active" : ""}`} onClick={() => setActiveTool("draw")}>
-            <PencilRuler size={15} />
-            <span>Draw</span>
-          </button>
-          <button type="button" className={`sketch-tool-btn ${activeTool === "pan" ? "is-active" : ""}`} onClick={() => setActiveTool("pan")}>
-            <Hand size={15} />
-            <span>Pan / Move</span>
-          </button>
-          <button type="button" className={`sketch-tool-btn ${activeTool === "dimension" ? "is-active" : ""}`} onClick={() => setActiveTool("dimension")} disabled={!closed}>
-            <Ruler size={15} />
-            <span>Dimensions</span>
-          </button>
-          <button type="button" className={`sketch-tool-btn ${activeTool === "customDiagonal" ? "is-active" : ""}`} onClick={() => setActiveTool("customDiagonal")} disabled={!closed}>
-            <GitCommit size={15} />
-            <span>Custom Diagonals</span>
-          </button>
-          <button type="button" className={`sketch-tool-btn ${activeTool === "angles" ? "is-active" : ""}`} onClick={() => setActiveTool("angles")} disabled={!closed}>
-            <Compass size={15} />
-            <span>Angles</span>
-          </button>
-          <button type="button" className={`sketch-tool-btn ${activeTool === "triangles" ? "is-active" : ""}`} onClick={() => setActiveTool("triangles")} disabled={!closed}>
-            <Triangle size={15} />
-            <span>Triangles</span>
-          </button>
-        </nav>
+        {/* Streamlined Floating Toolbar for Closed Plot */}
+        {closed ? (
+          <nav className="sketch-toolbar">
+            <button
+              type="button"
+              className={`sketch-tool-btn ${activeTool === "customDiagonal" ? "is-active" : ""}`}
+              onClick={() => {
+                if (activeTool === "customDiagonal") {
+                  setActiveTool("dimension");
+                  setPivotBaseIndex(null);
+                  setSelectedGroupTargets([]);
+                } else {
+                  setActiveTool("customDiagonal");
+                }
+              }}
+            >
+              <GitCommit size={15} />
+              <span>Diagonals</span>
+            </button>
+            <button
+              type="button"
+              className={`sketch-tool-btn ${activeTool === "triangles" ? "is-active" : ""}`}
+              onClick={() => setActiveTool(activeTool === "triangles" ? "dimension" : "triangles")}
+            >
+              <Triangle size={15} />
+              <span>Triangles ({dynamicTrianglesList.length})</span>
+            </button>
+            <button
+              type="button"
+              className="sketch-tool-btn"
+              onClick={fitPlotToViewport}
+              title="Fit & Center Map to Viewport"
+            >
+              <Maximize2 size={15} />
+              <span>Fit Map</span>
+            </button>
+          </nav>
+        ) : (
+          <div className="sketch-draw-hint">
+            <span>Tap on canvas to add plot corners. Tap green pulsing ring (V1) to close.</span>
+          </div>
+        )}
 
         {/* Interactive SVG Canvas */}
         <div ref={viewerRef} className="sketch-viewer" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
@@ -1458,45 +1492,54 @@ export default function SketchPadPage() {
           <aside className={`sketch-dock ${isGroupDockCollapsed ? "is-collapsed" : ""}`}>
             <header className="sketch-dock-header" onClick={() => setIsGroupDockCollapsed(!isGroupDockCollapsed)} style={{ cursor: "pointer" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <h3>Custom Diagonals (Base Vertex {pivotBaseIndex + 1})</h3>
-                {isGroupDockCollapsed ? <ChevronUp size={16} color="#1e3a8a" /> : <ChevronDown size={16} color="#1e3a8a" />}
+                <span className="sketch-dock-badge">Base V{pivotBaseIndex + 1}</span>
+                <h3 style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#1e3a8a" }}>Diagonals Setup</h3>
+                {isGroupDockCollapsed ? <ChevronUp size={15} color="#1e3a8a" /> : <ChevronDown size={15} color="#1e3a8a" />}
               </div>
-              <button type="button" className="sketch-icon-btn" onClick={(e) => { e.stopPropagation(); setPivotBaseIndex(null); }}>
-                <X size={16} />
+              <button
+                type="button"
+                className="sketch-icon-btn"
+                onClick={(e) => { e.stopPropagation(); setPivotBaseIndex(null); }}
+                title="Close"
+              >
+                <X size={15} />
               </button>
             </header>
 
             {!isGroupDockCollapsed && (
               <>
                 <div className="sketch-dock-body">
-                  <p style={{ fontSize: 12, color: "#64748b", margin: 0 }}>
-                    Tap target vertices on canvas to select diagonals in bulk. Enter measured lengths below and click Save Group.
-                  </p>
                   {selectedGroupTargets.length === 0 ? (
-                    <div style={{ textAlign: "center", padding: "20px 0", color: "#94a3b8", fontSize: 13 }}>
-                      No target vertices selected yet. Tap any vertex on canvas to add to group.
+                    <div className="sketch-dock-empty">
+                      <GitCommit size={20} color="#94a3b8" />
+                      <span>Tap any other corner on canvas to connect a diagonal from <strong>V{pivotBaseIndex + 1}</strong></span>
                     </div>
                   ) : (
                     selectedGroupTargets.map((tIdx) => {
                       const val = groupInputLengths[tIdx] ?? "";
                       return (
-                        <div key={`grp-input-${tIdx}`} style={{ display: "flex", alignItems: "center", gap: 10, background: "#f8fafc", padding: 10, borderRadius: 12, border: "1px solid #e2e8f0" }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: "#1e3a8a", flex: 1 }}>
-                            Vertex {pivotBaseIndex + 1} ➔ Vertex {tIdx + 1}
-                          </span>
-                          <input
-                            type="number"
-                            value={val}
-                            onChange={(e) => setGroupInputLengths({ ...groupInputLengths, [tIdx]: e.target.value })}
-                            placeholder={`Length in ${unit}`}
-                            style={{ width: 90, height: 32, padding: "0 8px", border: "1px solid #cbd5e1", borderRadius: 8, fontSize: 12 }}
-                          />
+                        <div key={`grp-input-${pivotBaseIndex}-${tIdx}`} className="sketch-diag-card-row">
+                          <div className="sketch-diag-label-pill">
+                            <span className="sketch-node-tag">V{pivotBaseIndex + 1}</span>
+                            <span className="sketch-node-arrow">⟷</span>
+                            <span className="sketch-node-tag">V{tIdx + 1}</span>
+                          </div>
+                          <div className="sketch-diag-input-box">
+                            <input
+                              type="number"
+                              inputMode="decimal"
+                              value={val}
+                              onChange={(e) => setGroupInputLengths({ ...groupInputLengths, [tIdx]: e.target.value })}
+                              placeholder="Length"
+                              className="sketch-diag-field"
+                            />
+                            <span className="sketch-field-unit">{unit}</span>
+                          </div>
                           <button
                             type="button"
-                            className="sketch-icon-btn"
+                            className="sketch-diag-remove-btn"
                             onClick={() => setSelectedGroupTargets((curr) => curr.filter((i) => i !== tIdx))}
-                            style={{ width: 28, height: 28, color: "#ef4444" }}
-                            title="Remove from group"
+                            title="Remove diagonal"
                           >
                             <X size={14} />
                           </button>
@@ -1505,18 +1548,19 @@ export default function SketchPadPage() {
                     })
                   )}
                 </div>
-                <footer style={{ padding: 14, borderTop: "1px solid #e2e8f0", background: "#ffffff" }}>
-                  <button
-                    type="button"
-                    className="sketch-btn sketch-btn-success"
-                    onClick={saveGroupDiagonalsBatch}
-                    disabled={selectedGroupTargets.length === 0}
-                    style={{ width: "100%", height: 40 }}
-                  >
-                    <CheckCircle2 size={16} />
-                    <span>Lock & Save Group Diagonals ({selectedGroupTargets.length})</span>
-                  </button>
-                </footer>
+                {selectedGroupTargets.length > 0 && (
+                  <footer className="sketch-dock-footer">
+                    <button
+                      type="button"
+                      className="sketch-btn sketch-btn-success"
+                      onClick={saveGroupDiagonalsBatch}
+                      style={{ width: "100%", height: 38, fontSize: 13 }}
+                    >
+                      <CheckCircle2 size={16} />
+                      <span>Lock & Save Diagonals ({selectedGroupTargets.length})</span>
+                    </button>
+                  </footer>
+                )}
               </>
             )}
           </aside>
@@ -1538,6 +1582,7 @@ export default function SketchPadPage() {
               <div style={{ display: "flex", gap: 8 }}>
                 <input
                   type="number"
+                  inputMode="decimal"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={selectedElement.type === "angle" ? "Degrees (e.g. 90)" : `Length in ${unit}`}
