@@ -121,7 +121,6 @@ export const OffsetDragHandleOverlay: React.FC<OffsetDragHandleOverlayProps> = (
       setIsDragging(false);
 
       callbacksRef.current.onDragEnd?.();
-      callbacksRef.current.onDeselect?.();
     };
 
     window.addEventListener('pointermove', handlePointerMove, { passive: true });

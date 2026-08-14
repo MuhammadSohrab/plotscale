@@ -805,9 +805,18 @@ export default function SketchPadPage() {
     }
     lastPointerDownRef.current = { time: now, x: event.clientX, y: event.clientY };
 
-    // Single Tap on Vertex 0 closes polygon during drawing phase
-    if (!closed && hitIdx === 0 && points.length >= 3) {
-      closePolygonAtVertex0();
+    // Drawing Phase: Add points without showing drag handle; tap Vertex 0 to close
+    if (activeTool === "draw" && !closed) {
+      if (hitIdx === 0 && points.length >= 3) {
+        closePolygonAtVertex0();
+        return;
+      }
+      setSelectedVertexIndex(null);
+      const snapX = Math.round(rawX / 12) * 12;
+      const snapY = Math.round(rawY / 12) * 12;
+      const updated = [...points, { x: snapX, y: snapY }];
+      setPoints(updated);
+      pushHistory(updated, closed, outerSides, diagonals);
       return;
     }
 
@@ -842,9 +851,9 @@ export default function SketchPadPage() {
       return;
     }
 
-    // Tap to select vertex for offset dragging
+    // Tap on an existing vertex to reveal / switch offset drag handle
     if (hitIdx >= 0) {
-      setSelectedVertexIndex((prev) => (prev === hitIdx ? null : hitIdx));
+      setSelectedVertexIndex(hitIdx);
       return;
     }
 
@@ -860,14 +869,6 @@ export default function SketchPadPage() {
         };
         return;
       }
-    }
-
-    if (activeTool === "draw" && !closed) {
-      const snapX = Math.round(rawX / 12) * 12;
-      const snapY = Math.round(rawY / 12) * 12;
-      const updated = [...points, { x: snapX, y: snapY }];
-      setPoints(updated);
-      pushHistory(updated, closed, outerSides, diagonals);
     }
   };
 
@@ -896,7 +897,6 @@ export default function SketchPadPage() {
   const handleDragEnd = useCallback(() => {
     dragStartPointRef.current = null;
     pushHistory(points, closed, outerSides, diagonals);
-    setSelectedVertexIndex(null);
   }, [points, closed, outerSides, diagonals, pushHistory]);
 
   const handlePointerMove = (event: ReactPointerEvent<SVGSVGElement>) => {
@@ -1413,11 +1413,6 @@ export default function SketchPadPage() {
                     scale={transform.scale}
                     color={color}
                     selected={isSelected}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (activeTool === "customDiagonal" && customDiagSubMode === "add") return;
-                      setSelectedVertexIndex((prev) => (prev === idx ? null : idx));
-                    }}
                     onContextMenu={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
