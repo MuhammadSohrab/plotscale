@@ -924,10 +924,10 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onNavigation
   }
 
   return (
-    <div className={`w-full flex flex-col gap-0 ${isFullscreen ? 'fixed inset-0 z-[9999] bg-background overflow-hidden' : ''}`}>
+    <div className={`w-full h-full flex flex-col gap-0 min-h-0 ${isFullscreen ? 'fixed inset-0 z-[9999] bg-slate-950 overflow-hidden' : 'relative flex-1 overflow-hidden'}`}>
       {/* ─── Map Container ─── */}
-      <div ref={mapContainerRef} className={`relative w-full ${isFullscreen ? 'flex-1 min-h-[200px]' : ''}`} style={!isFullscreen ? { height: 'calc(100vh - 200px)', minHeight: 450 } : undefined}>
-        <div ref={mapRef} className="w-full h-full rounded-t-2xl" />
+      <div ref={mapContainerRef} className="relative w-full flex-1 min-h-0 overflow-hidden">
+        <div ref={mapRef} className="w-full h-full" />
 
         {!mapLoaded &&
           <div className="absolute inset-0 bg-background/80 rounded-t-2xl flex items-center justify-center">
@@ -1129,8 +1129,8 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onNavigation
 
       {/* ─── Options Bar ─── */}
       {mapLoaded &&
-        <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md border border-slate-200/90 border-t-0 px-3 py-2.5 overflow-x-auto flex-nowrap sm:flex-wrap flex-shrink-0 font-sans [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <div className="flex items-center gap-1.5 flex-shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 bg-white/98 backdrop-blur-md border-t border-slate-200 px-3 py-1.5 sm:py-2 overflow-x-auto flex-nowrap sm:flex-wrap flex-shrink-0 font-sans shadow-sm z-[1001] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex items-center gap-1 flex-shrink-0">
             <Ruler className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
             <UnitDropdown
               units={allLengthUnits}
@@ -1138,10 +1138,10 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onNavigation
               onChange={(u) => setLengthDisplayUnit(u.unit_id)}
               align="right"
               width="w-56"
-              buttonClassName="flex items-center gap-1 px-2.5 py-1.5 bg-slate-100/90 border border-slate-200 rounded-lg text-xs font-bold text-slate-800 hover:border-[#2563eb]/50 transition-colors whitespace-nowrap"
+              buttonClassName="flex items-center gap-1 px-2 py-1 bg-slate-100/90 border border-slate-200 rounded-lg text-xs font-bold text-slate-800 hover:border-[#2563eb]/50 transition-colors whitespace-nowrap"
               renderButton={(sel) => <span>{sel?.unit_symbol || lengthDisplayUnit}</span>} />
           </div>
-          <div className="flex items-center gap-1.5 flex-shrink-0">
+          <div className="flex items-center gap-1 flex-shrink-0">
             <Square className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
             <UnitDropdown
               units={allAreaUnits}
@@ -1149,27 +1149,36 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onNavigation
               onChange={(u) => { setInternalAreaUnit(u); onAreaOutputUnitChange?.(u); }}
               align="right"
               width="w-56"
-              buttonClassName="flex items-center gap-1 px-2.5 py-1.5 bg-slate-100/90 border border-slate-200 rounded-lg text-xs font-bold text-slate-800 hover:border-[#2563eb]/50 transition-colors whitespace-nowrap"
+              buttonClassName="flex items-center gap-1 px-2 py-1 bg-slate-100/90 border border-slate-200 rounded-lg text-xs font-bold text-slate-800 hover:border-[#2563eb]/50 transition-colors whitespace-nowrap"
               renderButton={(sel) => <span>{sel?.unit_symbol || 'sqft'}</span>} />
           </div>
-          <div className="w-px h-6 bg-slate-200 flex-shrink-0" />
-          <button onClick={() => setShowLabels((v) => !v)} className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${showLabels ? 'bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'}`} title="Toggle Labels">
+          {areaSqft > 0 && (
+            <button
+              onClick={() => setShowConversions((v) => !v)}
+              className={`px-2 py-1 rounded-lg text-xs font-bold border transition-all flex-shrink-0 ${showConversions ? 'bg-[#1e3a8a] text-white border-transparent' : 'bg-slate-100/90 text-slate-700 border-slate-200 hover:bg-slate-200/60'}`}
+              title="Toggle All Area Unit Conversions"
+            >
+              Conversions
+            </button>
+          )}
+          <div className="w-px h-5 bg-slate-200 flex-shrink-0" />
+          <button onClick={() => setShowLabels((v) => !v)} className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${showLabels ? 'bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'}`} title="Toggle Labels">
             {showLabels ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
           </button>
-          <button onClick={handleUndo} disabled={points.length === 0} className="w-8 h-8 rounded-lg flex items-center justify-center border border-transparent transition-all flex-shrink-0 bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white hover:opacity-90 active:scale-95 disabled:opacity-40 shadow-sm" title="Undo">
+          <button onClick={handleUndo} disabled={points.length === 0} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center border border-transparent transition-all flex-shrink-0 bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white hover:opacity-90 active:scale-95 disabled:opacity-40 shadow-sm" title="Undo">
             <Undo2 className="w-3.5 h-3.5" />
           </button>
-          <button onClick={handleReset} disabled={points.length === 0} className="w-8 h-8 rounded-lg flex items-center justify-center border border-transparent transition-all flex-shrink-0 bg-red-500 text-white hover:bg-red-600 active:scale-95 disabled:opacity-40 shadow-sm" title="Delete All">
+          <button onClick={handleReset} disabled={points.length === 0} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center border border-transparent transition-all flex-shrink-0 bg-red-500 text-white hover:bg-red-600 active:scale-95 disabled:opacity-40 shadow-sm" title="Delete All">
             <Trash2 className="w-3.5 h-3.5" />
           </button>
-          <div className="w-px h-6 bg-slate-200 flex-shrink-0" />
-          <button onClick={() => setLocked(v => !v)} className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${locked ? 'bg-amber-500 text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'}`} title={locked ? 'Unlock Pointing' : 'Lock Pointing (stop adding points)'}>
+          <div className="w-px h-5 bg-slate-200 flex-shrink-0" />
+          <button onClick={() => setLocked(v => !v)} className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${locked ? 'bg-amber-500 text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'}`} title={locked ? 'Unlock Pointing' : 'Lock Pointing (stop adding points)'}>
             {locked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
           </button>
-          <button onClick={toggleBaseDiagMode} disabled={points.length < 3} className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${baseDiagMode ? 'bg-[#2563eb] text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'} disabled:opacity-40`} title="Diagonal Setup — select base + connected point groups for PDF">
+          <button onClick={toggleBaseDiagMode} disabled={points.length < 3} className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${baseDiagMode ? 'bg-[#2563eb] text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'} disabled:opacity-40`} title="Diagonal Setup — select base + connected point groups for PDF">
             <Crosshair className="w-3.5 h-3.5" />
           </button>
-          <button onClick={() => { setEntranceMode(v => { const next = !v; if (next) setBaseDiagMode(false); return next; }); }} className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${entranceMode || entrancePoint ? 'bg-amber-500 text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'}`} title={entrancePoint ? 'Vehicle Entrance Set (click to relocate or clear)' : 'Set Vehicle Entrance / Navigation Point'}>
+          <button onClick={() => { setEntranceMode(v => { const next = !v; if (next) setBaseDiagMode(false); return next; }); }} className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 active:scale-95 ${entranceMode || entrancePoint ? 'bg-amber-500 text-white border-transparent shadow-sm' : 'bg-slate-100/90 text-slate-600 border-slate-200 hover:bg-slate-200/60'}`} title={entrancePoint ? 'Vehicle Entrance Set (click to relocate or clear)' : 'Set Vehicle Entrance / Navigation Point'}>
             <Navigation className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -1177,24 +1186,24 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onNavigation
 
       {/* ─── Action Bar ─── */}
       {mapLoaded && (
-        <div className="grid grid-cols-5 gap-1.5 bg-gradient-to-r from-[#1e3a8a] via-[#2563eb] to-[#1e3a8a] text-white px-2.5 py-1.5 rounded-b-2xl flex-shrink-0 font-sans shadow-md">
-          <button onClick={() => openPlotActionModal('save')} disabled={points.length < 3} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-40">
+        <div className="grid grid-cols-5 gap-1 bg-gradient-to-r from-[#1e3a8a] via-[#2563eb] to-[#1e3a8a] text-white px-2 py-1.5 flex-shrink-0 font-sans shadow-md z-[1001]">
+          <button onClick={() => openPlotActionModal('save')} disabled={points.length < 3} className="flex flex-col items-center gap-0.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-40">
             <BookMarked className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold">Save</span>
           </button>
-          <button onClick={handleShareGeoJSON} disabled={points.length < 3} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-40">
+          <button onClick={handleShareGeoJSON} disabled={points.length < 3} className="flex flex-col items-center gap-0.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-40">
             <FileDown className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold">GeoJSON</span>
           </button>
-          <button onClick={handleShareKML} disabled={points.length < 3} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-40">
+          <button onClick={handleShareKML} disabled={points.length < 3} className="flex flex-col items-center gap-0.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-40">
             <FileDown className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold">KML</span>
           </button>
-          <button onClick={() => fileInputRef.current?.click()} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all">
+          <button onClick={() => fileInputRef.current?.click()} className="flex flex-col items-center gap-0.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all">
             <Upload className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold">Import</span>
           </button>
-          <button onClick={() => openPlotActionModal('pdf')} disabled={pdfLoading || points.length < 3} className="flex flex-col items-center gap-0.5 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 active:bg-white/40 transition-all disabled:opacity-40">
+          <button onClick={() => openPlotActionModal('pdf')} disabled={pdfLoading || points.length < 3} className="flex flex-col items-center gap-0.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 active:bg-white/40 transition-all disabled:opacity-40">
             <FileText className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold">{pdfLoading ? '...' : 'PDF'}</span>
           </button>
@@ -1202,23 +1211,19 @@ export default function MapDrawMode({ onAreaChange, onPointsChange, onNavigation
         </div>
       )}
 
-      {/* ─── Conversions Toggle + Panel ─── */}
-      {mapLoaded && areaSqft > 0 && (points.length >= 3 || isFullscreen) && (
-        <div className="mt-2 pb-2 px-1">
-          <button
-            onClick={() => setShowConversions((v) => !v)}
-            className="w-full flex items-center justify-between px-4 py-2.5 bg-card border border-border rounded-xl text-sm font-bold text-foreground hover:border-primary/40 transition-colors">
-            <span className="flex items-center gap-1.5">
-              <Square className="w-3.5 h-3.5 text-primary" />
-              All Conversions
+      {/* ─── Conversions Floating Drawer Panel ─── */}
+      {mapLoaded && areaSqft > 0 && showConversions && (
+        <div className="absolute bottom-24 left-3 right-3 sm:left-auto sm:right-3 sm:w-96 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-2xl max-h-[50vh] overflow-y-auto z-[1002]">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 dark:border-slate-800">
+            <span className="font-bold text-xs flex items-center gap-1.5 text-slate-900 dark:text-white">
+              <Square className="w-3.5 h-3.5 text-[#2563eb]" />
+              All Area Unit Conversions
             </span>
-            {showConversions ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-          </button>
-          {showConversions &&
-            <div className="mt-1.5 bg-card border border-border rounded-xl p-3 max-h-[35vh] overflow-y-auto flex-shrink-0">
-              <AreaConversionList areaSqm={areaSqm} primaryUnitId={areaOutputUnit?.unit_id} />
-            </div>
-          }
+            <button onClick={() => setShowConversions(false)} className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <AreaConversionList areaSqm={areaSqm} primaryUnitId={areaOutputUnit?.unit_id} />
         </div>
       )}
 

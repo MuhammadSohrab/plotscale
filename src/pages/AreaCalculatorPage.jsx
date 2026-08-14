@@ -1125,22 +1125,26 @@ function AreaCalculationWorkspace({ requestedMode, editId }) {
   const ModeIcon = modeDetails.icon;
   const backPath = mode === "map" || mode === "map_mode" ? "/dashboard" : "/calculator";
 
-  if (mode === "map_mode") {
+  if (mode === "map_mode" || mode === "map") {
     return (
-      <main className="calculator-page calculator-page--map_mode p-0 h-screen w-screen flex flex-col font-sans overflow-hidden">
-        <header className="calculator-header px-4 sm:px-6 py-3.5 z-[1001] shrink-0">
-          <Link to="/dashboard" className="icon-button" aria-label="Back to dashboard">
-            <ArrowLeft size={19} />
-          </Link>
-          <Brand compact />
-          <span className="calculator-header__chip">
-            <ModeIcon size={14} /> Map Mode (RND)
+      <main className="calculator-page calculator-page--map_mode p-0 h-[100dvh] max-h-[100dvh] w-screen flex flex-col font-sans overflow-hidden bg-slate-900">
+        <header className="calculator-header px-4 sm:px-6 py-2.5 z-[1001] shrink-0 bg-slate-900 border-b border-slate-800 text-white flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link to="/dashboard" className="icon-button text-white hover:bg-slate-800" aria-label="Back to dashboard">
+              <ArrowLeft size={19} />
+            </Link>
+            <Brand compact />
+          </div>
+          <span className="calculator-header__chip bg-blue-600/30 text-blue-300 border border-blue-500/30 font-semibold text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
+            <ModeIcon size={13} /> Map Mode
           </span>
         </header>
-        <div className="flex-1 w-full relative overflow-hidden">
+        <div className="flex-1 w-full relative overflow-hidden flex flex-col min-h-0">
           <MapDrawMode
             initialPoints={mapPoints}
             onPointsChange={setMapPoints}
+            navigationPoint={mapNavigationPoint}
+            onNavigationPointChange={setMapNavigationPoint}
             areaOutputUnit={areaUnit.id}
             onAreaOutputUnitChange={(uId) => {
               const found = areaUnits.find((x) => x.id === uId || x.unit_id === uId);
