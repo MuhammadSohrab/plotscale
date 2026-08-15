@@ -13,33 +13,35 @@ import { ScreenShell } from "../components/ScreenShell";
 
 const modes = [
   {
+    icon: PencilRuler,
+    title: "Sketch Pad",
+    description: "Draw, scale and shape a plot with rotary joints & diagonals",
+    tone: "blue",
+    highlight: true,
+    badge: "Featured",
+  },
+  {
+    icon: MapPinned,
+    title: "Map Measurement",
+    description: "Drop pins on satellite imagery with GPS & entrance point",
+    tone: "green",
+  },
+  {
+    icon: Image,
+    title: "Image Trace",
+    description: "Vectorize & trace boundaries from survey map, photo or PDF",
+    tone: "blue",
+  },
+  {
     icon: Calculator,
     title: "Area Calculator",
-    description: "Type dimensions, get area instantly",
-    tone: "blue",
+    description: "Type dimensions, get regular and irregular land area instantly",
+    tone: "green",
   },
   {
     icon: ArrowLeftRight,
     title: "Unit Converter",
     description: "Convert standard and verified local units",
-    tone: "green",
-  },
-  {
-    icon: MapPinned,
-    title: "Map Measurement",
-    description: "Drop pins on satellite imagery",
-    tone: "blue",
-  },
-  {
-    icon: Image,
-    title: "Image Trace",
-    description: "Trace a survey plan or photo",
-    tone: "green",
-  },
-  {
-    icon: PencilRuler,
-    title: "Sketch Pad",
-    description: "Draw, scale and shape a plot visually",
     tone: "blue",
   },
 ];

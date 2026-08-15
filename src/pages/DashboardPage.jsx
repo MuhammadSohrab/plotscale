@@ -44,18 +44,13 @@ export function DashboardPage() {
 
   const measuringTools = [
     {
-      icon: Calculator,
-      title: "Area Calculator",
-      description: "Calculate regular and irregular land area",
+      icon: PencilRuler,
+      title: "Sketch Pad",
+      description: "Interactive CAD plot builder with rotary joints, live diagonals & instant morph",
       tone: "blue",
-      to: "/calculator",
-    },
-    {
-      icon: ArrowLeftRight,
-      title: "Unit Converter",
-      description: "Convert standard and active local units",
-      tone: "green",
-      to: "/converter",
+      highlight: true,
+      badge: "Featured CAD",
+      to: "/sketch",
     },
     {
       icon: MapPinned,
@@ -68,15 +63,22 @@ export function DashboardPage() {
       icon: Image,
       title: "Image Trace",
       description: "Trace boundaries from a map, image or PDF",
-      tone: "green",
+      tone: "blue",
       to: "/image-trace",
     },
     {
-      icon: PencilRuler,
-      title: "Sketch Pad",
-      description: "Draw, scale and build plot boundaries",
+      icon: Calculator,
+      title: "Area Calculator",
+      description: "Calculate regular and irregular land area",
+      tone: "green",
+      to: "/calculator",
+    },
+    {
+      icon: ArrowLeftRight,
+      title: "Unit Converter",
+      description: "Convert standard and active local units",
       tone: "blue",
-      to: "/sketch",
+      to: "/converter",
     },
   ];
 

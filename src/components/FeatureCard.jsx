@@ -7,18 +7,25 @@ export function FeatureCard({
   description,
   tone = "blue",
   badge,
+  highlight = false,
   to,
   onClick,
 }) {
+  const cardClassName = `feature-card ${highlight ? "feature-card--highlight" : ""}`.trim();
+
   const content = (
     <>
-      <span className={`feature-card__icon feature-card__icon--${tone}`}>
+      <span className={`feature-card__icon feature-card__icon--${tone} ${highlight ? "feature-card__icon--highlight" : ""}`}>
         <Icon size={23} />
       </span>
       <span className="feature-card__copy">
         <span className="feature-card__heading">
           <strong>{title}</strong>
-          {badge && <small className="feature-card__badge">{badge}</small>}
+          {badge && (
+            <small className={`feature-card__badge ${highlight ? "feature-card__badge--highlight" : ""}`}>
+              {badge}
+            </small>
+          )}
         </span>
         <small>{description}</small>
       </span>
@@ -28,14 +35,14 @@ export function FeatureCard({
 
   if (to) {
     return (
-      <Link className="feature-card" to={to}>
+      <Link className={cardClassName} to={to}>
         {content}
       </Link>
     );
   }
 
   return (
-    <button className="feature-card" type="button" onClick={onClick}>
+    <button className={cardClassName} type="button" onClick={onClick}>
       {content}
     </button>
   );
