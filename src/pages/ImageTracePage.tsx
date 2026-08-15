@@ -51,6 +51,7 @@ import {
   ZoomOut,
 } from "lucide-react";
 import { averagePixelsPerUnit, documentBoxToRaster, nearestCalibrationVertex } from "../services/imageTrace/calibration-engine";
+import { parseCadFile } from "../services/imageTrace/cad-engine";
 import { remapAndSanitizeDiagonals, sanitizeDiagonals, validateDiagonal } from "../services/imageTrace/diagonal-engine";
 import { buildDxfExport, buildSvgExport } from "../services/imageTrace/export-engine";
 import { clamp, distance, pointInPolygon, polygonArea, segmentProjection } from "../services/imageTrace/geometry-engine";
@@ -2135,6 +2136,90 @@ export default function Home() {
       }
     }
 
+    const isDxf = file.name.toLowerCase().endsWith(".dxf") || file.type.includes("dxf");
+    const isDwg = file.name.toLowerCase().endsWith(".dwg") || file.type.includes("dwg");
+    const isCad = isDxf || isDwg;
+
+    if (isCad) {
+      const loadToken = ++rasterLoadTokenRef.current;
+      const nextRevision = mapRevisionRef.current + 1;
+      mapRevisionRef.current = nextRevision;
+      setMapRevision(nextRevision);
+      resetTransientEditorState();
+      restartVectorWorker();
+      retainedBitmapRef.current?.close();
+      retainedBitmapRef.current = null;
+      rasterSourceRef.current = null;
+      const display = mapCanvasRef.current;
+      const memory = ensureProcessingCanvas();
+      display?.getContext("2d")?.clearRect(0, 0, display.width, display.height);
+      memory.getContext("2d")?.clearRect(0, 0, memory.width, memory.height);
+      setMapSource("none"); setMapVisible(false);
+      setCurrentPdfInfo(null);
+      setShapes([]); setSelectedIds([]); setSelectedSegment(null); setManualPoints([]); setEraserStrokes([]); setActiveEraserStroke(null); setRoi(null); setExpanded({}); cancelCalibration();
+      resetHistory();
+
+      try {
+        const cadResult = await parseCadFile(file);
+        if (loadToken !== rasterLoadTokenRef.current) return;
+        if (!cadResult.ok) throw new Error(cadResult.error || "CAD parsing failed");
+
+        const source = cadResult.canvas;
+        const sourceWidth = cadResult.width;
+        const sourceHeight = cadResult.height;
+
+        const processingScale = Math.min(1, Math.sqrt(MAX_PROCESSING_PIXELS / (sourceWidth * sourceHeight)));
+        const processingWidth = Math.max(1, Math.round(sourceWidth * processingScale));
+        const processingHeight = Math.max(1, Math.round(sourceHeight * processingScale));
+        memory.width = processingWidth; memory.height = processingHeight;
+        const context = memory.getContext("2d", { willReadFrequently: true });
+        if (!context) throw new Error("Processing canvas context unavailable");
+        context.clearRect(0, 0, processingWidth, processingHeight);
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, processingWidth, processingHeight);
+        context.imageSmoothingEnabled = processingScale < 1;
+        context.imageSmoothingQuality = "high";
+        context.drawImage(source, 0, 0, processingWidth, processingHeight);
+        rasterSourceRef.current = source;
+        setDocumentRaster({
+          nativeWidth: sourceWidth,
+          nativeHeight: sourceHeight,
+          processingWidth,
+          processingHeight,
+          processingScale,
+          revision: nextRevision,
+        });
+        setMapSource("upload"); setMapVisible(true);
+        if (cadResult.unitSuggestion) setUnit(cadResult.unitSuggestion);
+
+        if (cadResult.closedPolygons.length > 0) {
+          const autoShapes: Shape[] = cadResult.closedPolygons.map((poly, pIdx) => ({
+            id: `cad-poly-${Date.now()}-${pIdx}`,
+            name: `Plot ${String(pIdx + 1).padStart(2, "0")}`,
+            points: poly.points.map((p) => ({
+              x: Math.round(p.x * processingScale * 100) / 100,
+              y: Math.round(p.y * processingScale * 100) / 100,
+            })),
+            closed: true,
+            visible: true,
+            color: poly.color || "#00ff87",
+            source: "auto",
+            diagonals: [],
+          }));
+          setShapes(autoShapes);
+        }
+
+        hasFittedRef.current = false;
+        window.requestAnimationFrame(fitDocument);
+        notify(`${cadResult.format} CAD Drawing loaded (${cadResult.entityCount} vector entities, ${cadResult.layers.length} layers${cadResult.closedPolygons.length ? `, ${cadResult.closedPolygons.length} closed plots auto-detected` : ""})`);
+      } catch (error) {
+        if (loadToken !== rasterLoadTokenRef.current) return;
+        setMapSource("none"); setMapVisible(false);
+        notify(error instanceof Error ? `CAD load failed: ${error.message}` : "CAD load failed");
+      }
+      return;
+    }
+
     // Regular image loading:
     const loadToken = ++rasterLoadTokenRef.current;
     const nextRevision = mapRevisionRef.current + 1;
@@ -2373,7 +2458,7 @@ export default function Home() {
         <div className="cad-header-actions">
           <button className="cad-icon-button" onClick={undo} disabled={!canUndo} title="Undo (Ctrl/Cmd+Z)"><Undo2 size={17} /></button>
           <button className="cad-icon-button" onClick={redo} disabled={!canRedo} title="Redo (Ctrl/Cmd+Shift+Z or Ctrl+Y)"><Redo2 size={17} /></button>
-          <button className="cad-icon-button" onClick={() => fileRef.current?.click()} title="Upload map image or PDF"><FileUp size={17} /></button><input ref={fileRef} type="file" accept="image/*,application/pdf,.pdf" hidden onChange={loadImage} />
+          <button className="cad-icon-button" onClick={() => fileRef.current?.click()} title="Upload map image, PDF, DXF or DWG"><FileUp size={17} /></button><input ref={fileRef} type="file" accept="image/*,application/pdf,.pdf,.dxf,.dwg,application/dxf,application/dwg,application/x-dwg,application/x-autocad" hidden onChange={loadImage} />
           <button className="cad-icon-button" onClick={() => setMapVisible((visible) => !visible)} disabled={mapSource === "none"} title={mapVisible ? "Hide background map" : "Show background map"}>{mapVisible ? <EyeOff size={17} /> : <Eye size={17} />}</button>
           <button className="cad-icon-button danger-icon" onClick={removeMap} disabled={mapSource === "none"} title="Clear background image from canvas and processing memory"><ImageOff size={17} /></button>
           <button className="cad-icon-button sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}><Menu size={18} /></button>
