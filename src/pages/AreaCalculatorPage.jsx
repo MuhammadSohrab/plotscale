@@ -32,6 +32,10 @@ import {
   calculateRegularShape,
   calculateTriangleRows,
 } from "../services/GeometryService";
+import {
+  calculateInteriorAngle,
+  solveLinkageDrag,
+} from "../services/imageTrace/sketch-solver";
 import { localDatabaseService } from "../services/LocalDatabaseService";
 import { useAppStore } from "../store/useAppStore";
 import { useUnitStore } from "../store/useUnitStore";
@@ -171,50 +175,25 @@ function computeDynamicVertices(result, defaultCorners) {
 
 function solve4BarLinkage(corners, draggedIdx, targetPoint, sides, calibrationScale) {
   const N = 4;
-  const pts = corners.map((p, idx) => (idx === draggedIdx ? { ...p, x: targetPoint.x, y: targetPoint.y } : { ...p }));
+  const targetScale = calibrationScale || 5;
 
-  const targetPx = new Array(N);
-  for (let i = 0; i < N; i++) {
+  const sidesList = [0, 1, 2, 3].map((i) => {
     const nextIdx = (i + 1) % N;
-    const lenVal = sides[i] && Number(sides[i]) > 0 ? Number(sides[i]) : null;
-    if (lenVal && calibrationScale) {
-      targetPx[i] = lenVal * calibrationScale;
-    } else {
-      targetPx[i] = Math.hypot(corners[nextIdx].x - corners[i].x, corners[nextIdx].y - corners[i].y);
-    }
-  }
+    const lenVal = Number(sides[i]) || 0;
+    const isEntered = Boolean(lenVal > 0);
+    const canvasDist = Math.hypot(corners[nextIdx].x - corners[i].x, corners[nextIdx].y - corners[i].y);
+    const physicalLen = isEntered ? lenVal : canvasDist / targetScale;
 
-  for (let iter = 0; iter < 40; iter++) {
-    for (let i = 0; i < N; i++) {
-      const nextIdx = (i + 1) % N;
-      const p1 = pts[i];
-      const p2 = pts[nextIdx];
-      const dx = p2.x - p1.x;
-      const dy = p2.y - p1.y;
-      const curDist = Math.hypot(dx, dy);
-      if (curDist < 1e-4) continue;
+    return {
+      id: `side-${i}`,
+      fromIndex: i,
+      toIndex: nextIdx,
+      length: physicalLen,
+      isLocked: isEntered,
+    };
+  });
 
-      const diff = (curDist - targetPx[i]) / curDist;
-      const moveX = dx * 0.5 * diff;
-      const moveY = dy * 0.5 * diff;
-
-      if (i === draggedIdx) {
-        pts[nextIdx].x -= moveX * 2;
-        pts[nextIdx].y -= moveY * 2;
-      } else if (nextIdx === draggedIdx) {
-        pts[i].x += moveX * 2;
-        pts[i].y += moveY * 2;
-      } else {
-        pts[i].x += moveX;
-        pts[i].y += moveY;
-        pts[nextIdx].x -= moveX;
-        pts[nextIdx].y -= moveY;
-      }
-    }
-  }
-
-  pts[draggedIdx] = { ...pts[draggedIdx], x: targetPoint.x, y: targetPoint.y };
-  return pts;
+  return solveLinkageDrag(corners, draggedIdx, targetPoint, sidesList, [], targetScale);
 }
 
 function IrregularSingleCanvasCalculator({
@@ -272,6 +251,42 @@ function IrregularSingleCanvasCalculator({
     setCompassAngle((prev) => (prev + 45) % 360);
   };
 
+  // Active pixel-to-unit scale factor
+  const activeScale = useMemo(() => {
+    for (let i = 0; i < 4; i++) {
+      const lenVal = Number(sides[i]);
+      if (lenVal > 0) {
+        const p1 = corners[i];
+        const p2 = corners[(i + 1) % 4];
+        const dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        if (dist > 1) return dist / lenVal;
+      }
+    }
+    return calibrationScale || 5;
+  }, [sides, corners, calibrationScale]);
+
+  // Live dynamic distances for both diagonals
+  const liveDiagC1C3 = useMemo(() => {
+    const d = Math.hypot(c3.x - c1.x, c3.y - c1.y);
+    return (d / activeScale).toFixed(2);
+  }, [c1, c3, activeScale]);
+
+  const liveDiagC2C4 = useMemo(() => {
+    const d = Math.hypot(c4.x - c2.x, c4.y - c2.y);
+    return (d / activeScale).toFixed(2);
+  }, [c2, c4, activeScale]);
+
+  // Corner interior angles in degrees
+  const cornerAngles = useMemo(() => {
+    return [0, 1, 2, 3].map((idx) => {
+      const pPrev = corners[(idx - 1 + 4) % 4];
+      const pCurr = corners[idx];
+      const pNext = corners[(idx + 1) % 4];
+      const deg = calculateInteriorAngle(pPrev, pCurr, pNext);
+      return Math.round(deg * 10) / 10;
+    });
+  }, [corners]);
+
   const getScreenPos = useCallback((pt) => {
     if (!svgRef.current || !containerRef.current || !pt) return null;
     const svg = svgRef.current;
@@ -306,20 +321,9 @@ function IrregularSingleCanvasCalculator({
       y: Math.max(15, Math.min(305, start.y + dy / svgScale)),
     };
 
-    const solved = solve4BarLinkage(corners, selectedCornerIndex, targetPoint, sides, calibrationScale);
+    const solved = solve4BarLinkage(corners, selectedCornerIndex, targetPoint, sides, activeScale);
     setLocalCorners(solved);
-
-    if (calibrationScale) {
-      const next = [...sides];
-      for (let i = 0; i < 4; i++) {
-        const p1 = solved[i];
-        const p2 = solved[(i + 1) % 4];
-        const d = Math.hypot(p2.x - p1.x, p2.y - p1.y);
-        next[i] = String(Math.round(d / calibrationScale));
-      }
-      onSidesChange(next);
-    }
-  }, [selectedCornerIndex, isLocked, corners, sides, calibrationScale, onSidesChange]);
+  }, [selectedCornerIndex, isLocked, corners, sides, activeScale]);
 
   const handleCornerDragEnd = useCallback(() => {
     dragStartPointRef.current = null;
@@ -336,14 +340,6 @@ function IrregularSingleCanvasCalculator({
 
       const next = [...sides];
       next[index] = value;
-      for (let i = 0; i < 4; i++) {
-        if (i !== index && (!next[i] || Number(next[i]) <= 0)) {
-          const pa = corners[i];
-          const pb = corners[(i + 1) % 4];
-          const d = Math.hypot(pb.x - pa.x, pb.y - pa.y);
-          next[i] = String(Math.round(d / newScale));
-        }
-      }
       onSidesChange(next);
     } else {
       onSidesChange(sides.map((v, i) => i === index ? value : v));
@@ -364,7 +360,7 @@ function IrregularSingleCanvasCalculator({
           ) : (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 shadow-sm">
               <Unlock size={13} className="text-blue-600" />
-              4-Bar Linkage (Tap corners to drag)
+              Fixed-Bar 4-Linkage (Drag joints to shape)
             </span>
           )}
         </div>
@@ -447,7 +443,7 @@ function IrregularSingleCanvasCalculator({
             strokeDasharray="4 2"
           />
 
-          {/* 4 Boundary Sides - CLEAN Lines without ugly S1/S2 badges */}
+          {/* 4 Boundary Sides - CLEAN Rigid Bar Lines */}
           {[
             { p1: c1, p2: c2, idx: 0, label: sideLabels[0] },
             { p1: c2, p2: c3, idx: 1, label: sideLabels[1] },
@@ -501,7 +497,7 @@ function IrregularSingleCanvasCalculator({
             );
           })}
 
-          {/* Interactive Diagonal C1 ↔ C3 - CLEAN Line */}
+          {/* Interactive Diagonal C1 ↔ C3 with Live Real-Time Distance */}
           <g
             className="cursor-pointer group"
             onClick={(e) => {
@@ -513,11 +509,11 @@ function IrregularSingleCanvasCalculator({
             <line x1={c1.x} y1={c1.y} x2={c3.x} y2={c3.y} stroke="transparent" strokeWidth="24" />
             <line
               x1={c1.x} y1={c1.y} x2={c3.x} y2={c3.y}
-              stroke={selectedDiagonalType === "C1_C3" ? "#1d4ed8" : "#cbd5e1"}
-              strokeWidth={selectedDiagonalType === "C1_C3" ? "4" : "2"}
-              strokeDasharray={selectedDiagonalType === "C1_C3" ? "none" : "6 4"}
+              stroke={selectedDiagonalType === "C1_C3" && diagonalValue ? "#1d4ed8" : "#93c5fd"}
+              strokeWidth={selectedDiagonalType === "C1_C3" && diagonalValue ? "4" : "2"}
+              strokeDasharray={selectedDiagonalType === "C1_C3" && diagonalValue ? "none" : "6 4"}
             />
-            {selectedDiagonalType === "C1_C3" && diagonalValue && (
+            {selectedDiagonalType === "C1_C3" && diagonalValue ? (
               <g transform={`translate(${(c1.x + c3.x) / 2}, ${(c1.y + c3.y) / 2})`}>
                 <rect
                   x="-38" y="-13" width="76" height="26" rx="13"
@@ -528,10 +524,21 @@ function IrregularSingleCanvasCalculator({
                   {diagonalValue} {lengthUnit.symbol}
                 </text>
               </g>
+            ) : (
+              <g transform={`translate(${(c1.x + c3.x) / 2}, ${(c1.y + c3.y) / 2})`}>
+                <rect
+                  x="-42" y="-10" width="84" height="20" rx="10"
+                  fill="#ffffff" stroke="#93c5fd" strokeWidth="1"
+                  className="shadow-sm"
+                />
+                <text x="0" y="3.5" textAnchor="middle" fill="#2563eb" fontSize="9" fontWeight="bold">
+                  {liveDiagC1C3} {lengthUnit.symbol}
+                </text>
+              </g>
             )}
           </g>
 
-          {/* Interactive Diagonal C2 ↔ C4 - CLEAN Line */}
+          {/* Interactive Diagonal C2 ↔ C4 with Live Real-Time Distance */}
           <g
             className="cursor-pointer group"
             onClick={(e) => {
@@ -543,11 +550,11 @@ function IrregularSingleCanvasCalculator({
             <line x1={c2.x} y1={c2.y} x2={c4.x} y2={c4.y} stroke="transparent" strokeWidth="24" />
             <line
               x1={c2.x} y1={c2.y} x2={c4.x} y2={c4.y}
-              stroke={selectedDiagonalType === "C2_C4" ? "#7e22ce" : "#cbd5e1"}
-              strokeWidth={selectedDiagonalType === "C2_C4" ? "4" : "2"}
-              strokeDasharray={selectedDiagonalType === "C2_C4" ? "none" : "6 4"}
+              stroke={selectedDiagonalType === "C2_C4" && diagonalValue ? "#7e22ce" : "#d8b4fe"}
+              strokeWidth={selectedDiagonalType === "C2_C4" && diagonalValue ? "4" : "2"}
+              strokeDasharray={selectedDiagonalType === "C2_C4" && diagonalValue ? "none" : "6 4"}
             />
-            {selectedDiagonalType === "C2_C4" && diagonalValue && (
+            {selectedDiagonalType === "C2_C4" && diagonalValue ? (
               <g transform={`translate(${(c2.x + c4.x) / 2}, ${(c2.y + c4.y) / 2})`}>
                 <rect
                   x="-38" y="-13" width="76" height="26" rx="13"
@@ -558,31 +565,103 @@ function IrregularSingleCanvasCalculator({
                   {diagonalValue} {lengthUnit.symbol}
                 </text>
               </g>
+            ) : (
+              <g transform={`translate(${(c2.x + c4.x) / 2}, ${(c2.y + c4.y) / 2})`}>
+                <rect
+                  x="-42" y="-10" width="84" height="20" rx="10"
+                  fill="#ffffff" stroke="#d8b4fe" strokeWidth="1"
+                  className="shadow-sm"
+                />
+                <text x="0" y="3.5" textAnchor="middle" fill="#7e22ce" fontSize="9" fontWeight="bold">
+                  {liveDiagC2C4} {lengthUnit.symbol}
+                </text>
+              </g>
             )}
           </g>
 
-          {/* Corner Rotary Joint Nodes */}
-          {corners.map((pt, idx) => (
-            <g
-              key={pt.label}
-              className="cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!isLocked) {
-                  setSelectedCornerIndex(idx);
-                }
-              }}
-            >
-              <CrosshairPointMarker
-                cx={pt.x}
-                cy={pt.y}
-                scale={1}
-                color={selectedCornerIndex === idx ? "#3b82f6" : "#22c55e"}
-                selected={selectedCornerIndex === idx}
-                label={pt.label}
-              />
-            </g>
-          ))}
+          {/* Corner Rotary Joint Nodes with Live Angles & Direct Drag */}
+          {corners.map((pt, idx) => {
+            const angle = cornerAngles[idx];
+            const pPrev = corners[(idx - 1 + 4) % 4];
+            const pNext = corners[(idx + 1) % 4];
+            const v1x = pPrev.x - pt.x;
+            const v1y = pPrev.y - pt.y;
+            const v2x = pNext.x - pt.x;
+            const v2y = pNext.y - pt.y;
+            const bisectX = -(v1x / (Math.hypot(v1x, v1y) || 1) + v2x / (Math.hypot(v2x, v2y) || 1));
+            const bisectY = -(v1y / (Math.hypot(v1x, v1y) || 1) + v2y / (Math.hypot(v2x, v2y) || 1));
+            const bLen = Math.hypot(bisectX, bisectY) || 1;
+            const angleBadgeX = pt.x + (bisectX / bLen) * 22;
+            const angleBadgeY = pt.y + (bisectY / bLen) * 22;
+
+            return (
+              <g key={pt.label}>
+                {/* Live Angle Tag */}
+                {angle > 0 && (
+                  <g transform={`translate(${angleBadgeX}, ${angleBadgeY})`}>
+                    <rect
+                      x="-17" y="-8" width="34" height="16" rx="5"
+                      fill="#ffffff" stroke="#cbd5e1" strokeWidth="1"
+                      className="shadow-sm"
+                    />
+                    <text x="0" y="3.5" textAnchor="middle" fill="#0f172a" fontSize="8" fontWeight="bold">
+                      {angle}°
+                    </text>
+                  </g>
+                )}
+
+                {/* Direct Drag & Tap Corner Joint */}
+                <g
+                  className="cursor-grab active:cursor-grabbing"
+                  onPointerDown={(e) => {
+                    e.stopPropagation();
+                    if (!isLocked) {
+                      setSelectedCornerIndex(idx);
+                      dragStartPointRef.current = { ...pt };
+                      try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+                    }
+                  }}
+                  onPointerMove={(e) => {
+                    if (dragStartPointRef.current && selectedCornerIndex === idx && !isLocked) {
+                      const svg = svgRef.current;
+                      if (!svg) return;
+                      const ctm = svg.getScreenCTM();
+                      if (!ctm) return;
+                      const p = svg.createSVGPoint();
+                      p.x = e.clientX;
+                      p.y = e.clientY;
+                      const svgP = p.matrixTransform(ctm.inverse());
+                      const targetPoint = {
+                        x: Math.max(15, Math.min(385, svgP.x)),
+                        y: Math.max(15, Math.min(305, svgP.y)),
+                      };
+                      const solved = solve4BarLinkage(corners, idx, targetPoint, sides, activeScale);
+                      setLocalCorners(solved);
+                    }
+                  }}
+                  onPointerUp={(e) => {
+                    dragStartPointRef.current = null;
+                    try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!isLocked) {
+                      setSelectedCornerIndex(idx);
+                    }
+                  }}
+                >
+                  <CrosshairPointMarker
+                    cx={pt.x}
+                    cy={pt.y}
+                    scale={1.1}
+                    color={selectedCornerIndex === idx ? "#3b82f6" : "#22c55e"}
+                    selected={selectedCornerIndex === idx}
+                    label={pt.label}
+                  />
+                </g>
+              </g>
+            );
+          })}
         </svg>
 
         {/* Tap-to-Reveal Offset Drag Handle Overlay */}
