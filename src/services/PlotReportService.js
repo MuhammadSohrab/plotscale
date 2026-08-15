@@ -165,10 +165,10 @@ function drawPlotDiagram(pdf, snapshot, x, y, width, height) {
         const midY = (p1.y + p2.y) / 2;
         const distM = snapshot.result.diagonalsMeters?.[pIdx];
         const distVal = distM ? (distM / lengthFactor).toFixed(2) : null;
-        const label = distVal ? `Diag: ${distVal} ${lengthSymbol}` : `P${from + 1}-P${to + 1}`;
+        const label = distVal ? `${distVal} ${lengthSymbol}` : `P${from + 1}-P${to + 1}`;
 
         pdf.setFont("helvetica", "bold");
-        pdf.setFontSize(6.2);
+        pdf.setFontSize(6.5);
         const textWidth = pdf.getTextWidth(label) + 2;
 
         // Clean white knockout mask (prevents line striking through text)
