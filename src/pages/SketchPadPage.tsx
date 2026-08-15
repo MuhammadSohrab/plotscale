@@ -436,13 +436,13 @@ export default function SketchPadPage() {
     return solveTriangulatedPolygon(sideVals, activeDiagonalsList, activeScale, points);
   }, [activeDiagonalsList, closed, outerSides, points, calibrationScale]);
 
-  // Morph Points in Mode A when triangulation is complete
+  // Morph Points when triangulation is complete
   useEffect(() => {
-    if (solverMode === "modeA" && isTriangulationComplete && triangulationResult && triangulationResult.ok && triangulationResult.solvedPoints) {
+    if (isTriangulationComplete && triangulationResult && triangulationResult.ok && triangulationResult.solvedPoints) {
       setPoints(triangulationResult.solvedPoints);
       notify("Plot morphed to exact triangulated 2D shape!");
     }
-  }, [isTriangulationComplete, solverMode]);
+  }, [isTriangulationComplete]);
 
   // Area Calculations (100% Accurate Shoelace formula in Square Meters)
   const rawAreaInSqMeters = useMemo(() => {
