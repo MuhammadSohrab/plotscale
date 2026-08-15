@@ -113,43 +113,109 @@ function drawPlotDiagram(pdf, snapshot, x, y, width, height) {
     ? mapPointsToLocal(snapshot.map?.points)
     : snapshot.result.vertices;
   if (!rawPoints?.length) return;
-  const points = fitPoints(rawPoints, x, y, width, height);
-  pdf.setFillColor(239, 246, 255);
-  pdf.setDrawColor(...COLORS.blue);
-  pdf.setLineWidth(0.7);
-  const lines = points.slice(1).map((point, index) => [
-    point.x - points[index].x,
-    point.y - points[index].y,
-  ]);
-  pdf.lines(lines, points[0].x, points[0].y, [1, 1], "FD", true);
 
+  const points = fitPoints(rawPoints, x, y, width, height, 16);
+  const lengthFactor = Number(snapshot.inputUnit?.factorToBase) || 0.3048;
+  const lengthSymbol = snapshot.inputUnit?.symbol || "ft";
+
+  // 1. Draw Dotted Diagonals FIRST (with visible dotted stroke)
   const pairs = snapshot.result.diagonalPairs ?? [];
-  pdf.setDrawColor(...COLORS.muted);
-  pdf.setLineDashPattern([1.5, 1], 0);
+  pdf.setDrawColor(60, 60, 60);
+  pdf.setLineWidth(0.55);
+  pdf.setLineDashPattern([2, 1.5], 0);
+
   pairs.forEach(([from, to]) => {
-    if (points[from] && points[to]) {
-      pdf.line(points[from].x, points[from].y, points[to].x, points[to].y);
+    const p1 = points[from];
+    const p2 = points[to];
+    if (p1 && p2) {
+      pdf.line(p1.x, p1.y, p2.x, p2.y);
     }
   });
   pdf.setLineDashPattern([], 0);
 
+  // 1b. Draw Diagonal Length Labels with white background pill
+  pairs.forEach(([from, to], pIdx) => {
+    const p1 = points[from];
+    const p2 = points[to];
+    if (p1 && p2) {
+      const midX = (p1.x + p2.x) / 2;
+      const midY = (p1.y + p2.y) / 2;
+      const distM = snapshot.result.diagonalsMeters?.[pIdx];
+      const distVal = distM ? (distM / lengthFactor).toFixed(2) : null;
+      const label = distVal ? `Diag: ${distVal} ${lengthSymbol}` : `P${from + 1}⟷P${to + 1}`;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(6.2);
+      const textWidth = pdf.getTextWidth(label) + 4;
+
+      pdf.setFillColor(255, 255, 255);
+      pdf.setDrawColor(180, 180, 180);
+      pdf.setLineWidth(0.2);
+      pdf.roundedRect(midX - (textWidth / 2), midY - 2.8, textWidth, 5.6, 1, 1, "FD");
+
+      pdf.setTextColor(30, 58, 138);
+      pdf.text(label, midX, midY + 1.2, { align: "center" });
+    }
+  });
+
+  // 2. Draw Precision Corner Center Points & Crosshairs (At exact corner intersection)
+  points.forEach((point) => {
+    pdf.setDrawColor(0, 0, 0);
+    pdf.setLineWidth(0.22);
+    pdf.line(point.x - 2.2, point.y, point.x + 2.2, point.y);
+    pdf.line(point.x, point.y - 2.2, point.x, point.y + 2.2);
+    pdf.circle(point.x, point.y, 0.9, "D");
+    pdf.setFillColor(0, 0, 0);
+    pdf.circle(point.x, point.y, 0.35, "F");
+  });
+
+  // 3. Draw Solid Black Outer Boundaries (NO fill color, pure vector stroke)
+  pdf.setDrawColor(0, 0, 0);
+  pdf.setLineWidth(0.85);
+  const lines = points.slice(1).map((point, index) => [
+    point.x - points[index].x,
+    point.y - points[index].y,
+  ]);
+  pdf.lines(lines, points[0].x, points[0].y, [1, 1], "D", true);
+
+  // 4. Draw Side Measurements & Outward-Offset Vertex Labels
+  const centerX = points.reduce((s, p) => s + p.x, 0) / points.length;
+  const centerY = points.reduce((s, p) => s + p.y, 0) / points.length;
+
   points.forEach((point, index) => {
     const next = points[(index + 1) % points.length];
-    pdf.setFillColor(...COLORS.green);
-    pdf.circle(point.x, point.y, 1.3, "F");
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(7);
-    pdf.setTextColor(...COLORS.navy);
-    pdf.text(`P${index + 1}`, point.x + 2, point.y - 2);
+    
+    // Side Length Badge
     const label = snapshot.result.sideLabels?.[index];
     if (label) {
-      pdf.setFont("helvetica", "normal");
+      const midX = (point.x + next.x) / 2;
+      const midY = (point.y + next.y) / 2;
+      
+      pdf.setFont("helvetica", "bold");
       pdf.setFontSize(6.5);
-      pdf.setTextColor(...COLORS.ink);
-      pdf.text(label, (point.x + next.x) / 2, ((point.y + next.y) / 2) - 1.5, {
-        align: "center",
-      });
+      const sideTextWidth = pdf.getTextWidth(label) + 4;
+
+      pdf.setFillColor(255, 255, 255);
+      pdf.setDrawColor(0, 0, 0);
+      pdf.setLineWidth(0.25);
+      pdf.roundedRect(midX - (sideTextWidth / 2), midY - 3, sideTextWidth, 6, 1, 1, "FD");
+
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(label, midX, midY + 1.2, { align: "center" });
     }
+
+    // Corner Label P1, P2... (offset outward so intersection is 100% visible)
+    const dirX = point.x - centerX;
+    const dirY = point.y - centerY;
+    const dist = Math.hypot(dirX, dirY) || 1;
+    const offsetX = (dirX / dist) * 5.5;
+    const offsetY = (dirY / dist) * 5.5;
+
+    const cornerLabel = `P${index + 1}`;
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(cornerLabel, point.x + offsetX, point.y + offsetY + 1.5, { align: "center" });
   });
 }
 
@@ -488,32 +554,41 @@ export async function exportPlotPdf(input) {
 
   if (isTrianglesMode) {
     drawTriangleBreakdownTable(pdf, snapshot, 14, 114, 182);
-  } else {
-    let nextY = 116;
-    if (snapshot.mode === "irregular" && hasTrianglesData) {
-      nextY = drawTriangleBreakdownTable(pdf, snapshot, 14, 114, 182) + 8;
-    }
-
-    if (nextY > 170) {
-      pdf.addPage();
-      drawHeader(pdf, snapshot.logo);
-      nextY = 34;
-    }
-
+    pdf.addPage();
+    drawHeader(pdf, snapshot.logo);
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(11);
     pdf.setTextColor(...COLORS.navy);
-    pdf.text("Plot diagram", 14, nextY);
-    drawPlotDiagram(pdf, snapshot, 14, nextY + 4, snapshot.sourceType === "map" ? 112 : 182, 102);
+    pdf.text("Cadastral Survey Drawing (Full Page Proportional)", 14, 32);
+    drawPlotDiagram(pdf, snapshot, 14, 36, 182, 240);
+    addMeasurementPage(pdf, snapshot);
+  } else {
+    if (hasTrianglesData) {
+      drawTriangleBreakdownTable(pdf, snapshot, 14, 114, 182);
+    }
+
+    // Dedicated Full Page Cadastral Survey Drawing
+    pdf.addPage();
+    drawHeader(pdf, snapshot.logo);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(11);
+    pdf.setTextColor(...COLORS.navy);
+    pdf.text("Cadastral Survey Drawing (Full Page Proportional)", 14, 32);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(7);
+    pdf.setTextColor(...COLORS.muted);
+    pdf.text("Black boundary line with precision corner center crosshairs and dotted diagonals", 14, 36);
+    drawPlotDiagram(pdf, snapshot, 14, 38, 182, 238);
 
     if (snapshot.result.warning) {
       pdf.setFillColor(255, 247, 237);
-      pdf.roundedRect(14, nextY + 110, 182, 18, 2, 2, "F");
+      pdf.roundedRect(14, 252, 182, 16, 2, 2, "F");
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(7.5);
       pdf.setTextColor(...COLORS.warning);
-      pdf.text(pdf.splitTextToSize(snapshot.result.warning, 174), 18, nextY + 116);
+      pdf.text(pdf.splitTextToSize(snapshot.result.warning, 174), 18, 258);
     }
+
     addMeasurementPage(pdf, snapshot);
   }
 
