@@ -88,9 +88,6 @@ export default function SketchPadPage() {
   const navigate = useNavigate();
   const viewerRef = useRef<HTMLDivElement>(null);
 
-  // Solver Mode: Mode A (With Diagonals) vs Mode B (Fixed Linkage)
-  const [solverMode, setSolverMode] = useState<"modeA" | "modeB">("modeA");
-
   // Tools: draw, pan, dimension, customDiagonal, angles, triangles
   const [activeTool, setActiveTool] = useState<"draw" | "pan" | "dimension" | "customDiagonal" | "angles" | "triangles">("draw");
 
@@ -1098,59 +1095,44 @@ export default function SketchPadPage() {
 
       {/* Main Workspace Shell */}
       <section className="sketch-shell">
-        {/* Top Controls Bar (Mode A vs Mode B Switcher, Actions & Zoom Controls) */}
+        {/* Top Controls Bar (Action Tools on Left, Zoom & Fit on Right) */}
         <div className="sketch-top-controls-bar">
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            {closed && (
-              <div className="sketch-mode-toggle">
-                <button type="button" className={`sketch-mode-btn ${solverMode === "modeA" ? "is-active" : ""}`} onClick={() => setSolverMode("modeA")}>
-                  Mode A: Diagonals
-                </button>
-                <button type="button" className={`sketch-mode-btn ${solverMode === "modeB" ? "is-active" : ""}`} onClick={() => setSolverMode("modeB")}>
-                  Mode B: Linkage
-                </button>
-              </div>
-            )}
+          {/* Header Action Tools */}
+          <div className="sketch-header-actions">
+            <button type="button" className="sketch-icon-btn" onClick={handleUndo} disabled={historyIndex <= 0} title="Undo">
+              <Undo2 size={16} />
+            </button>
+            <button type="button" className="sketch-icon-btn" onClick={handleRedo} disabled={historyIndex >= history.length - 1} title="Redo">
+              <Redo2 size={16} />
+            </button>
+            <button type="button" className="sketch-icon-btn" onClick={() => setSaveModalOpen(true)} disabled={!closed || points.length < 3} title="Save Plot">
+              <Save size={16} />
+            </button>
+            <button type="button" className="sketch-icon-btn" onClick={() => setExportModalOpen(true)} disabled={!closed || points.length < 3} title="Export (PDF, GeoJSON, KML, DXF)">
+              <Download size={16} />
+            </button>
+            <button type="button" className="sketch-icon-btn" onClick={handleClear} title="Clear Canvas" style={{ color: "#ef4444" }}>
+              <Trash2 size={16} />
+            </button>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            {/* Header Action Tools */}
-            <div className="sketch-header-actions">
-              <button type="button" className="sketch-icon-btn" onClick={handleUndo} disabled={historyIndex <= 0} title="Undo">
-                <Undo2 size={16} />
-              </button>
-              <button type="button" className="sketch-icon-btn" onClick={handleRedo} disabled={historyIndex >= history.length - 1} title="Redo">
-                <Redo2 size={16} />
-              </button>
-              <button type="button" className="sketch-icon-btn" onClick={() => setSaveModalOpen(true)} disabled={!closed || points.length < 3} title="Save Plot">
-                <Save size={16} />
-              </button>
-              <button type="button" className="sketch-icon-btn" onClick={() => setExportModalOpen(true)} disabled={!closed || points.length < 3} title="Export (PDF, GeoJSON, KML, DXF)">
-                <Download size={16} />
-              </button>
-              <button type="button" className="sketch-icon-btn" onClick={handleClear} title="Clear Canvas" style={{ color: "#ef4444" }}>
-                <Trash2 size={16} />
-              </button>
-            </div>
-
-            {/* Zoom & Fit Map Controls */}
-            <div className="sketch-zoom">
-              <button type="button" onClick={() => setTransform((t) => ({ ...t, scale: Math.min(3.5, t.scale * 1.25) }))} title="Zoom In">
-                <ZoomIn size={15} />
-              </button>
-              <span>{Math.round(transform.scale * 100)}%</span>
-              <button type="button" onClick={() => setTransform((t) => ({ ...t, scale: Math.max(0.4, t.scale / 1.25) }))} title="Zoom Out">
-                <ZoomOut size={15} />
-              </button>
-              <button type="button" onClick={fitPlotToViewport} title="Fit & Center Map to Viewport" style={{ color: "#2563eb", borderLeft: "1px solid #e2e8f0" }}>
-                <Maximize2 size={15} />
-              </button>
-            </div>
+          {/* Zoom & Fit Map Controls */}
+          <div className="sketch-zoom">
+            <button type="button" onClick={() => setTransform((t) => ({ ...t, scale: Math.min(3.5, t.scale * 1.25) }))} title="Zoom In">
+              <ZoomIn size={15} />
+            </button>
+            <span>{Math.round(transform.scale * 100)}%</span>
+            <button type="button" onClick={() => setTransform((t) => ({ ...t, scale: Math.max(0.4, t.scale / 1.25) }))} title="Zoom Out">
+              <ZoomOut size={15} />
+            </button>
+            <button type="button" onClick={fitPlotToViewport} title="Fit & Center Map to Viewport" style={{ color: "#2563eb", borderLeft: "1px solid #e2e8f0" }}>
+              <Maximize2 size={15} />
+            </button>
           </div>
         </div>
 
         {/* Dismissable Warning Banner */}
-        {solverMode === "modeA" && closed && points.length >= 4 && !warningDismissed && (
+        {closed && points.length >= 4 && !warningDismissed && (
           <div className="sketch-warning-banner">
             <AlertTriangle size={16} style={{ flexShrink: 0 }} />
             <span style={{ flex: 1 }}>
@@ -1229,15 +1211,6 @@ export default function SketchPadPage() {
             >
               <Triangle size={15} />
               <span>Triangles ({dynamicTrianglesList.length})</span>
-            </button>
-            <button
-              type="button"
-              className="sketch-tool-btn"
-              onClick={fitPlotToViewport}
-              title="Fit & Center Map to Viewport"
-            >
-              <Maximize2 size={15} />
-              <span>Fit Map</span>
             </button>
           </nav>
         ) : (
