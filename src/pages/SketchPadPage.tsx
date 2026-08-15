@@ -1113,10 +1113,13 @@ export default function SketchPadPage() {
         return `${distPhysical.toFixed(2)} ${lengthUnitSymbol}`;
       });
 
-      const diagonalPairs = diagonals.map((d) => [d.from, d.to]);
-      const diagonalsMeters = diagonals.map((d) => {
-        const p1 = points[d.from];
-        const p2 = points[d.to];
+      const activeDiags = (activeDiagonalsList && activeDiagonalsList.length > 0) ? activeDiagonalsList : diagonals;
+      const diagonalPairs = activeDiags.map((d) => [d.fromIndex ?? d.from, d.toIndex ?? d.to]);
+      const diagonalsMeters = activeDiags.map((d) => {
+        const from = d.fromIndex ?? d.from;
+        const to = d.toIndex ?? d.to;
+        const p1 = points[from];
+        const p2 = points[to];
         const distPx = p1 && p2 ? Math.hypot(p2.x - p1.x, p2.y - p1.y) : 0;
         const distPhysical = d.length > 0 ? d.length : (distPx / activeScale);
         return distPhysical * unitFactor;

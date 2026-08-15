@@ -114,64 +114,76 @@ function drawPlotDiagram(pdf, snapshot, x, y, width, height) {
     : snapshot.result.vertices;
   if (!rawPoints?.length) return;
 
-  const points = fitPoints(rawPoints, x, y, width, height, 16);
+  const points = fitPoints(rawPoints, x, y, width, height, 18);
   const lengthFactor = Number(snapshot.inputUnit?.factorToBase) || 0.3048;
   const lengthSymbol = snapshot.inputUnit?.symbol || "ft";
 
-  // 1. Draw Dotted Diagonals FIRST (with visible dotted stroke)
+  // 1. Draw Precision Corner Markers in BACKGROUND (Under main black boundary)
+  points.forEach((point) => {
+    // Soft light green corner target circle
+    pdf.setFillColor(187, 247, 208); // #bbf7d0 light green
+    pdf.circle(point.x, point.y, 2.4, "F");
+    pdf.setDrawColor(34, 197, 94); // #22c55e green border
+    pdf.setLineWidth(0.2);
+    pdf.circle(point.x, point.y, 2.4, "D");
+
+    // Red precision crosshairs (+) extending beyond the circle
+    pdf.setDrawColor(239, 68, 68); // #ef4444 Red
+    pdf.setLineWidth(0.35);
+    pdf.line(point.x - 3.2, point.y, point.x + 3.2, point.y);
+    pdf.line(point.x, point.y - 3.2, point.x, point.y + 3.2);
+
+    // Red center point dot at exact mathematical vertex
+    pdf.setFillColor(220, 38, 38);
+    pdf.circle(point.x, point.y, 0.45, "F");
+  });
+
+  // 2. Draw Dotted Diagonals (Visible 2px equivalent stroke = 0.65mm)
   const pairs = snapshot.result.diagonalPairs ?? [];
-  pdf.setDrawColor(60, 60, 60);
-  pdf.setLineWidth(0.55);
-  pdf.setLineDashPattern([2, 1.5], 0);
+  pdf.setDrawColor(75, 85, 99);
+  pdf.setLineWidth(0.65);
+  pdf.setLineDashPattern([1.8, 1.2], 0);
 
   pairs.forEach(([from, to]) => {
-    const p1 = points[from];
-    const p2 = points[to];
-    if (p1 && p2) {
-      pdf.line(p1.x, p1.y, p2.x, p2.y);
+    if (typeof from === "number" && typeof to === "number") {
+      const p1 = points[from];
+      const p2 = points[to];
+      if (p1 && p2) {
+        pdf.line(p1.x, p1.y, p2.x, p2.y);
+      }
     }
   });
   pdf.setLineDashPattern([], 0);
 
-  // 1b. Draw Diagonal Length Labels with white background pill
+  // 2b. Draw Diagonal Length Labels (With clean white knockout mask - no ugly box)
   pairs.forEach(([from, to], pIdx) => {
-    const p1 = points[from];
-    const p2 = points[to];
-    if (p1 && p2) {
-      const midX = (p1.x + p2.x) / 2;
-      const midY = (p1.y + p2.y) / 2;
-      const distM = snapshot.result.diagonalsMeters?.[pIdx];
-      const distVal = distM ? (distM / lengthFactor).toFixed(2) : null;
-      const label = distVal ? `Diag: ${distVal} ${lengthSymbol}` : `P${from + 1}⟷P${to + 1}`;
+    if (typeof from === "number" && typeof to === "number") {
+      const p1 = points[from];
+      const p2 = points[to];
+      if (p1 && p2) {
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        const distM = snapshot.result.diagonalsMeters?.[pIdx];
+        const distVal = distM ? (distM / lengthFactor).toFixed(2) : null;
+        const label = distVal ? `Diag: ${distVal} ${lengthSymbol}` : `P${from + 1}-P${to + 1}`;
 
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(6.2);
-      const textWidth = pdf.getTextWidth(label) + 4;
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(6.2);
+        const textWidth = pdf.getTextWidth(label) + 2;
 
-      pdf.setFillColor(255, 255, 255);
-      pdf.setDrawColor(180, 180, 180);
-      pdf.setLineWidth(0.2);
-      pdf.roundedRect(midX - (textWidth / 2), midY - 2.8, textWidth, 5.6, 1, 1, "FD");
+        // Clean white knockout mask (prevents line striking through text)
+        pdf.setFillColor(255, 255, 255);
+        pdf.rect(midX - (textWidth / 2) - 0.8, midY - 2.2, textWidth + 1.6, 4.4, "F");
 
-      pdf.setTextColor(30, 58, 138);
-      pdf.text(label, midX, midY + 1.2, { align: "center" });
+        pdf.setTextColor(30, 58, 138);
+        pdf.text(label, midX, midY + 1.0, { align: "center" });
+      }
     }
   });
 
-  // 2. Draw Precision Corner Center Points & Crosshairs (At exact corner intersection)
-  points.forEach((point) => {
-    pdf.setDrawColor(0, 0, 0);
-    pdf.setLineWidth(0.22);
-    pdf.line(point.x - 2.2, point.y, point.x + 2.2, point.y);
-    pdf.line(point.x, point.y - 2.2, point.x, point.y + 2.2);
-    pdf.circle(point.x, point.y, 0.9, "D");
-    pdf.setFillColor(0, 0, 0);
-    pdf.circle(point.x, point.y, 0.35, "F");
-  });
-
-  // 3. Draw Solid Black Outer Boundaries (NO fill color, pure vector stroke)
+  // 3. Draw Solid Black Outer Boundaries ON TOP (NO fill color)
   pdf.setDrawColor(0, 0, 0);
-  pdf.setLineWidth(0.85);
+  pdf.setLineWidth(0.9);
   const lines = points.slice(1).map((point, index) => [
     point.x - points[index].x,
     point.y - points[index].y,
@@ -185,31 +197,30 @@ function drawPlotDiagram(pdf, snapshot, x, y, width, height) {
   points.forEach((point, index) => {
     const next = points[(index + 1) % points.length];
     
-    // Side Length Badge
+    // Side Length with clean white knockout mask (no rectangular box outline)
     const label = snapshot.result.sideLabels?.[index];
     if (label) {
       const midX = (point.x + next.x) / 2;
       const midY = (point.y + next.y) / 2;
       
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(6.5);
-      const sideTextWidth = pdf.getTextWidth(label) + 4;
+      pdf.setFontSize(6.8);
+      const sideTextWidth = pdf.getTextWidth(label) + 2;
 
+      // Pure white knockout mask under text
       pdf.setFillColor(255, 255, 255);
-      pdf.setDrawColor(0, 0, 0);
-      pdf.setLineWidth(0.25);
-      pdf.roundedRect(midX - (sideTextWidth / 2), midY - 3, sideTextWidth, 6, 1, 1, "FD");
+      pdf.rect(midX - (sideTextWidth / 2) - 0.8, midY - 2.4, sideTextWidth + 1.6, 4.8, "F");
 
       pdf.setTextColor(0, 0, 0);
-      pdf.text(label, midX, midY + 1.2, { align: "center" });
+      pdf.text(label, midX, midY + 1.0, { align: "center" });
     }
 
-    // Corner Label P1, P2... (offset outward so intersection is 100% visible)
+    // Corner Label P1, P2... (offset outward so precision crosshair is 100% visible)
     const dirX = point.x - centerX;
     const dirY = point.y - centerY;
     const dist = Math.hypot(dirX, dirY) || 1;
-    const offsetX = (dirX / dist) * 5.5;
-    const offsetY = (dirY / dist) * 5.5;
+    const offsetX = (dirX / dist) * 6.0;
+    const offsetY = (dirY / dist) * 6.0;
 
     const cornerLabel = `P${index + 1}`;
     pdf.setFont("helvetica", "bold");
@@ -390,21 +401,16 @@ function addMeasurementPage(pdf, snapshot) {
         }
         const distanceMeters = snapshot.result.diagonalsMeters?.[pIdx];
         const distInUnit = distanceMeters ? (distanceMeters / lengthFactor).toFixed(2) : null;
+        const fromNum = typeof from === "number" ? from + 1 : pIdx + 1;
+        const toNum = typeof to === "number" ? to + 1 : pIdx + 2;
+
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(7.5);
         pdf.setTextColor(...COLORS.ink);
-        pdf.text(
-          `Diagonal P${from + 1} ⟷ P${to + 1}`,
-          17,
-          y + 5,
-        );
-        pdf.text(
-          distanceMeters === null || distanceMeters === undefined
-            ? "—"
-            : `${distInUnit} ${lengthSymbol}  (${format(distanceMeters)} m)`,
-          55,
-          y + 5,
-        );
+
+        pdf.text(`Diagonal P${fromNum} - P${toNum}`, 17, y + 5);
+        pdf.text(distInUnit ? `${distInUnit} ${lengthSymbol}` : "—", 75, y + 5);
+        pdf.text(distanceMeters ? `(${format(distanceMeters)} m)` : "", 120, y + 5);
         y += 8;
       });
     } else if (snapshot.map?.diagonalGroups?.length) {
@@ -422,12 +428,8 @@ function addMeasurementPage(pdf, snapshot) {
           pdf.setFont("helvetica", "normal");
           pdf.setFontSize(7.5);
           pdf.setTextColor(...COLORS.ink);
-          pdf.text(
-            `Diagonal P${group.base + 1} ⟷ P${connected + 1}`,
-            17,
-            y + 5,
-          );
-          pdf.text(distance === null ? "—" : `${format(distance)} m`, 55, y + 5);
+          pdf.text(`Diagonal P${group.base + 1} - P${connected + 1}`, 17, y + 5);
+          pdf.text(distance === null ? "—" : `${format(distance)} m`, 75, y + 5);
           y += 8;
         });
       });
