@@ -303,36 +303,69 @@ function addMeasurementPage(pdf, snapshot) {
     pdf.text(`${format(snapshot.result.averageElevationM, 2)} m`, 54, y);
   }
 
-  if (snapshot.sourceType === "map" && snapshot.map?.diagonalGroups?.length) {
+  const hasDiagonals = (snapshot.result.diagonalPairs?.length > 0) || (snapshot.sourceType === "map" && snapshot.map?.diagonalGroups?.length);
+  if (hasDiagonals) {
     y += 10;
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(10);
     pdf.setTextColor(...COLORS.navy);
     pdf.text("Diagonal measurements", 14, y);
     y += 5;
-    snapshot.map.diagonalGroups.forEach((group) => {
-      group.connected.forEach((connected) => {
+
+    const lengthFactor = Number(snapshot.inputUnit?.factorToBase) || 0.3048;
+    const lengthSymbol = snapshot.inputUnit?.symbol || "ft";
+
+    if (snapshot.result.diagonalPairs?.length) {
+      snapshot.result.diagonalPairs.forEach(([from, to], pIdx) => {
         if (y > 270) {
           pdf.addPage();
           drawHeader(pdf, snapshot.logo);
           y = 34;
         }
-        const pairIndex = snapshot.result.diagonalPairs?.findIndex(([from, to]) =>
-          (from === group.base && to === connected)
-          || (from === connected && to === group.base));
-        const distance = pairIndex >= 0 ? snapshot.result.diagonalsMeters?.[pairIndex] : null;
+        const distanceMeters = snapshot.result.diagonalsMeters?.[pIdx];
+        const distInUnit = distanceMeters ? (distanceMeters / lengthFactor).toFixed(2) : null;
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(7.5);
         pdf.setTextColor(...COLORS.ink);
         pdf.text(
-          `P${group.base + 1} to P${connected + 1}`,
+          `Diagonal P${from + 1} ⟷ P${to + 1}`,
           17,
           y + 5,
         );
-        pdf.text(distance === null ? "—" : `${format(distance)} m`, 55, y + 5);
+        pdf.text(
+          distanceMeters === null || distanceMeters === undefined
+            ? "—"
+            : `${distInUnit} ${lengthSymbol}  (${format(distanceMeters)} m)`,
+          55,
+          y + 5,
+        );
         y += 8;
       });
-    });
+    } else if (snapshot.map?.diagonalGroups?.length) {
+      snapshot.map.diagonalGroups.forEach((group) => {
+        group.connected.forEach((connected) => {
+          if (y > 270) {
+            pdf.addPage();
+            drawHeader(pdf, snapshot.logo);
+            y = 34;
+          }
+          const pairIndex = snapshot.result.diagonalPairs?.findIndex(([from, to]) =>
+            (from === group.base && to === connected)
+            || (from === connected && to === group.base));
+          const distance = pairIndex >= 0 ? snapshot.result.diagonalsMeters?.[pairIndex] : null;
+          pdf.setFont("helvetica", "normal");
+          pdf.setFontSize(7.5);
+          pdf.setTextColor(...COLORS.ink);
+          pdf.text(
+            `Diagonal P${group.base + 1} ⟷ P${connected + 1}`,
+            17,
+            y + 5,
+          );
+          pdf.text(distance === null ? "—" : `${format(distance)} m`, 55, y + 5);
+          y += 8;
+        });
+      });
+    }
   }
 
   if (snapshot.metadata.notes) {

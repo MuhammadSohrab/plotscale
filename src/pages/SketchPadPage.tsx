@@ -42,6 +42,7 @@ import {
   ZoomOut,
 } from "lucide-react";
 import { Brand } from "../components/Brand";
+import { exportPlotPdf } from "../services/PlotReportService";
 import { localDatabaseService } from "../services/LocalDatabaseService";
 import { CrosshairPointMarker } from "../components/common/PointMarker";
 import { OffsetDragHandleOverlay } from "../components/common/OffsetDragHandle";
@@ -1080,6 +1081,104 @@ export default function SketchPadPage() {
     notify(`Exported ${filename}!`);
   };
 
+  const handleExportPdf = async () => {
+    if (!closed || points.length < 3) {
+      notify("Please complete and close the plot before exporting PDF");
+      return;
+    }
+    try {
+      notify("Generating high-resolution survey PDF report...");
+      const activeScale = calibrationScale ?? DEFAULT_SCALE;
+      const unitFactor = unit === "ft" ? 0.3048 : unit === "yd" ? 0.9144 : 1.0;
+      const areaUnitFactor = unit === "ft" ? 0.09290304 : unit === "yd" ? 0.83612736 : 1.0;
+      const lengthUnitSymbol = unit === "ft" ? "ft" : unit === "yd" ? "gaj" : "m";
+      const areaUnitSymbol = unit === "ft" ? "sq.ft" : unit === "yd" ? "sq.yd" : "m²";
+
+      // Physical side lengths
+      const sideLengthsMeters = outerSides.map((s) => {
+        const p1 = points[s.from];
+        const p2 = points[s.to];
+        const distPx = p1 && p2 ? Math.hypot(p2.x - p1.x, p2.y - p1.y) : 0;
+        const distPhysical = s.length > 0 ? s.length : (distPx / activeScale);
+        return distPhysical * unitFactor;
+      });
+
+      const sideLabels = outerSides.map((s) => {
+        const p1 = points[s.from];
+        const p2 = points[s.to];
+        const distPx = p1 && p2 ? Math.hypot(p2.x - p1.x, p2.y - p1.y) : 0;
+        const distPhysical = s.length > 0 ? s.length : (distPx / activeScale);
+        return `${distPhysical.toFixed(2)} ${lengthUnitSymbol}`;
+      });
+
+      const diagonalPairs = diagonals.map((d) => [d.from, d.to]);
+      const diagonalsMeters = diagonals.map((d) => {
+        const p1 = points[d.from];
+        const p2 = points[d.to];
+        const distPx = p1 && p2 ? Math.hypot(p2.x - p1.x, p2.y - p1.y) : 0;
+        const distPhysical = d.length > 0 ? d.length : (distPx / activeScale);
+        return distPhysical * unitFactor;
+      });
+
+      const perimeterM = sideLengthsMeters.reduce((a, b) => a + b, 0);
+
+      // Triangles data breakdown
+      const trianglesData = dynamicTrianglesList.map((tri, idx) => {
+        return {
+          name: `Triangle ${idx + 1} (P${tri.indices[0] + 1}-P${tri.indices[1] + 1}-P${tri.indices[2] + 1})`,
+          sidesMeters: tri.sides.map((s) => s * unitFactor),
+          values: tri.sides.map((s) => s.toFixed(2)),
+          areaSqm: tri.areaSqMeters,
+          indices: tri.indices,
+        };
+      });
+
+      const snapshot = {
+        sourceType: "manual",
+        calculationMode: "irregular",
+        mode: "irregular",
+        inputUnit: {
+          id: unit,
+          name: unit === "ft" ? "Feet" : unit === "yd" ? "Gaj" : "Meter",
+          symbol: lengthUnitSymbol,
+          factorToBase: String(unitFactor),
+        },
+        outputUnit: {
+          id: unit === "ft" ? "sqft" : unit === "yd" ? "gaj" : "sqm",
+          name: unit === "ft" ? "Square Feet" : unit === "yd" ? "Square Yard" : "Square Meter",
+          symbol: areaUnitSymbol,
+          factorToBase: String(areaUnitFactor),
+        },
+        metadata: {
+          plotName: plotName || "Sketch Plot",
+          owner: "Surveyor / Owner",
+          address: "Site Sketch Survey",
+          notes: `Generated from PlotScale CAD Sketch Engine. Vertices: ${points.length}. Locked diagonals: ${diagonals.length}.`,
+        },
+        result: {
+          areaSqm: rawAreaInSqMeters,
+          perimeterM,
+          method: "triangulation_cad",
+          exactness: isTriangulationComplete ? "confirmed" : "approximate",
+          vertices: points,
+          sideLengthsMeters,
+          sideLabels,
+          diagonalPairs,
+          diagonalsMeters,
+          triangles: trianglesData,
+        },
+        boundaries: outerSides.map((_, i) => `Boundary ${i + 1}`),
+      };
+
+      setExportModalOpen(false);
+      await exportPlotPdf(snapshot);
+      notify(`Exported PlotScale-${plotName || "Plot"}.pdf!`);
+    } catch (err) {
+      console.error("PDF export failed:", err);
+      notify("Failed to generate PDF report");
+    }
+  };
+
   return (
     <main className="sketch-app">
       {/* Standard PlotScale Header */}
@@ -1735,10 +1834,10 @@ export default function SketchPadPage() {
                   <strong>KML File</strong>
                   <small>Google Earth</small>
                 </div>
-                <div className="sketch-export-card" onClick={() => window.print()}>
+                <div className="sketch-export-card" onClick={handleExportPdf}>
                   <FileSpreadsheet size={24} color="#9333ea" />
                   <strong>PDF Plot Sheet</strong>
-                  <small>Print / Share</small>
+                  <small>Land Measurement Report</small>
                 </div>
               </div>
             </div>
