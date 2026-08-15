@@ -29,6 +29,7 @@ import {
   Eye,
   EyeOff,
   FileCode2,
+  FileText,
   FileUp,
   Focus,
   ImageOff,
@@ -238,6 +239,22 @@ function paintEraserStrokes(
 }
 
 
+interface PdfThumbnail {
+  pageNum: number;
+  dataUrl: string;
+  width: number;
+  height: number;
+}
+
+interface PdfSelectionSession {
+  file: File;
+  arrayBuffer: ArrayBuffer;
+  totalPages: number;
+  thumbnails: PdfThumbnail[];
+  selectedPage: number;
+  loadingThumbnails: boolean;
+}
+
 function ToolButton({ active, danger, label, icon, className = "", onClick }: { active?: boolean; danger?: boolean; label: string; icon: ReactNode; className?: string; onClick: () => void }) {
   return <button type="button" className={`cad-tool ${className} ${active ? "is-active" : ""} ${danger ? "is-danger" : ""}`} onClick={onClick} aria-pressed={active} title={label}><span>{icon}</span><span>{label}</span></button>;
 }
@@ -363,6 +380,8 @@ export default function Home() {
   const [toolbarScroll, setToolbarScroll] = useState({ canLeft: false, canRight: false });
   const [maxScale, setMaxScale] = useState(64);
   const [preferencesHydrated, setPreferencesHydrated] = useState(false);
+  const [pdfSession, setPdfSession] = useState<PdfSelectionSession | null>(null);
+  const [currentPdfInfo, setCurrentPdfInfo] = useState<{ file: File; arrayBuffer: ArrayBuffer; totalPages: number; currentPage: number } | null>(null);
   const DOC_W = documentRaster.nativeWidth;
   const DOC_H = documentRaster.nativeHeight;
   const topology = useMemo(() => buildTopologyState(shapes), [shapes]);
@@ -1929,8 +1948,24 @@ export default function Home() {
     }
   };
 
-  const loadImage = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]; event.target.value = ""; if (!file) return;
+  const renderPdfPageToCanvas = async (arrayBuffer: ArrayBuffer, pageNum: number) => {
+    const pdfjs = await import("pdfjs-dist/build/pdf.mjs");
+    pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+    const pdf = await pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+    const page = await pdf.getPage(pageNum);
+    const viewport = page.getViewport({ scale: 2 });
+    const pageCanvas = document.createElement("canvas");
+    pageCanvas.width = Math.ceil(viewport.width);
+    pageCanvas.height = Math.ceil(viewport.height);
+    const pageContext = pageCanvas.getContext("2d", { alpha: false });
+    if (!pageContext) throw new Error("PDF canvas context unavailable");
+    await page.render({ canvas: pageCanvas, canvasContext: pageContext, viewport }).promise;
+    await pdf.destroy();
+    return { pageCanvas, width: pageCanvas.width, height: pageCanvas.height };
+  };
+
+  const importSelectedPdfPage = async (arrayBuffer: ArrayBuffer, pageNum: number, totalPages: number, file: File) => {
+    setPdfSession(null);
     const loadToken = ++rasterLoadTokenRef.current;
     const nextRevision = mapRevisionRef.current + 1;
     mapRevisionRef.current = nextRevision;
@@ -1948,31 +1983,9 @@ export default function Home() {
     setShapes([]); setSelectedIds([]); setSelectedSegment(null); setManualPoints([]); setEraserStrokes([]); setActiveEraserStroke(null); setRoi(null); setExpanded({}); cancelCalibration();
     resetHistory();
 
-    let bitmap: ImageBitmap | null = null;
     try {
-      let source: CanvasImageSource;
-      let sourceWidth: number;
-      let sourceHeight: number;
-      const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-      if (isPdf) {
-        const pdfjs = await import("pdfjs-dist/build/pdf.mjs");
-        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-        const pdf = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
-        const page = await pdf.getPage(1);
-        const viewport = page.getViewport({ scale: 2 });
-        const pageCanvas = document.createElement("canvas");
-        pageCanvas.width = Math.ceil(viewport.width); pageCanvas.height = Math.ceil(viewport.height);
-        const pageContext = pageCanvas.getContext("2d", { alpha: false });
-        if (!pageContext) throw new Error("PDF canvas context unavailable");
-        await page.render({ canvas: pageCanvas, canvasContext: pageContext, viewport }).promise;
-        source = pageCanvas; sourceWidth = pageCanvas.width; sourceHeight = pageCanvas.height;
-        await pdf.destroy();
-      } else {
-        if (!file.type.startsWith("image/")) throw new Error("Unsupported file type");
-        bitmap = await createImageBitmap(file);
-        source = bitmap; sourceWidth = bitmap.width; sourceHeight = bitmap.height;
-      }
-      if (loadToken !== rasterLoadTokenRef.current) { bitmap?.close(); return; }
+      const { pageCanvas, width: sourceWidth, height: sourceHeight } = await renderPdfPageToCanvas(arrayBuffer, pageNum);
+      if (loadToken !== rasterLoadTokenRef.current) return;
 
       const processingScale = Math.min(1, Math.sqrt(MAX_PROCESSING_PIXELS / (sourceWidth * sourceHeight)));
       const processingWidth = Math.max(1, Math.round(sourceWidth * processingScale));
@@ -1985,9 +1998,182 @@ export default function Home() {
       context.fillRect(0, 0, processingWidth, processingHeight);
       context.imageSmoothingEnabled = processingScale < 1;
       context.imageSmoothingQuality = "high";
-      context.drawImage(source, 0, 0, processingWidth, processingHeight);
+      context.drawImage(pageCanvas, 0, 0, processingWidth, processingHeight);
+      rasterSourceRef.current = pageCanvas;
+      setDocumentRaster({
+        nativeWidth: sourceWidth,
+        nativeHeight: sourceHeight,
+        processingWidth,
+        processingHeight,
+        processingScale,
+        revision: nextRevision,
+      });
+      setMapSource("upload"); setMapVisible(true);
+      setCurrentPdfInfo({ file, arrayBuffer, totalPages, currentPage: pageNum });
+      hasFittedRef.current = false;
+      window.requestAnimationFrame(fitDocument);
+      notify(totalPages > 1
+        ? `PDF Page ${pageNum} of ${totalPages} loaded successfully (${processingWidth}×${processingHeight})`
+        : `PDF page loaded at ${processingWidth}×${processingHeight} resolution`);
+    } catch (error) {
+      if (loadToken !== rasterLoadTokenRef.current) return;
+      setMapSource("none"); setMapVisible(false);
+      notify(error instanceof Error ? `PDF load failed: ${error.message}` : "PDF load failed");
+    }
+  };
+
+  const openPdfPageSelectorForCurrent = async () => {
+    if (!currentPdfInfo) return;
+    setPdfSession({
+      file: currentPdfInfo.file,
+      arrayBuffer: currentPdfInfo.arrayBuffer,
+      totalPages: currentPdfInfo.totalPages,
+      thumbnails: [],
+      selectedPage: currentPdfInfo.currentPage,
+      loadingThumbnails: true,
+    });
+
+    try {
+      const pdfjs = await import("pdfjs-dist/build/pdf.mjs");
+      pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+      const pdf = await pdfjs.getDocument({ data: new Uint8Array(currentPdfInfo.arrayBuffer) }).promise;
+      const thumbs: PdfThumbnail[] = [];
+      for (let i = 1; i <= currentPdfInfo.totalPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 0.35 });
+        const thumbCanvas = document.createElement("canvas");
+        thumbCanvas.width = Math.ceil(viewport.width);
+        thumbCanvas.height = Math.ceil(viewport.height);
+        const thumbCtx = thumbCanvas.getContext("2d", { alpha: false });
+        if (thumbCtx) {
+          await page.render({ canvas: thumbCanvas, canvasContext: thumbCtx, viewport }).promise;
+          thumbs.push({
+            pageNum: i,
+            dataUrl: thumbCanvas.toDataURL("image/jpeg", 0.8),
+            width: thumbCanvas.width,
+            height: thumbCanvas.height,
+          });
+        }
+        setPdfSession((curr) =>
+          curr && curr.file === currentPdfInfo.file
+            ? { ...curr, thumbnails: [...thumbs], loadingThumbnails: i < currentPdfInfo.totalPages }
+            : curr
+        );
+      }
+      await pdf.destroy();
+    } catch {
+      setPdfSession((curr) => curr ? { ...curr, loadingThumbnails: false } : null);
+    }
+  };
+
+  const loadImage = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]; event.target.value = ""; if (!file) return;
+
+    const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    if (isPdf) {
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdfjs = await import("pdfjs-dist/build/pdf.mjs");
+        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+        const pdf = await pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+        const totalPages = pdf.numPages;
+
+        if (totalPages <= 1) {
+          await pdf.destroy();
+          await importSelectedPdfPage(arrayBuffer, 1, 1, file);
+          return;
+        }
+
+        // Multi-page PDF: Launch Page Picker Modal
+        setPdfSession({
+          file,
+          arrayBuffer,
+          totalPages,
+          thumbnails: [],
+          selectedPage: 1,
+          loadingThumbnails: true,
+        });
+
+        // Generate thumbnails asynchronously
+        void (async () => {
+          try {
+            const thumbs: PdfThumbnail[] = [];
+            for (let i = 1; i <= totalPages; i++) {
+              const page = await pdf.getPage(i);
+              const viewport = page.getViewport({ scale: 0.35 });
+              const thumbCanvas = document.createElement("canvas");
+              thumbCanvas.width = Math.ceil(viewport.width);
+              thumbCanvas.height = Math.ceil(viewport.height);
+              const thumbCtx = thumbCanvas.getContext("2d", { alpha: false });
+              if (thumbCtx) {
+                await page.render({ canvas: thumbCanvas, canvasContext: thumbCtx, viewport }).promise;
+                thumbs.push({
+                  pageNum: i,
+                  dataUrl: thumbCanvas.toDataURL("image/jpeg", 0.8),
+                  width: thumbCanvas.width,
+                  height: thumbCanvas.height,
+                });
+              }
+              setPdfSession((curr) =>
+                curr && curr.file === file
+                  ? { ...curr, thumbnails: [...thumbs], loadingThumbnails: i < totalPages }
+                  : curr
+              );
+            }
+            await pdf.destroy();
+          } catch {
+            await pdf.destroy().catch(() => {});
+            setPdfSession((curr) => curr ? { ...curr, loadingThumbnails: false } : null);
+          }
+        })();
+        return;
+      } catch (error) {
+        notify(error instanceof Error ? `PDF load failed: ${error.message}` : "PDF load failed");
+        return;
+      }
+    }
+
+    // Regular image loading:
+    const loadToken = ++rasterLoadTokenRef.current;
+    const nextRevision = mapRevisionRef.current + 1;
+    mapRevisionRef.current = nextRevision;
+    setMapRevision(nextRevision);
+    resetTransientEditorState();
+    restartVectorWorker();
+    retainedBitmapRef.current?.close();
+    retainedBitmapRef.current = null;
+    rasterSourceRef.current = null;
+    const display = mapCanvasRef.current;
+    const memory = ensureProcessingCanvas();
+    display?.getContext("2d")?.clearRect(0, 0, display.width, display.height);
+    memory.getContext("2d")?.clearRect(0, 0, memory.width, memory.height);
+    setMapSource("none"); setMapVisible(false);
+    setCurrentPdfInfo(null);
+    setShapes([]); setSelectedIds([]); setSelectedSegment(null); setManualPoints([]); setEraserStrokes([]); setActiveEraserStroke(null); setRoi(null); setExpanded({}); cancelCalibration();
+    resetHistory();
+
+    let bitmap: ImageBitmap | null = null;
+    try {
+      if (!file.type.startsWith("image/")) throw new Error("Unsupported file type");
+      bitmap = await createImageBitmap(file);
+      const sourceWidth = bitmap.width;
+      const sourceHeight = bitmap.height;
+      if (loadToken !== rasterLoadTokenRef.current) { bitmap.close(); return; }
+
+      const processingScale = Math.min(1, Math.sqrt(MAX_PROCESSING_PIXELS / (sourceWidth * sourceHeight)));
+      const processingWidth = Math.max(1, Math.round(sourceWidth * processingScale));
+      const processingHeight = Math.max(1, Math.round(sourceHeight * processingScale));
+      memory.width = processingWidth; memory.height = processingHeight;
+      const context = memory.getContext("2d", { willReadFrequently: true });
+      if (!context) throw new Error("Processing canvas context unavailable");
+      context.clearRect(0, 0, processingWidth, processingHeight);
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, processingWidth, processingHeight);
+      context.imageSmoothingEnabled = processingScale < 1;
+      context.imageSmoothingQuality = "high";
+      context.drawImage(bitmap, 0, 0, processingWidth, processingHeight);
       retainedBitmapRef.current = bitmap;
-      rasterSourceRef.current = source;
+      rasterSourceRef.current = bitmap;
       setDocumentRaster({
         nativeWidth: sourceWidth,
         nativeHeight: sourceHeight,
@@ -1999,11 +2185,9 @@ export default function Home() {
       setMapSource("upload"); setMapVisible(true);
       hasFittedRef.current = false;
       window.requestAnimationFrame(fitDocument);
-      notify(isPdf
-        ? `PDF page 1 loaded at ${processingWidth}×${processingHeight} processing resolution`
-        : processingScale === 1
-          ? `Uploaded image preserved at native ${sourceWidth}×${sourceHeight} resolution`
-          : `Large image safely processed at ${processingWidth}×${processingHeight} (${Math.round(processingScale * 100)}%)`);
+      notify(processingScale === 1
+        ? `Uploaded image preserved at native ${sourceWidth}×${sourceHeight} resolution`
+        : `Large image safely processed at ${processingWidth}×${processingHeight} (${Math.round(processingScale * 100)}%)`);
     } catch (error) {
       if (bitmap && retainedBitmapRef.current !== bitmap) bitmap.close();
       if (loadToken !== rasterLoadTokenRef.current) return;
@@ -2021,7 +2205,7 @@ export default function Home() {
     restartVectorWorker();
     retainedBitmapRef.current?.close(); retainedBitmapRef.current = null; rasterSourceRef.current = null;
     const display = mapCanvasRef.current; const memory = ensureProcessingCanvas(); display?.getContext("2d")?.clearRect(0, 0, display.width, display.height); memory.getContext("2d")?.clearRect(0, 0, memory.width, memory.height);
-    setMapSource("none"); setMapVisible(false); setEraserStrokes([]); setActiveEraserStroke(null); setRoi(null); resetHistory(); cancelCalibration(); notify("Map removed from canvas and processing memory / vectors preserved");
+    setMapSource("none"); setMapVisible(false); setCurrentPdfInfo(null); setPdfSession(null); setEraserStrokes([]); setActiveEraserStroke(null); setRoi(null); resetHistory(); cancelCalibration(); notify("Map removed from canvas and processing memory / vectors preserved");
   };
 
   const clearAll = () => {
@@ -2126,6 +2310,18 @@ export default function Home() {
           <button type="button" className={`cad-tool mobile-secondary mobile-detect-action ${tool === "roi" ? "is-active" : ""}`} onClick={() => runDetectAction("roi")}><BoxSelect size={15} /><span>ROI Select</span></button>
           <button type="button" className={`cad-tool mobile-secondary mobile-detect-action ${processing ? "is-active" : ""}`} onClick={() => runDetectAction("auto")}><Sparkles size={15} /><span>Auto-Vectorize</span></button>
           <button type="button" className="cad-tool mobile-map-tool mobile-secondary" onClick={() => fileRef.current?.click()} title="Upload Map"><FileUp size={15} /><span>Upload Map</span></button>
+          {currentPdfInfo && currentPdfInfo.totalPages > 1 && (
+            <button
+              type="button"
+              className="cad-tool mobile-map-tool mobile-secondary"
+              onClick={() => void openPdfPageSelectorForCurrent()}
+              title="Switch to another PDF page"
+              style={{ borderColor: "#3b82f6", color: "#2563eb", background: "#eff6ff", fontWeight: 700 }}
+            >
+              <FileText size={15} />
+              <span>Page {currentPdfInfo.currentPage}/{currentPdfInfo.totalPages}</span>
+            </button>
+          )}
           <button type="button" className="cad-tool mobile-map-tool mobile-secondary" onClick={() => setMapVisible((visible) => !visible)} disabled={mapSource === "none"} title={mapVisible ? "Hide Map" : "Show Map"}>{mapVisible ? <EyeOff size={15} /> : <Eye size={15} />}<span>{mapVisible ? "Hide Map" : "Show Map"}</span></button>
           <button type="button" className="cad-tool mobile-map-tool mobile-secondary is-danger" onClick={removeMap} disabled={mapSource === "none"} title="Clear Map"><ImageOff size={15} /><span>Clear Map</span></button>
           <ToolButton label="Manual Trace" active={tool === "manual"} icon={<PencilLine size={15} />} onClick={() => { setTool("manual"); setManualPoints([]); setExtendAnchor(null); }} />
@@ -2430,6 +2626,120 @@ export default function Home() {
       <footer className="cad-footer"><span>RASTER <b>{mapSource.toUpperCase()} / REV {mapRevision}</b></span><span>SNAP <b>{snapSettings.enabled ? `${snapKind} / ${snapSettings.linkedEdit === "all" ? "ALL LINKED" : "SELECTED ONLY"}` : "OFF"} / 15PX LOOP</b></span><span>{shapes.length} SHAPES / {shapes.reduce((sum, shape) => sum + segmentPairs(shape).length, 0)} SEGMENTS / {shapes.reduce((sum, shape) => sum + shape.diagonals.length, 0)} DIAGONALS / {[...topology.edges.values()].filter((edge) => edge.members.length > 1).length} SHARED</span></footer>
 
       {calibrationLauncherOpen && <div className="modal-backdrop" role="dialog" aria-modal="true"><div className="calibration-launcher"><header><Ruler size={18} /><div><b>CHOOSE CALIBRATION ENGINE</b><span>Use one known line directly or average any set up to three.</span></div></header><button onClick={() => beginCalibration("auto")}><Sparkles size={18} /><span><b>Auto grid / flexible 1-3 lines</b><small>Detect candidate grid lines, retain one verified baseline or average up to three.</small></span></button><button onClick={() => beginCalibration("segments")}><ScanLine size={18} /><span><b>Use existing shape lines</b><small>Touch detected or manually drawn segments and enter their known real-world lengths.</small></span></button><button onClick={() => beginCalibration("manual")}><PencilLine size={18} /><span><b>Point-to-point / flexible 1-3 lines</b><small>Click the first vertex or point, then click the second point to set the calibration distance.</small></span></button><footer><button onClick={() => setCalibrationLauncherOpen(false)}>Cancel</button></footer></div></div>}
+      
+      {/* Multi-Page PDF Page Selector Modal */}
+      {pdfSession && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="pdf-page-modal">
+            <header className="pdf-page-header">
+              <div className="pdf-page-header-title">
+                <FileText size={22} className="text-blue-600" />
+                <div>
+                  <h3>Select Map Page from PDF</h3>
+                  <p>
+                    Found <strong>{pdfSession.totalPages} pages</strong> in "{pdfSession.file.name}". Choose the page containing your parcel / survey map.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="pdf-page-close-btn"
+                onClick={() => setPdfSession(null)}
+                title="Cancel"
+              >
+                <X size={18} />
+              </button>
+            </header>
+
+            <div className="pdf-page-grid-wrapper">
+              {pdfSession.loadingThumbnails && pdfSession.thumbnails.length < pdfSession.totalPages && (
+                <div className="pdf-page-loading-bar">
+                  <Sparkles size={14} className="animate-spin text-blue-600" />
+                  <span>
+                    Generating page previews ({pdfSession.thumbnails.length} of {pdfSession.totalPages})...
+                  </span>
+                </div>
+              )}
+
+              <div className="pdf-page-grid">
+                {Array.from({ length: pdfSession.totalPages }, (_, i) => i + 1).map((pageNum) => {
+                  const thumb = pdfSession.thumbnails.find((t) => t.pageNum === pageNum);
+                  const isSelected = pdfSession.selectedPage === pageNum;
+
+                  return (
+                    <div
+                      key={pageNum}
+                      className={`pdf-page-card ${isSelected ? "is-selected" : ""}`}
+                      onClick={() => setPdfSession((curr) => curr ? { ...curr, selectedPage: pageNum } : null)}
+                      onDoubleClick={() => {
+                        void importSelectedPdfPage(
+                          pdfSession.arrayBuffer,
+                          pageNum,
+                          pdfSession.totalPages,
+                          pdfSession.file
+                        );
+                      }}
+                    >
+                      <div className="pdf-page-thumb-holder">
+                        {thumb ? (
+                          <img
+                            src={thumb.dataUrl}
+                            alt={`Page ${pageNum}`}
+                            className="pdf-page-thumb-img"
+                          />
+                        ) : (
+                          <div className="pdf-page-thumb-skeleton">
+                            <Sparkles size={16} className="animate-pulse opacity-40" />
+                            <span>Loading Page {pageNum}...</span>
+                          </div>
+                        )}
+                        {isSelected && (
+                          <div className="pdf-page-check-badge">
+                            <Check size={14} />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="pdf-page-card-footer">
+                        <span className="pdf-page-number">Page {pageNum}</span>
+                        {isSelected && <span className="pdf-page-selected-tag">Selected</span>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <footer className="pdf-page-modal-footer">
+              <span className="pdf-page-hint">Tip: Double-click any page to open immediately</span>
+              <div className="pdf-page-modal-actions">
+                <button
+                  type="button"
+                  className="pdf-page-btn-cancel"
+                  onClick={() => setPdfSession(null)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="pdf-page-btn-confirm"
+                  onClick={() => {
+                    void importSelectedPdfPage(
+                      pdfSession.arrayBuffer,
+                      pdfSession.selectedPage,
+                      pdfSession.totalPages,
+                      pdfSession.file
+                    );
+                  }}
+                >
+                  <Check size={15} /> Import Page {pdfSession.selectedPage}
+                </button>
+              </div>
+            </footer>
+          </div>
+        </div>
+      )}
+
       {processing && <div className="processing"><Sparkles size={18} /><span><b>{tool === "pick" ? "Tracing selected parcel" : tool === "line-pick" ? "Tracing raster centreline" : "Mapping cadastral geometry"}</b><small>Processing native raster coordinates in the background</small></span></div>}
     </main>
   );
