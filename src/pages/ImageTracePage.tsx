@@ -248,7 +248,6 @@ interface PdfThumbnail {
 
 interface PdfSelectionSession {
   file: File;
-  arrayBuffer: ArrayBuffer;
   totalPages: number;
   thumbnails: PdfThumbnail[];
   selectedPage: number;
@@ -381,7 +380,7 @@ export default function Home() {
   const [maxScale, setMaxScale] = useState(64);
   const [preferencesHydrated, setPreferencesHydrated] = useState(false);
   const [pdfSession, setPdfSession] = useState<PdfSelectionSession | null>(null);
-  const [currentPdfInfo, setCurrentPdfInfo] = useState<{ file: File; arrayBuffer: ArrayBuffer; totalPages: number; currentPage: number } | null>(null);
+  const [currentPdfInfo, setCurrentPdfInfo] = useState<{ file: File; totalPages: number; currentPage: number } | null>(null);
   const DOC_W = documentRaster.nativeWidth;
   const DOC_H = documentRaster.nativeHeight;
   const topology = useMemo(() => buildTopologyState(shapes), [shapes]);
@@ -1948,10 +1947,13 @@ export default function Home() {
     }
   };
 
-  const renderPdfPageToCanvas = async (arrayBuffer: ArrayBuffer, pageNum: number) => {
+  const renderPdfPageToCanvas = async (fileOrBuffer: File | ArrayBuffer, pageNum: number) => {
     const pdfjs = await import("pdfjs-dist/build/pdf.mjs");
     pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-    const pdf = await pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+    const rawBuffer = fileOrBuffer instanceof File
+      ? await fileOrBuffer.arrayBuffer()
+      : fileOrBuffer.slice(0);
+    const pdf = await pdfjs.getDocument({ data: new Uint8Array(rawBuffer) }).promise;
     const page = await pdf.getPage(pageNum);
     const viewport = page.getViewport({ scale: 2 });
     const pageCanvas = document.createElement("canvas");
@@ -1964,7 +1966,7 @@ export default function Home() {
     return { pageCanvas, width: pageCanvas.width, height: pageCanvas.height };
   };
 
-  const importSelectedPdfPage = async (arrayBuffer: ArrayBuffer, pageNum: number, totalPages: number, file: File) => {
+  const importSelectedPdfPage = async (file: File, pageNum: number, totalPages: number) => {
     setPdfSession(null);
     const loadToken = ++rasterLoadTokenRef.current;
     const nextRevision = mapRevisionRef.current + 1;
@@ -1984,7 +1986,7 @@ export default function Home() {
     resetHistory();
 
     try {
-      const { pageCanvas, width: sourceWidth, height: sourceHeight } = await renderPdfPageToCanvas(arrayBuffer, pageNum);
+      const { pageCanvas, width: sourceWidth, height: sourceHeight } = await renderPdfPageToCanvas(file, pageNum);
       if (loadToken !== rasterLoadTokenRef.current) return;
 
       const processingScale = Math.min(1, Math.sqrt(MAX_PROCESSING_PIXELS / (sourceWidth * sourceHeight)));
@@ -2009,7 +2011,7 @@ export default function Home() {
         revision: nextRevision,
       });
       setMapSource("upload"); setMapVisible(true);
-      setCurrentPdfInfo({ file, arrayBuffer, totalPages, currentPage: pageNum });
+      setCurrentPdfInfo({ file, totalPages, currentPage: pageNum });
       hasFittedRef.current = false;
       window.requestAnimationFrame(fitDocument);
       notify(totalPages > 1
@@ -2024,9 +2026,9 @@ export default function Home() {
 
   const openPdfPageSelectorForCurrent = async () => {
     if (!currentPdfInfo) return;
+    const file = currentPdfInfo.file;
     setPdfSession({
-      file: currentPdfInfo.file,
-      arrayBuffer: currentPdfInfo.arrayBuffer,
+      file,
       totalPages: currentPdfInfo.totalPages,
       thumbnails: [],
       selectedPage: currentPdfInfo.currentPage,
@@ -2034,9 +2036,10 @@ export default function Home() {
     });
 
     try {
+      const buffer = await file.arrayBuffer();
       const pdfjs = await import("pdfjs-dist/build/pdf.mjs");
       pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-      const pdf = await pdfjs.getDocument({ data: new Uint8Array(currentPdfInfo.arrayBuffer) }).promise;
+      const pdf = await pdfjs.getDocument({ data: new Uint8Array(buffer) }).promise;
       const thumbs: PdfThumbnail[] = [];
       for (let i = 1; i <= currentPdfInfo.totalPages; i++) {
         const page = await pdf.getPage(i);
@@ -2055,7 +2058,7 @@ export default function Home() {
           });
         }
         setPdfSession((curr) =>
-          curr && curr.file === currentPdfInfo.file
+          curr && curr.file === file
             ? { ...curr, thumbnails: [...thumbs], loadingThumbnails: i < currentPdfInfo.totalPages }
             : curr
         );
@@ -2072,29 +2075,28 @@ export default function Home() {
     const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
     if (isPdf) {
       try {
-        const arrayBuffer = await file.arrayBuffer();
         const pdfjs = await import("pdfjs-dist/build/pdf.mjs");
         pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-        const pdf = await pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+        const buffer = await file.arrayBuffer();
+        const pdf = await pdfjs.getDocument({ data: new Uint8Array(buffer) }).promise;
         const totalPages = pdf.numPages;
 
         if (totalPages <= 1) {
           await pdf.destroy();
-          await importSelectedPdfPage(arrayBuffer, 1, 1, file);
+          await importSelectedPdfPage(file, 1, 1);
           return;
         }
 
         // Multi-page PDF: Launch Page Picker Modal
         setPdfSession({
           file,
-          arrayBuffer,
           totalPages,
           thumbnails: [],
           selectedPage: 1,
           loadingThumbnails: true,
         });
 
-        // Generate thumbnails asynchronously
+        // Generate thumbnails asynchronously using the open pdf instance
         void (async () => {
           try {
             const thumbs: PdfThumbnail[] = [];
@@ -2673,10 +2675,9 @@ export default function Home() {
                       onClick={() => setPdfSession((curr) => curr ? { ...curr, selectedPage: pageNum } : null)}
                       onDoubleClick={() => {
                         void importSelectedPdfPage(
-                          pdfSession.arrayBuffer,
+                          pdfSession.file,
                           pageNum,
-                          pdfSession.totalPages,
-                          pdfSession.file
+                          pdfSession.totalPages
                         );
                       }}
                     >
@@ -2725,10 +2726,9 @@ export default function Home() {
                   className="pdf-page-btn-confirm"
                   onClick={() => {
                     void importSelectedPdfPage(
-                      pdfSession.arrayBuffer,
+                      pdfSession.file,
                       pdfSession.selectedPage,
-                      pdfSession.totalPages,
-                      pdfSession.file
+                      pdfSession.totalPages
                     );
                   }}
                 >
