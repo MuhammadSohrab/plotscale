@@ -24,11 +24,14 @@ export function CloudProfilePage() {
   };
   return (
     <main className="dashboard cloud-profile">
-      <header className="dashboard__header">
-        <Brand compact />
+      <header className="calculator-header">
         <Link className="icon-button" to="/dashboard" aria-label="Back to dashboard">
           <ArrowLeft size={19} />
         </Link>
+        <Brand compact />
+        <span className="calculator-header__chip">
+          <ShieldCheck size={14} /> Profile
+        </span>
       </header>
       <section className="dashboard__hero">
         <span className="status-pill"><Cloud size={15} /> Account protected</span>

@@ -45,11 +45,14 @@ export function SavedPlotsPage() {
 
   return (
     <main className="dashboard saved-plots">
-      <header className="dashboard__header">
-        <Brand compact />
-        <Link className="icon-button" to="/dashboard" aria-label="Back to home">
+      <header className="calculator-header">
+        <Link className="icon-button" to="/dashboard" aria-label="Back to dashboard">
           <ArrowLeft size={19} />
         </Link>
+        <Brand compact />
+        <span className="calculator-header__chip">
+          <FolderOpen size={14} /> My Plots
+        </span>
       </header>
       <section className="dashboard__hero saved-plots__hero">
         <span className="status-pill"><FolderOpen size={15} /> Free account feature</span>

@@ -1085,64 +1085,67 @@ export default function SketchPadPage() {
 
   return (
     <main className="sketch-app">
-      {/* Single-Row PlotScale Responsive Header */}
-      <header className="sketch-header">
-        <button type="button" className="sketch-icon-btn" onClick={() => navigate("/dashboard")} title="Back to Dashboard">
-          <ArrowLeft size={18} />
+      {/* Standard PlotScale Header */}
+      <header className="calculator-header sketch-top-header">
+        <button type="button" className="icon-button" onClick={() => navigate("/dashboard")} aria-label="Back to dashboard">
+          <ArrowLeft size={19} />
         </button>
-
-        <div className="sketch-brand">
-          <Brand compact />
-          <span className="sketch-brand-badge">SKETCH PAD</span>
-        </div>
-
-        <div className="sketch-header-actions">
-          <button type="button" className="sketch-icon-btn" onClick={handleUndo} disabled={historyIndex <= 0} title="Undo">
-            <Undo2 size={17} />
-          </button>
-          <button type="button" className="sketch-icon-btn" onClick={handleRedo} disabled={historyIndex >= history.length - 1} title="Redo">
-            <Redo2 size={17} />
-          </button>
-          <button type="button" className="sketch-icon-btn" onClick={() => setSaveModalOpen(true)} disabled={!closed || points.length < 3} title="Save Plot">
-            <Save size={17} />
-          </button>
-          <button type="button" className="sketch-icon-btn" onClick={() => setExportModalOpen(true)} disabled={!closed || points.length < 3} title="Export (PDF, GeoJSON, KML, DXF)">
-            <Download size={17} />
-          </button>
-          <button type="button" className="sketch-icon-btn" onClick={handleClear} title="Clear Canvas" style={{ color: "#ef4444" }}>
-            <Trash2 size={17} />
-          </button>
-        </div>
+        <Brand compact />
+        <span className="calculator-header__chip">
+          <PencilRuler size={14} /> Sketch Pad
+        </span>
       </header>
 
       {/* Main Workspace Shell */}
       <section className="sketch-shell">
-        {/* Top Controls Bar (Mode A vs Mode B Switcher & Zoom Controls) */}
+        {/* Top Controls Bar (Mode A vs Mode B Switcher, Actions & Zoom Controls) */}
         <div className="sketch-top-controls-bar">
-          {closed && (
-            <div className="sketch-mode-toggle">
-              <button type="button" className={`sketch-mode-btn ${solverMode === "modeA" ? "is-active" : ""}`} onClick={() => setSolverMode("modeA")}>
-                Mode A: Diagonals
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            {closed && (
+              <div className="sketch-mode-toggle">
+                <button type="button" className={`sketch-mode-btn ${solverMode === "modeA" ? "is-active" : ""}`} onClick={() => setSolverMode("modeA")}>
+                  Mode A: Diagonals
+                </button>
+                <button type="button" className={`sketch-mode-btn ${solverMode === "modeB" ? "is-active" : ""}`} onClick={() => setSolverMode("modeB")}>
+                  Mode B: Linkage
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            {/* Header Action Tools */}
+            <div className="sketch-header-actions">
+              <button type="button" className="sketch-icon-btn" onClick={handleUndo} disabled={historyIndex <= 0} title="Undo">
+                <Undo2 size={16} />
               </button>
-              <button type="button" className={`sketch-mode-btn ${solverMode === "modeB" ? "is-active" : ""}`} onClick={() => setSolverMode("modeB")}>
-                Mode B: Linkage
+              <button type="button" className="sketch-icon-btn" onClick={handleRedo} disabled={historyIndex >= history.length - 1} title="Redo">
+                <Redo2 size={16} />
+              </button>
+              <button type="button" className="sketch-icon-btn" onClick={() => setSaveModalOpen(true)} disabled={!closed || points.length < 3} title="Save Plot">
+                <Save size={16} />
+              </button>
+              <button type="button" className="sketch-icon-btn" onClick={() => setExportModalOpen(true)} disabled={!closed || points.length < 3} title="Export (PDF, GeoJSON, KML, DXF)">
+                <Download size={16} />
+              </button>
+              <button type="button" className="sketch-icon-btn" onClick={handleClear} title="Clear Canvas" style={{ color: "#ef4444" }}>
+                <Trash2 size={16} />
               </button>
             </div>
-          )}
 
-          {/* Zoom & Fit Map Controls */}
-          <div className="sketch-zoom">
-            <button type="button" onClick={() => setTransform((t) => ({ ...t, scale: Math.min(3.5, t.scale * 1.25) }))} title="Zoom In">
-              <ZoomIn size={16} />
-            </button>
-            <span>{Math.round(transform.scale * 100)}%</span>
-            <button type="button" onClick={() => setTransform((t) => ({ ...t, scale: Math.max(0.4, t.scale / 1.25) }))} title="Zoom Out">
-              <ZoomOut size={16} />
-            </button>
-            <button type="button" onClick={fitPlotToViewport} title="Fit & Center Map to Viewport" style={{ color: "#2563eb", borderLeft: "1px solid #e2e8f0" }}>
-              <Maximize2 size={16} />
-            </button>
-          </div>
+            {/* Zoom & Fit Map Controls */}
+            <div className="sketch-zoom">
+              <button type="button" onClick={() => setTransform((t) => ({ ...t, scale: Math.min(3.5, t.scale * 1.25) }))} title="Zoom In">
+                <ZoomIn size={15} />
+              </button>
+              <span>{Math.round(transform.scale * 100)}%</span>
+              <button type="button" onClick={() => setTransform((t) => ({ ...t, scale: Math.max(0.4, t.scale / 1.25) }))} title="Zoom Out">
+                <ZoomOut size={15} />
+              </button>
+              <button type="button" onClick={fitPlotToViewport} title="Fit & Center Map to Viewport" style={{ color: "#2563eb", borderLeft: "1px solid #e2e8f0" }}>
+                <Maximize2 size={15} />
+              </button>
+            </div>
         </div>
 
         {/* Dismissable Warning Banner */}
