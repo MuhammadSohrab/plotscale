@@ -1146,6 +1146,7 @@ export default function SketchPadPage() {
                 <Maximize2 size={15} />
               </button>
             </div>
+          </div>
         </div>
 
         {/* Dismissable Warning Banner */}
