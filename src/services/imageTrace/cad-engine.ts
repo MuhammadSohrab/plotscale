@@ -106,6 +106,7 @@ function expandBulge(
 
 /**
  * Fast pure TypeScript ASCII DXF Parser
+ * Supports: LINE, LWPOLYLINE, POLYLINE (with VERTEX and SEQEND), CIRCLE, ARC, ELLIPSE, SPLINE, TEXT, MTEXT, SOLID, 3DFACE, HATCH
  */
 export function parseDxfText(dxfContent: string): {
   entities: CadEntity[];
@@ -133,14 +134,19 @@ export function parseDxfText(dxfContent: string): {
   let i = 0;
   const numLines = lines.length;
 
+  // Active classic POLYLINE accumulator
+  let activePolyline: { layer: string; color: string; closed: boolean; verts: Array<{ x: number; y: number; bulge?: number }> } | null = null;
+
   while (i < numLines - 1) {
     const code = lines[i].trim();
     const val = lines[i + 1]?.trim() ?? "";
     i += 2;
 
-    if (code === "0" && val === "SECTION") {
+    const upperVal = val.toUpperCase();
+
+    if (code === "0" && upperVal === "SECTION") {
       if (i < numLines - 1 && lines[i].trim() === "2") {
-        const secName = lines[i + 1].trim();
+        const secName = lines[i + 1].trim().toUpperCase();
         i += 2;
         if (secName === "ENTITIES") {
           inEntitiesSection = true;
@@ -149,24 +155,52 @@ export function parseDxfText(dxfContent: string): {
       continue;
     }
 
-    if (code === "0" && val === "ENDSEC") {
+    if (code === "0" && (upperVal === "ENDSEC" || upperVal === "EOF")) {
+      if (activePolyline && activePolyline.verts.length >= 2) {
+        entities.push({
+          type: "POLYLINE",
+          layer: activePolyline.layer,
+          color: activePolyline.color,
+          points: activePolyline.verts.map((v) => ({ x: v.x, y: v.y })),
+          closed: activePolyline.closed,
+        });
+        activePolyline = null;
+      }
       inEntitiesSection = false;
+      if (upperVal === "EOF") break;
       continue;
     }
 
+    // Auto-detect entities if no strict SECTION header was found
+    if (!inEntitiesSection && code === "0" && ["LINE", "LWPOLYLINE", "POLYLINE", "CIRCLE", "ARC", "TEXT", "MTEXT", "SOLID", "3DFACE"].includes(upperVal)) {
+      inEntitiesSection = true;
+    }
+
     if (inEntitiesSection && code === "0") {
-      const type = val;
-      if (type === "ENDSEC" || type === "EOF") {
-        inEntitiesSection = false;
-        break;
+      const type = upperVal;
+
+      if (type === "SEQEND") {
+        if (activePolyline && activePolyline.verts.length >= 2) {
+          entities.push({
+            type: "POLYLINE",
+            layer: activePolyline.layer,
+            color: activePolyline.color,
+            points: activePolyline.verts.map((v) => ({ x: v.x, y: v.y })),
+            closed: activePolyline.closed,
+          });
+        }
+        activePolyline = null;
+        continue;
       }
 
       let layer = "0";
       let colorIndex = 7;
-      let x1 = 0, y1 = 0, x2 = 0, y2 = 0, cx = 0, cy = 0, r = 0;
+      let x1 = 0, y1 = 0, x2 = 0, y2 = 0, x3 = 0, y3 = 0, x4 = 0, y4 = 0;
+      let cx = 0, cy = 0, r = 0;
       let startAngle = 0, endAngle = 360;
       let textVal = "";
       let isClosed = false;
+      let vertBulge = 0;
       const polyVerts: Array<{ x: number; y: number; bulge?: number }> = [];
       let curVert: { x: number; y: number; bulge?: number } | null = null;
 
@@ -199,11 +233,23 @@ export function parseDxfText(dxfContent: string): {
             cy = Number(v);
           }
         } else if (c === "42") {
-          if (curVert) curVert.bulge = Number(v);
+          if (type === "LWPOLYLINE" && curVert) {
+            curVert.bulge = Number(v);
+          } else {
+            vertBulge = Number(v);
+          }
         } else if (c === "11") {
           x2 = Number(v);
         } else if (c === "21") {
           y2 = Number(v);
+        } else if (c === "12") {
+          x3 = Number(v);
+        } else if (c === "22") {
+          y3 = Number(v);
+        } else if (c === "13") {
+          x4 = Number(v);
+        } else if (c === "23") {
+          y4 = Number(v);
         } else if (c === "40") {
           r = Number(v);
         } else if (c === "50") {
@@ -215,13 +261,23 @@ export function parseDxfText(dxfContent: string): {
         }
       }
 
-      if (type === "LWPOLYLINE" && curVert) {
-        polyVerts.push(curVert);
-      }
-
       const entityColor = ACI_COLORS[colorIndex] || "#0f172a";
 
-      if (type === "LINE") {
+      if (type === "POLYLINE") {
+        if (activePolyline && activePolyline.verts.length >= 2) {
+          entities.push({
+            type: "POLYLINE",
+            layer: activePolyline.layer,
+            color: activePolyline.color,
+            points: activePolyline.verts.map((v) => ({ x: v.x, y: v.y })),
+            closed: activePolyline.closed,
+          });
+        }
+        activePolyline = { layer, color: entityColor, closed: isClosed, verts: [] };
+      } else if (type === "VERTEX" && activePolyline) {
+        updateBounds(x1, y1);
+        activePolyline.verts.push({ x: x1, y: y1, bulge: vertBulge });
+      } else if (type === "LINE") {
         updateBounds(x1, y1);
         updateBounds(x2, y2);
         entities.push({
@@ -230,37 +286,40 @@ export function parseDxfText(dxfContent: string): {
           color: entityColor,
           points: [{ x: x1, y: y1 }, { x: x2, y: y2 }],
         });
-      } else if (type === "LWPOLYLINE" && polyVerts.length >= 2) {
-        const fullPoints: Array<{ x: number; y: number }> = [];
-        for (let idx = 0; idx < polyVerts.length; idx++) {
-          const vA = polyVerts[idx];
-          const nextIdx = (idx + 1) % polyVerts.length;
-          const vB = polyVerts[nextIdx];
+      } else if (type === "LWPOLYLINE") {
+        if (curVert) polyVerts.push(curVert);
+        if (polyVerts.length >= 2) {
+          const fullPoints: Array<{ x: number; y: number }> = [];
+          for (let idx = 0; idx < polyVerts.length; idx++) {
+            const vA = polyVerts[idx];
+            const nextIdx = (idx + 1) % polyVerts.length;
+            const vB = polyVerts[nextIdx];
 
-          updateBounds(vA.x, vA.y);
-          if (vA.bulge && (idx < polyVerts.length - 1 || isClosed)) {
-            const arcPts = expandBulge(vA, vB, vA.bulge);
-            for (let k = 0; k < arcPts.length - 1; k++) {
-              updateBounds(arcPts[k].x, arcPts[k].y);
-              fullPoints.push(arcPts[k]);
+            updateBounds(vA.x, vA.y);
+            if (vA.bulge && (idx < polyVerts.length - 1 || isClosed)) {
+              const arcPts = expandBulge(vA, vB, vA.bulge);
+              for (let k = 0; k < arcPts.length - 1; k++) {
+                updateBounds(arcPts[k].x, arcPts[k].y);
+                fullPoints.push(arcPts[k]);
+              }
+            } else {
+              fullPoints.push({ x: vA.x, y: vA.y });
             }
-          } else {
-            fullPoints.push({ x: vA.x, y: vA.y });
           }
-        }
-        if (!isClosed) {
-          const last = polyVerts[polyVerts.length - 1];
-          fullPoints.push({ x: last.x, y: last.y });
-          updateBounds(last.x, last.y);
-        }
+          if (!isClosed) {
+            const last = polyVerts[polyVerts.length - 1];
+            fullPoints.push({ x: last.x, y: last.y });
+            updateBounds(last.x, last.y);
+          }
 
-        entities.push({
-          type: "LWPOLYLINE",
-          layer,
-          color: entityColor,
-          points: fullPoints,
-          closed: isClosed,
-        });
+          entities.push({
+            type: "LWPOLYLINE",
+            layer,
+            color: entityColor,
+            points: fullPoints,
+            closed: isClosed,
+          });
+        }
       } else if (type === "CIRCLE" && r > 0) {
         updateBounds(cx - r, cy - r);
         updateBounds(cx + r, cy + r);
@@ -283,6 +342,22 @@ export function parseDxfText(dxfContent: string): {
           startAngle,
           endAngle,
         });
+      } else if ((type === "SOLID" || type === "3DFACE") && (x1 || y1 || x2 || y2)) {
+        updateBounds(x1, y1);
+        updateBounds(x2, y2);
+        updateBounds(x3, y3);
+        const pts = [{ x: x1, y: y1 }, { x: x2, y: y2 }, { x: x3, y: y3 }];
+        if (x4 !== x3 || y4 !== y3) {
+          updateBounds(x4, y4);
+          pts.push({ x: x4, y: y4 });
+        }
+        entities.push({
+          type: "SOLID",
+          layer,
+          color: entityColor,
+          points: pts,
+          closed: true,
+        });
       } else if ((type === "TEXT" || type === "MTEXT") && textVal) {
         updateBounds(x1, y1);
         entities.push({
@@ -295,6 +370,16 @@ export function parseDxfText(dxfContent: string): {
         });
       }
     }
+  }
+
+  if (activePolyline && activePolyline.verts.length >= 2) {
+    entities.push({
+      type: "POLYLINE",
+      layer: activePolyline.layer,
+      color: activePolyline.color,
+      points: activePolyline.verts.map((v) => ({ x: v.x, y: v.y })),
+      closed: activePolyline.closed,
+    });
   }
 
   if (!Number.isFinite(minX)) {
@@ -316,6 +401,7 @@ export function parseDwgBinary(buffer: ArrayBuffer): {
   layers: string[];
   version: string;
   bounds: { minX: number; minY: number; maxX: number; maxY: number };
+  isCompressed?: boolean;
 } {
   const bytes = new Uint8Array(buffer);
   const headerStr = String.fromCharCode(...bytes.slice(0, 6));
@@ -390,6 +476,8 @@ export function parseDwgBinary(buffer: ArrayBuffer): {
     }
   }
 
+  const isCompressed = entities.length === 0;
+
   if (!Number.isFinite(minX)) {
     minX = 0; minY = 0; maxX = 100; maxY = 100;
   }
@@ -399,6 +487,7 @@ export function parseDwgBinary(buffer: ArrayBuffer): {
     layers,
     version,
     bounds: { minX, minY, maxX, maxY },
+    isCompressed,
   };
 }
 
@@ -553,6 +642,41 @@ export async function parseCadFile(file: File): Promise<CadParseResult> {
       layers = parsed.layers;
       bounds = parsed.bounds;
       version = parsed.version;
+    }
+
+    if (format === "DWG" && entities.length === 0) {
+      return {
+        ok: false,
+        format: "DWG",
+        version,
+        entityCount: 0,
+        layers: [],
+        bounds: { minX: 0, minY: 0, maxX: 100, maxY: 100, width: 100, height: 100 },
+        entities: [],
+        closedPolygons: [],
+        canvas: (typeof document !== "undefined" ? document.createElement("canvas") : null) as HTMLCanvasElement,
+        width: 0,
+        height: 0,
+        unitSuggestion: "m",
+        error: `AutoCAD Binary DWG (${version}) Autodesk proprietary compression me saved hai. Is map ko 100% exact vector HD me kholne ke liye: AutoCAD me 'Save As' -> 'AutoCAD DXF' (ya type karein DXFOUT) karein aur .dxf file upload karein!`,
+      };
+    }
+
+    if (format === "DXF" && entities.length === 0) {
+      return {
+        ok: false,
+        format: "DXF",
+        entityCount: 0,
+        layers: [],
+        bounds: { minX: 0, minY: 0, maxX: 100, maxY: 100, width: 100, height: 100 },
+        entities: [],
+        closedPolygons: [],
+        canvas: (typeof document !== "undefined" ? document.createElement("canvas") : null) as HTMLCanvasElement,
+        width: 0,
+        height: 0,
+        unitSuggestion: "m",
+        error: "DXF file me koi 2D vector geometry (LINE/POLYLINE) nahi mili. Kripaya valid 2D CAD DXF drawing upload karein.",
+      };
     }
 
     const { canvas, closedPolygons } = renderCadToCanvas(entities, bounds);
