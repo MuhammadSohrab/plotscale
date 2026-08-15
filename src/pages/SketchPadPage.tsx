@@ -1123,13 +1123,14 @@ export default function SketchPadPage() {
       const perimeterM = sideLengthsMeters.reduce((a, b) => a + b, 0);
 
       // Triangles data breakdown
-      const trianglesData = dynamicTrianglesList.map((tri, idx) => {
+      const trianglesData = (dynamicTrianglesList || []).map((tri, idx) => {
+        const sides = [tri.a ?? 0, tri.b ?? 0, tri.c ?? 0];
         return {
-          name: `Triangle ${idx + 1} (P${tri.indices[0] + 1}-P${tri.indices[1] + 1}-P${tri.indices[2] + 1})`,
-          sidesMeters: tri.sides.map((s) => s * unitFactor),
-          values: tri.sides.map((s) => s.toFixed(2)),
-          areaSqm: tri.areaSqMeters,
-          indices: tri.indices,
+          name: `Triangle ${idx + 1} (P${(tri.indices?.[0] ?? 0) + 1}-P${(tri.indices?.[1] ?? 1) + 1}-P${(tri.indices?.[2] ?? 2) + 1})`,
+          sidesMeters: sides.map((s) => s * unitFactor),
+          values: sides.map((s) => s.toFixed(2)),
+          areaSqm: tri.areaSqM ?? 0,
+          indices: tri.indices ?? [0, 1, 2],
         };
       });
 
