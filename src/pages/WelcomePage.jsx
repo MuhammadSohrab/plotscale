@@ -54,7 +54,7 @@ export function WelcomePage() {
       <section className="welcome-copy">
         <span className="eyebrow">Survey tools, simplified</span>
         <h1>Measure any plot,<br />in any unit.</h1>
-        <p>Pick how you want to start. Everything works offline.</p>
+        <p>Choose your preferred survey method. Your plot data is stored privately on this device.</p>
       </section>
       <section className="feature-group welcome-feature-group" aria-labelledby="welcome-measuring-tools">
         <h2 className="feature-group__title" id="welcome-measuring-tools">Measuring Tools</h2>
