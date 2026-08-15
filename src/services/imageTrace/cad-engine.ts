@@ -677,6 +677,57 @@ export function renderCadToCanvas(
   return { canvas, closedPolygons };
 }
 
+let libdxfrwModulePromise: Promise<any> | null = null;
+
+export async function getLibdxfrw() {
+  if (!libdxfrwModulePromise) {
+    libdxfrwModulePromise = (async () => {
+      try {
+        const mod = await import("@mlightcad/libdxfrw-web/dist/libdxfrw.js");
+        const factory = mod.default || mod;
+        if (typeof factory === "function") {
+          return await factory({
+            locateFile: (file: string) => {
+              if (file.endsWith(".wasm")) return "/libdxfrw.wasm";
+              return file;
+            },
+          });
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    })();
+  }
+  return libdxfrwModulePromise;
+}
+
+export async function convertDwgToDxf(dwgBuffer: ArrayBuffer): Promise<string | null> {
+  try {
+    const libdxfrw = await getLibdxfrw();
+    if (!libdxfrw || !libdxfrw.DRW_Database || !libdxfrw.DRW_FileHandler) {
+      return null;
+    }
+    const database = new libdxfrw.DRW_Database();
+    const fileHandler = new libdxfrw.DRW_FileHandler();
+    fileHandler.database = database;
+    try {
+      const dataArr = new Uint8Array(dwgBuffer);
+      const success = fileHandler.fileImport(dataArr, database, false, false);
+      if (!success) {
+        return null;
+      }
+      const dxfContent = fileHandler.fileExport(libdxfrw.DRW_Version.AC1021, false, database, false);
+      return typeof dxfContent === "string" && dxfContent.length > 50 ? dxfContent : null;
+    } finally {
+      try { database.delete(); } catch {}
+      try { fileHandler.delete(); } catch {}
+    }
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Universal CAD (DWG / DXF) File Parser Entry Point
  */
@@ -718,11 +769,22 @@ export async function parseCadFile(file: File): Promise<CadParseResult> {
     } else {
       format = "DWG";
       const buffer = await file.arrayBuffer();
-      const parsed = parseDwgBinary(buffer);
-      entities = parsed.entities;
-      layers = parsed.layers;
-      bounds = parsed.bounds;
-      version = parsed.version;
+
+      // First try WebAssembly DWG-to-DXF converter
+      const convertedDxf = await convertDwgToDxf(buffer);
+      if (convertedDxf) {
+        const parsed = parseDxfText(convertedDxf);
+        entities = parsed.entities;
+        layers = parsed.layers;
+        bounds = parsed.bounds;
+        version = "AutoCAD Vector (WASM Decoded)";
+      } else {
+        const parsed = parseDwgBinary(buffer);
+        entities = parsed.entities;
+        layers = parsed.layers;
+        bounds = parsed.bounds;
+        version = parsed.version;
+      }
     }
 
     if (format === "DWG" && entities.length === 0) {

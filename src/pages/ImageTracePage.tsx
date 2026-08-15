@@ -382,6 +382,7 @@ export default function Home() {
   const [preferencesHydrated, setPreferencesHydrated] = useState(false);
   const [pdfSession, setPdfSession] = useState<PdfSelectionSession | null>(null);
   const [currentPdfInfo, setCurrentPdfInfo] = useState<{ file: File; totalPages: number; currentPage: number } | null>(null);
+  const [cadGuidanceModal, setCadGuidanceModal] = useState<{ message: string; format: string } | null>(null);
   const DOC_W = documentRaster.nativeWidth;
   const DOC_H = documentRaster.nativeHeight;
   const topology = useMemo(() => buildTopologyState(shapes), [shapes]);
@@ -2215,7 +2216,8 @@ export default function Home() {
       } catch (error) {
         if (loadToken !== rasterLoadTokenRef.current) return;
         setMapSource("none"); setMapVisible(false);
-        notify(error instanceof Error ? `CAD load failed: ${error.message}` : "CAD load failed");
+        const errorMsg = error instanceof Error ? error.message : "CAD load failed";
+        setCadGuidanceModal({ message: errorMsg, format: isDwg ? "DWG" : "DXF" });
       }
       return;
     }
@@ -2820,6 +2822,75 @@ export default function Home() {
                   <Check size={15} /> Import Page {pdfSession.selectedPage}
                 </button>
               </div>
+            </footer>
+          </div>
+        </div>
+      )}
+
+      {/* CAD Guidance / DXF Export Helper Modal */}
+      {cadGuidanceModal && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="cad-guidance-modal">
+            <header className="cad-guidance-header">
+              <div className="cad-guidance-title">
+                <FileCode2 size={24} className="text-blue-600" />
+                <div>
+                  <h3>AutoCAD DWG / DXF Guidance</h3>
+                  <p>{cadGuidanceModal.message}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="cad-guidance-close"
+                onClick={() => setCadGuidanceModal(null)}
+                title="Close"
+              >
+                <X size={18} />
+              </button>
+            </header>
+
+            <div className="cad-guidance-body">
+              <div className="cad-guidance-step">
+                <span className="step-num">1</span>
+                <div>
+                  <b>AutoCAD / Civil 3D me drawing kholein</b>
+                  <p>Apna CAD map AutoCAD, Civil 3D, QCAD ya LibreCAD software me open karein.</p>
+                </div>
+              </div>
+              <div className="cad-guidance-step">
+                <span className="step-num">2</span>
+                <div>
+                  <b>Save As → AutoCAD DXF (*.dxf) karein</b>
+                  <p>Menu me <code>File → Save As → AutoCAD DXF</code> select karein ya command bar me <code>DXFOUT</code> type karein.</p>
+                </div>
+              </div>
+              <div className="cad-guidance-step">
+                <span className="step-num">3</span>
+                <div>
+                  <b>PlotScale me .dxf file upload karein</b>
+                  <p>DXF open standard format hai jisme sabhi Khasra parcels, layers aur lines 100% HD Vector me turant load ho jayenge.</p>
+                </div>
+              </div>
+            </div>
+
+            <footer className="cad-guidance-footer">
+              <button
+                type="button"
+                className="pdf-page-btn-cancel"
+                onClick={() => setCadGuidanceModal(null)}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="cad-guidance-btn-primary"
+                onClick={() => {
+                  setCadGuidanceModal(null);
+                  fileRef.current?.click();
+                }}
+              >
+                <FileUp size={16} /> Upload DXF File
+              </button>
             </footer>
           </div>
         </div>
