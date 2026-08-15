@@ -314,119 +314,91 @@ function drawPlotDiagram(pdf, bx, by, bw, bh, points, sideLabels, diagGroups, le
     }
   }
 
-  pdf.setFillColor(209, 250, 229);
-  pdf.lines(pathLines, vsPdf[0].x, vsPdf[0].y, [1, 1], 'F', true);
-
-  if (diagsToDraw.length > 0) {
-    pdf.saveGraphicsState();
-    pdf.lines(pathLines, vsPdf[0].x, vsPdf[0].y, [1, 1], null, true);
-    pdf.clip();
-    pdf.discardPath();
-    pdf.setLineDashPattern([1.0, 0.6], 0);
-    pdf.setDrawColor(...BLUE);
+  // 1. Draw precision corner markers in BACKGROUND
+  vsPdf.forEach((node) => {
+    // Soft light green corner target circle
+    pdf.setFillColor(187, 247, 208);
+    pdf.circle(node.x, node.y, 2.4, 'F');
+    pdf.setDrawColor(34, 197, 94);
     pdf.setLineWidth(0.2);
+    pdf.circle(node.x, node.y, 2.4, 'D');
+
+    // Red precision crosshair (+)
+    pdf.setDrawColor(239, 68, 68);
+    pdf.setLineWidth(0.35);
+    pdf.line(node.x - 3.2, node.y, node.x + 3.2, node.y);
+    pdf.line(node.x, node.y - 3.2, node.x, node.y + 3.2);
+
+    // Red center point dot
+    pdf.setFillColor(220, 38, 38);
+    pdf.circle(node.x, node.y, 0.45, 'F');
+  });
+
+  // 2. Draw dotted diagonals
+  if (diagsToDraw.length > 0) {
+    pdf.setLineDashPattern([1.8, 1.2], 0);
+    pdf.setDrawColor(75, 85, 99);
+    pdf.setLineWidth(0.65);
     diagsToDraw.forEach(d => {
       pdf.line(vsPdf[d.from].x, vsPdf[d.from].y, vsPdf[d.to].x, vsPdf[d.to].y);
     });
     pdf.setLineDashPattern([], 0);
-    pdf.restoreGraphicsState();
+
+    // 2b. Diagonal length labels with white knockout mask
+    diagsToDraw.forEach(d => {
+      const p1 = vsPdf[d.from], p2 = vsPdf[d.to];
+      const mx = (p1.x + p2.x) / 2, my = (p1.y + p2.y) / 2;
+      const distM = haversineMeters(points[d.from], points[d.to]);
+      const lbl = `${formatValue(distM / (lengthFactor || 0.3048), 2)} ${lengthUnitSymbol || 'ft'}`;
+
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(6.2);
+      const textWidth = pdf.getTextWidth(lbl) + 2;
+
+      pdf.setFillColor(255, 255, 255);
+      pdf.rect(mx - (textWidth / 2) - 0.8, my - 2.2, textWidth + 1.6, 4.4, 'F');
+
+      pdf.setTextColor(30, 58, 138);
+      pdf.text(lbl, mx, my + 1.0, { align: 'center' });
+    });
   }
 
+  // 3. Draw Solid Black Outer Boundaries ON TOP (NO fill color)
   pdf.setDrawColor(...BLACK);
-  pdf.setLineWidth(BOUNDARY_W);
+  pdf.setLineWidth(0.9);
   pdf.lines(pathLines, vsPdf[0].x, vsPdf[0].y, [1, 1], 'S', true);
 
-  const boundaryLabels = [];
+  // 4. Side Lengths with clean white knockout mask
   vsPdf.forEach((node, i) => {
     const next = vsPdf[(i + 1) % n];
     const mx = (node.x + next.x) / 2, my = (node.y + next.y) / 2;
-    const ndx = mx - cx, ndy = my - cy;
-    const ndlen = Math.hypot(ndx, ndy) || 1;
-    const offset = 4.5;
-    const lx = mx + (ndx / ndlen) * offset;
-    const ly = my + (ndy / ndlen) * offset;
-    let angle = Math.atan2(next.y - node.y, next.x - node.x) * 180 / Math.PI;
-    if (angle > 90) angle -= 180;
-    if (angle < -90) angle += 180;
     const lbl = sideLabels?.[i] || '';
     if (!lbl) return;
-    boundaryLabels.push({ x: lx, y: ly, angle });
-    pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(5);
-    pdf.setTextColor(255, 255, 255);
-    [[-0.3, 0], [0.3, 0], [0, -0.3], [0, 0.3]].forEach(([dx, dy]) => {
-      pdf.text(lbl, lx + dx, ly + dy, { align: 'center', baseline: 'middle', angle });
-    });
-    pdf.setTextColor(...DARK);
-    pdf.text(lbl, lx, ly, { align: 'center', baseline: 'middle', angle });
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(6.8);
+    const sideTextWidth = pdf.getTextWidth(lbl) + 2;
+
+    pdf.setFillColor(255, 255, 255);
+    pdf.rect(mx - (sideTextWidth / 2) - 0.8, my - 2.4, sideTextWidth + 1.6, 4.8, 'F');
+
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(lbl, mx, my + 1.0, { align: 'center' });
   });
 
+  // 5. Corner Labels P1, P2... (offset outward so precision crosshair is 100% visible)
   vsPdf.forEach((node, i) => {
     const ndx = node.x - cx, ndy = node.y - cy;
     const ndlen = Math.hypot(ndx, ndy) || 1;
-    const outX = ndx / ndlen, outY = ndy / ndlen;
+    const offsetX = (ndx / ndlen) * 6.0;
+    const offsetY = (ndy / ndlen) * 6.0;
 
-    pdf.setFillColor(...WHITE);
-    pdf.circle(node.x, node.y, MARKER_R, 'F');
-    pdf.setFillColor(...GREEN);
-    pdf.circle(node.x, node.y, MARKER_R * 0.6, 'F');
-
-    const labelOffset = MARKER_R + 2.8;
-    let lx = node.x + outX * labelOffset;
-    let ly = node.y + outY * labelOffset;
-    let placeInside = false;
-
-    for (const bl of boundaryLabels) {
-      if (Math.hypot(lx - bl.x, ly - bl.y) < 5) { placeInside = true; break; }
-    }
-    if (placeInside) {
-      lx = node.x - outX * labelOffset;
-      ly = node.y - outY * labelOffset;
-    }
-
+    const cornerLabel = `P${i + 1}`;
     pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(7);
-    const pointColor = i % 2 === 0 ? [220, 38, 38] : [29, 78, 216];
-    pdf.setTextColor(255, 255, 255);
-    const o = 0.5;
-    [[-o,0],[o,0],[0,-o],[0,o],[-o,-o],[o,-o],[-o,o],[o,o]].forEach(([dx, dy]) => {
-      pdf.text(`P${i + 1}`, lx + dx, ly + dy, { align: 'center', baseline: 'middle' });
-    });
-    pdf.setTextColor(...pointColor);
-    pdf.text(`P${i + 1}`, lx, ly, { align: 'center', baseline: 'middle' });
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(cornerLabel, node.x + offsetX, node.y + offsetY + 1.5, { align: 'center' });
   });
-
-  if (diagsToDraw.length > 0 && diagsToDraw.length <= 30) {
-    const placedLabels = [];
-    diagsToDraw.forEach(d => {
-      const p1 = vsPdf[d.from], p2 = vsPdf[d.to];
-      let mx = (p1.x + p2.x) / 2, my = (p1.y + p2.y) / 2;
-      let angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
-      if (angle > 90) angle -= 180;
-      if (angle < -90) angle += 180;
-      const distM = haversineMeters(points[d.from], points[d.to]);
-      const lbl = formatValue(distM / (lengthFactor || 0.3048), 1);
-
-      const ddx = p2.x - p1.x, ddy = p2.y - p1.y;
-      const dlen = Math.hypot(ddx, ddy) || 1;
-      const perpX = -ddy / dlen, perpY = ddx / dlen;
-      for (const pl of placedLabels) {
-        if (Math.hypot(mx - pl.x, my - pl.y) < 6) {
-          mx += perpX * 3;
-          my += perpY * 3;
-        }
-      }
-      placedLabels.push({ x: mx, y: my });
-
-      pdf.setFontSize(4.5);
-      pdf.setTextColor(255, 255, 255);
-      [[-0.3, 0], [0.3, 0], [0, -0.3], [0, 0.3]].forEach(([dx, dy]) => {
-        pdf.text(lbl, mx + dx, my + dy, { align: 'center', baseline: 'middle', angle });
-      });
-      pdf.setTextColor(...GREY);
-      pdf.text(lbl, mx, my, { align: 'center', baseline: 'middle', angle });
-    });
-  }
 
   drawCompass(pdf, bx + bw - 9, by + bh - 9);
 }
