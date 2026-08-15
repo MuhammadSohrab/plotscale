@@ -542,55 +542,14 @@ export function parseDwgBinary(buffer: ArrayBuffer): {
     return { ...res, version };
   }
 
-  const entities: CadEntity[] = [];
-  const layers = ["0", "CAD_PARCELS"];
-  const allPoints: Array<{ x: number; y: number }> = [];
-
-  const dataView = new DataView(buffer);
-  const len = buffer.byteLength - 16;
-  const rawPoints: Array<{ x: number; y: number }> = [];
-
-  for (let offset = 64; offset < len; offset += 8) {
-    try {
-      const v1 = dataView.getFloat64(offset, true);
-      const v2 = dataView.getFloat64(offset + 8, true);
-
-      if (
-        Number.isFinite(v1) &&
-        Number.isFinite(v2) &&
-        Math.abs(v1) > 0.001 &&
-        Math.abs(v1) < 1e7 &&
-        Math.abs(v2) > 0.001 &&
-        Math.abs(v2) < 1e7 &&
-        !Number.isNaN(v1) &&
-        !Number.isNaN(v2)
-      ) {
-        rawPoints.push({ x: v1, y: v2 });
-        allPoints.push({ x: v1, y: v2 });
-      }
-    } catch {}
-  }
-
-  if (rawPoints.length >= 2) {
-    for (let j = 0; j < rawPoints.length - 1; j += 2) {
-      entities.push({
-        type: "LINE",
-        layer: "CAD_PARCELS",
-        color: "#0f172a",
-        points: [rawPoints[j], rawPoints[j + 1]],
-      });
-    }
-  }
-
-  const isCompressed = entities.length === 0;
-  const bounds = computeRobustBounds(allPoints);
-
+  // AutoCAD binary DWG cannot be safely decoded by heuristic float-scanning without a full C++ DWG engine.
+  // We report 0 entities so the system provides a clean, helpful DXF export guide.
   return {
-    entities,
-    layers,
+    entities: [],
+    layers: ["0"],
     version,
-    bounds,
-    isCompressed,
+    bounds: { minX: 0, minY: 0, maxX: 100, maxY: 100 },
+    isCompressed: true,
   };
 }
 
