@@ -394,6 +394,114 @@ export function parseDxfText(dxfContent: string): {
 }
 
 /**
+ * Computes a robust bounding box filtering out metadata coordinate outliers
+ */
+export function computeRobustBounds(points: Array<{ x: number; y: number }>): { minX: number; minY: number; maxX: number; maxY: number } {
+  if (!points.length) return { minX: 0, minY: 0, maxX: 100, maxY: 100 };
+  if (points.length <= 6) {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const p of points) {
+      if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) continue;
+      minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
+      minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+    }
+    return {
+      minX: Number.isFinite(minX) ? minX : 0,
+      maxX: Number.isFinite(maxX) && maxX > minX ? maxX : (minX || 0) + 100,
+      minY: Number.isFinite(minY) ? minY : 0,
+      maxY: Number.isFinite(maxY) && maxY > minY ? maxY : (minY || 0) + 100,
+    };
+  }
+
+  const valid = points.filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y));
+  if (!valid.length) return { minX: 0, minY: 0, maxX: 100, maxY: 100 };
+
+  const xs = valid.map((p) => p.x).sort((a, b) => a - b);
+  const ys = valid.map((p) => p.y).sort((a, b) => a - b);
+
+  // Take 2nd to 98th percentile to discard stray coordinate outliers
+  const pLow = Math.floor(xs.length * 0.02);
+  const pHigh = Math.min(xs.length - 1, Math.ceil(xs.length * 0.98));
+
+  let minX = xs[pLow];
+  let maxX = xs[pHigh];
+  let minY = ys[pLow];
+  let maxY = ys[pHigh];
+
+  if (maxX <= minX) { minX = xs[0]; maxX = xs[xs.length - 1]; }
+  if (maxY <= minY) { minY = ys[0]; maxY = ys[ys.length - 1]; }
+  if (maxX <= minX) maxX = minX + 100;
+  if (maxY <= minY) maxY = minY + 100;
+
+  return { minX, minY, maxX, maxY };
+}
+
+/**
+ * Assembles connected line segments into closed polygons
+ */
+export function connectLinesToPolygons(
+  lines: Array<{ a: { x: number; y: number }; b: { x: number; y: number }; layer?: string; color?: string }>,
+  tolerance = 4
+): Array<{ points: Array<{ x: number; y: number }>; layer?: string; color?: string }> {
+  const result: Array<{ points: Array<{ x: number; y: number }>; layer?: string; color?: string }> = [];
+  const unused = [...lines];
+
+  while (unused.length > 0) {
+    const start = unused.shift()!;
+    const chain: Array<{ x: number; y: number }> = [start.a, start.b];
+    let extended = true;
+
+    while (extended) {
+      extended = false;
+      const tail = chain[chain.length - 1];
+      const head = chain[0];
+
+      // Check if chain closed
+      if (chain.length >= 4 && Math.hypot(tail.x - head.x, tail.y - head.y) <= tolerance) {
+        break;
+      }
+
+      for (let i = 0; i < unused.length; i++) {
+        const candidate = unused[i];
+        if (Math.hypot(tail.x - candidate.a.x, tail.y - candidate.a.y) <= tolerance) {
+          chain.push(candidate.b);
+          unused.splice(i, 1);
+          extended = true;
+          break;
+        } else if (Math.hypot(tail.x - candidate.b.x, tail.y - candidate.b.y) <= tolerance) {
+          chain.push(candidate.a);
+          unused.splice(i, 1);
+          extended = true;
+          break;
+        } else if (Math.hypot(head.x - candidate.b.x, head.y - candidate.b.y) <= tolerance) {
+          chain.unshift(candidate.a);
+          unused.splice(i, 1);
+          extended = true;
+          break;
+        } else if (Math.hypot(head.x - candidate.a.x, head.y - candidate.a.y) <= tolerance) {
+          chain.unshift(candidate.b);
+          unused.splice(i, 1);
+          extended = true;
+          break;
+        }
+      }
+    }
+
+    const head = chain[0];
+    const tail = chain[chain.length - 1];
+    if (chain.length >= 4 && Math.hypot(tail.x - head.x, tail.y - head.y) <= tolerance * 2) {
+      result.push({
+        points: chain.slice(0, -1),
+        layer: start.layer,
+        color: start.color,
+      });
+    }
+  }
+
+  return result;
+}
+
+/**
  * Binary DWG Stream Scanner & Version Detector
  */
 export function parseDwgBinary(buffer: ArrayBuffer): {
@@ -407,6 +515,7 @@ export function parseDwgBinary(buffer: ArrayBuffer): {
   const headerStr = String.fromCharCode(...bytes.slice(0, 6));
 
   const versions: Record<string, string> = {
+    AC1014: "AutoCAD R14",
     AC1015: "AutoCAD 2000/2002 (R15)",
     AC1018: "AutoCAD 2004/2005/2006 (R18)",
     AC1021: "AutoCAD 2007/2008/2009 (R21)",
@@ -435,7 +544,7 @@ export function parseDwgBinary(buffer: ArrayBuffer): {
 
   const entities: CadEntity[] = [];
   const layers = ["0", "CAD_PARCELS"];
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  const allPoints: Array<{ x: number; y: number }> = [];
 
   const dataView = new DataView(buffer);
   const len = buffer.byteLength - 16;
@@ -449,18 +558,15 @@ export function parseDwgBinary(buffer: ArrayBuffer): {
       if (
         Number.isFinite(v1) &&
         Number.isFinite(v2) &&
-        Math.abs(v1) > 0.01 &&
-        Math.abs(v1) < 1e8 &&
-        Math.abs(v2) > 0.01 &&
-        Math.abs(v2) < 1e8 &&
+        Math.abs(v1) > 0.001 &&
+        Math.abs(v1) < 1e7 &&
+        Math.abs(v2) > 0.001 &&
+        Math.abs(v2) < 1e7 &&
         !Number.isNaN(v1) &&
         !Number.isNaN(v2)
       ) {
         rawPoints.push({ x: v1, y: v2 });
-        if (v1 < minX) minX = v1;
-        if (v1 > maxX) maxX = v1;
-        if (v2 < minY) minY = v2;
-        if (v2 > maxY) maxY = v2;
+        allPoints.push({ x: v1, y: v2 });
       }
     } catch {}
   }
@@ -477,16 +583,13 @@ export function parseDwgBinary(buffer: ArrayBuffer): {
   }
 
   const isCompressed = entities.length === 0;
-
-  if (!Number.isFinite(minX)) {
-    minX = 0; minY = 0; maxX = 100; maxY = 100;
-  }
+  const bounds = computeRobustBounds(allPoints);
 
   return {
     entities,
     layers,
     version,
-    bounds: { minX, minY, maxX, maxY },
+    bounds,
     isCompressed,
   };
 }
@@ -520,15 +623,34 @@ export function renderCadToCanvas(
   });
 
   const closedPolygons: Array<{ points: Array<{ x: number; y: number }>; layer?: string; color?: string }> = [];
+  const lineSegments: Array<{ a: { x: number; y: number }; b: { x: number; y: number }; layer?: string; color?: string }> = [];
 
   for (const ent of entities) {
-    if (ent.type === "LWPOLYLINE" && ent.points && ent.points.length >= 2 && ent.closed) {
+    if ((ent.type === "LWPOLYLINE" || ent.type === "POLYLINE") && ent.points && ent.points.length >= 3 && ent.closed) {
       closedPolygons.push({
         points: ent.points.map(mapPoint),
         layer: ent.layer,
         color: ent.color,
       });
+    } else if (ent.type === "SOLID" && ent.points && ent.points.length >= 3) {
+      closedPolygons.push({
+        points: ent.points.map(mapPoint),
+        layer: ent.layer,
+        color: ent.color,
+      });
+    } else if (ent.type === "LINE" && ent.points && ent.points.length >= 2) {
+      lineSegments.push({
+        a: mapPoint(ent.points[0]),
+        b: mapPoint(ent.points[1]),
+        layer: ent.layer,
+        color: ent.color,
+      });
     }
+  }
+
+  if (closedPolygons.length === 0 && lineSegments.length >= 3) {
+    const assembled = connectLinesToPolygons(lineSegments, 8);
+    closedPolygons.push(...assembled);
   }
 
   if (typeof document === "undefined") {

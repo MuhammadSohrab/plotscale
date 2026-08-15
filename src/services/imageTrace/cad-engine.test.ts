@@ -131,4 +131,20 @@ EOF`;
       expect(canvas.height).toBeGreaterThanOrEqual(300);
     }
   });
+
+  it("inspects user DWG files from Cadastral folder", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const dir = "C:\\Users\\SOHRAB\\Downloads\\Cadastral";
+    if (fs.existsSync(dir)) {
+      const files = fs.readdirSync(dir).filter((f) => f.endsWith(".dwg"));
+      for (const file of files) {
+        const buf = fs.readFileSync(path.join(dir, file));
+        const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+        const res = parseDwgBinary(ab);
+        console.log(`[DWG Test] ${file} -> Version: ${res.version}, Entities: ${res.entities.length}, IsCompressed: ${res.isCompressed}`);
+        expect(res.version).toBeDefined();
+      }
+    }
+  });
 });
