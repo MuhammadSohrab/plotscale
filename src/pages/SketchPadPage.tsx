@@ -21,11 +21,12 @@ import {
   Compass,
   Download,
   FileCode2,
+  FileImage,
   FileSpreadsheet,
+  FileText,
   GitCommit,
-  Globe,
   Hand,
-  MapPin,
+  Image,
   Maximize2,
   Minus,
   PencilRuler,
@@ -34,6 +35,7 @@ import {
   RotateCcw,
   Ruler,
   Save,
+  TableProperties,
   Trash2,
   Triangle,
   Undo2,
@@ -50,9 +52,9 @@ import {
   adjustSideCanvasLength,
   calculateHeronArea,
   calculateInteriorAngle,
+  exportToCsv,
   exportToDxf,
-  exportToGeoJson,
-  exportToKml,
+  exportToSvg,
   getRequiredDiagonalsCount,
   recalibrateUnlockedSides,
   solveClosedLinkagePhysics,
@@ -1820,25 +1822,25 @@ export default function SketchPadPage() {
             </header>
             <div className="sketch-modal-body">
               <div className="sketch-export-grid">
-                <div className="sketch-export-card" onClick={() => downloadFile(`${plotName}.dxf`, exportToDxf(plotName, points, DEFAULT_SCALE), "application/dxf")}>
+                <div className="sketch-export-card" onClick={() => downloadFile(`${plotName || "Plot"}.dxf`, exportToDxf(plotName, points, calibrationScale ?? DEFAULT_SCALE), "application/dxf")}>
                   <FileCode2 size={24} color="#2563eb" />
                   <strong>AutoCAD (.DXF)</strong>
-                  <small>CAD Drawings</small>
-                </div>
-                <div className="sketch-export-card" onClick={() => downloadFile(`${plotName}.geojson`, exportToGeoJson(plotName, points, DEFAULT_SCALE), "application/json")}>
-                  <Globe size={24} color="#22c55e" />
-                  <strong>GeoJSON</strong>
-                  <small>GIS Vector Data</small>
-                </div>
-                <div className="sketch-export-card" onClick={() => downloadFile(`${plotName}.kml`, exportToKml(plotName, points, DEFAULT_SCALE), "application/vnd.google-earth.kml+xml")}>
-                  <MapPin size={24} color="#eab308" />
-                  <strong>KML File</strong>
-                  <small>Google Earth</small>
+                  <small>CAD Vector Drawings (1:1)</small>
                 </div>
                 <div className="sketch-export-card" onClick={handleExportPdf}>
                   <FileSpreadsheet size={24} color="#9333ea" />
                   <strong>PDF Plot Sheet</strong>
-                  <small>Land Measurement Report</small>
+                  <small>Official Survey Report</small>
+                </div>
+                <div className="sketch-export-card" onClick={() => downloadFile(`${plotName || "Plot"}.svg`, exportToSvg(plotName, points, outerSides, diagonals, unit, calibrationScale ?? DEFAULT_SCALE), "image/svg+xml")}>
+                  <FileImage size={24} color="#16a34a" />
+                  <strong>SVG Vector Drawing</strong>
+                  <small>Scalable Graphic with Labels</small>
+                </div>
+                <div className="sketch-export-card" onClick={() => downloadFile(`${plotName || "Plot"}-data.csv`, exportToCsv(plotName, points, outerSides, diagonals, areaSummaries, unit, calibrationScale ?? DEFAULT_SCALE), "text/csv")}>
+                  <TableProperties size={24} color="#ea580c" />
+                  <strong>Survey Data (.CSV)</strong>
+                  <small>Excel Coordinates & Dimensions</small>
                 </div>
               </div>
             </div>

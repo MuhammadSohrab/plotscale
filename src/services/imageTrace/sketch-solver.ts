@@ -528,3 +528,165 @@ export function exportToDxf(plotName: string, points: Point[], scaleFactor = 20)
   dxf += `0\nENDSEC\n0\nEOF\n`;
   return dxf;
 }
+
+/**
+ * SVG Vector Exporter
+ */
+export function exportToSvg(
+  plotName: string,
+  points: Point[],
+  outerSides: SideMeasurement[] = [],
+  diagonals: DiagonalMeasurement[] = [],
+  unit = "ft",
+  scaleFactor = 20
+): string {
+  if (!points.length) return "";
+  const xs = points.map((p) => p.x);
+  const ys = points.map((p) => p.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+
+  const pad = 60;
+  const width = Math.max(maxX - minX + pad * 2, 400);
+  const height = Math.max(maxY - minY + pad * 2, 400);
+  const offsetX = minX - pad;
+  const offsetY = minY - pad;
+
+  const polyPoints = points
+    .map((p) => `${(p.x - offsetX).toFixed(1)},${(p.y - offsetY).toFixed(1)}`)
+    .join(" ");
+
+  let diagLines = "";
+  diagonals.forEach((d) => {
+    const p1 = points[d.from];
+    const p2 = points[d.to];
+    if (p1 && p2) {
+      diagLines += `<line x1="${(p1.x - offsetX).toFixed(1)}" y1="${(p1.y - offsetY).toFixed(1)}" x2="${(p2.x - offsetX).toFixed(1)}" y2="${(p2.y - offsetY).toFixed(1)}" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,4" />\n`;
+    }
+  });
+
+  let sideLabels = "";
+  outerSides.forEach((s) => {
+    const p1 = points[s.from];
+    const p2 = points[s.to];
+    if (p1 && p2) {
+      const midX = (p1.x + p2.x) / 2 - offsetX;
+      const midY = (p1.y + p2.y) / 2 - offsetY;
+      const distPhysical = s.length > 0 ? s.length : (Math.hypot(p2.x - p1.x, p2.y - p1.y) / scaleFactor);
+      sideLabels += `<g transform="translate(${midX.toFixed(1)},${midY.toFixed(1)})">
+        <rect x="-35" y="-10" width="70" height="20" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1" />
+        <text text-anchor="middle" y="4" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#1e3a8a">${distPhysical.toFixed(2)} ${unit}</text>
+      </g>\n`;
+    }
+  });
+
+  let vertexNodes = "";
+  points.forEach((p, idx) => {
+    const px = p.x - offsetX;
+    const py = p.y - offsetY;
+    vertexNodes += `<g transform="translate(${px.toFixed(1)},${py.toFixed(1)})">
+      <circle r="7" fill="#22c55e" stroke="#ffffff" stroke-width="2" />
+      <text x="10" y="-8" font-family="system-ui, sans-serif" font-size="11" font-weight="800" fill="#1e3a8a">P${idx + 1}</text>
+    </g>\n`;
+  });
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width.toFixed(1)} ${height.toFixed(1)}" width="${width.toFixed(1)}" height="${height.toFixed(1)}">
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f1f5f9" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Diagonals -->
+  ${diagLines}
+
+  <!-- Plot Boundary -->
+  <polygon points="${polyPoints}" fill="rgba(37, 99, 235, 0.12)" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round" />
+
+  <!-- Side Measurements -->
+  ${sideLabels}
+
+  <!-- Vertices -->
+  ${vertexNodes}
+
+  <!-- Title Block -->
+  <g transform="translate(16, 28)">
+    <text font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#1e3a8a">PlotScale: ${plotName || "Survey Plot"}</text>
+    <text y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#64748b">CAD Vector Drawing · Generated on ${new Date().toLocaleDateString()}</text>
+  </g>
+</svg>`;
+}
+
+/**
+ * CSV Survey Data Exporter
+ */
+export function exportToCsv(
+  plotName: string,
+  points: Point[],
+  outerSides: SideMeasurement[] = [],
+  diagonals: DiagonalMeasurement[] = [],
+  areaSummaries: Record<string, string> = {},
+  unit = "ft",
+  scaleFactor = 20
+): string {
+  const unitFactor = unit === "ft" ? 0.3048 : unit === "yd" ? 0.9144 : 1.0;
+  const lines: string[] = [];
+
+  lines.push(`"PlotScale Land Survey Export"`);
+  lines.push(`"Plot Name","${plotName || "Survey Plot"}"`);
+  lines.push(`"Date","${new Date().toLocaleString()}"`);
+  lines.push(`"Active Unit","${unit}"`);
+  lines.push(``);
+
+  lines.push(`"--- AREA SUMMARY ---"`);
+  lines.push(`"Unit","Area"`);
+  lines.push(`"Square Feet (sq.ft)","${areaSummaries.sqft ?? "—"}"`);
+  lines.push(`"Square Meters (sq.m)","${areaSummaries.sqm ?? "—"}"`);
+  lines.push(`"Gaj / Square Yards (sq.yd)","${areaSummaries.gaj ?? "—"}"`);
+  lines.push(`"Acre","${areaSummaries.acre ?? "—"}"`);
+  lines.push(`"Hectare","${areaSummaries.hectare ?? "—"}"`);
+  lines.push(`"Bigha (Standard)","${areaSummaries.bigha_standard ?? "—"}"`);
+  lines.push(`"Guntha","${areaSummaries.guntha ?? "—"}"`);
+  lines.push(``);
+
+  lines.push(`"--- BOUNDARY SIDES ---"`);
+  lines.push(`"Side #","From Point","To Point","Length (${unit})","Length (Meters)"`);
+  outerSides.forEach((s, idx) => {
+    const p1 = points[s.from];
+    const p2 = points[s.to];
+    const distPx = p1 && p2 ? Math.hypot(p2.x - p1.x, p2.y - p1.y) : 0;
+    const lenUnit = s.length > 0 ? s.length : (distPx / scaleFactor);
+    const lenM = lenUnit * unitFactor;
+    lines.push(`"Side ${idx + 1}","P${s.from + 1}","P${s.to + 1}","${lenUnit.toFixed(2)}","${lenM.toFixed(2)}"`);
+  });
+  lines.push(``);
+
+  if (diagonals.length > 0) {
+    lines.push(`"--- DIAGONAL MEASUREMENTS ---"`);
+    lines.push(`"Diagonal #","From Point","To Point","Length (${unit})","Length (Meters)"`);
+    diagonals.forEach((d, idx) => {
+      const p1 = points[d.from];
+      const p2 = points[d.to];
+      const distPx = p1 && p2 ? Math.hypot(p2.x - p1.x, p2.y - p1.y) : 0;
+      const lenUnit = d.length > 0 ? d.length : (distPx / scaleFactor);
+      const lenM = lenUnit * unitFactor;
+      lines.push(`"Diagonal ${idx + 1}","P${d.from + 1}","P${d.to + 1}","${lenUnit.toFixed(2)}","${lenM.toFixed(2)}"`);
+    });
+    lines.push(``);
+  }
+
+  lines.push(`"--- CORNER VERTICES COORDINATES ---"`);
+  lines.push(`"Vertex #","Local X (${unit})","Local Y (${unit})","Canvas X (px)","Canvas Y (px)"`);
+  points.forEach((p, idx) => {
+    const xUnit = (p.x / scaleFactor).toFixed(2);
+    const yUnit = (-p.y / scaleFactor).toFixed(2);
+    lines.push(`"P${idx + 1}","${xUnit}","${yUnit}","${p.x.toFixed(1)}","${p.y.toFixed(1)}"`);
+  });
+
+  return lines.join("\n");
+}
