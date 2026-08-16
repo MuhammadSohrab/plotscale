@@ -51,7 +51,6 @@ import {
   ZoomOut,
 } from "lucide-react";
 import { averagePixelsPerUnit, documentBoxToRaster, nearestCalibrationVertex } from "../services/imageTrace/calibration-engine";
-import { parseCadFile } from "../services/imageTrace/cad-engine";
 import { remapAndSanitizeDiagonals, sanitizeDiagonals, validateDiagonal } from "../services/imageTrace/diagonal-engine";
 import { buildDxfExport, buildSvgExport } from "../services/imageTrace/export-engine";
 import { clamp, distance, pointInPolygon, polygonArea, segmentProjection } from "../services/imageTrace/geometry-engine";
@@ -382,7 +381,6 @@ export default function Home() {
   const [preferencesHydrated, setPreferencesHydrated] = useState(false);
   const [pdfSession, setPdfSession] = useState<PdfSelectionSession | null>(null);
   const [currentPdfInfo, setCurrentPdfInfo] = useState<{ file: File; totalPages: number; currentPage: number } | null>(null);
-  const [cadGuidanceModal, setCadGuidanceModal] = useState<{ message: string; format: string } | null>(null);
   const DOC_W = documentRaster.nativeWidth;
   const DOC_H = documentRaster.nativeHeight;
   const topology = useMemo(() => buildTopologyState(shapes), [shapes]);
@@ -2137,91 +2135,6 @@ export default function Home() {
       }
     }
 
-    const isDxf = file.name.toLowerCase().endsWith(".dxf") || file.type.includes("dxf");
-    const isDwg = file.name.toLowerCase().endsWith(".dwg") || file.type.includes("dwg");
-    const isCad = isDxf || isDwg;
-
-    if (isCad) {
-      const loadToken = ++rasterLoadTokenRef.current;
-      const nextRevision = mapRevisionRef.current + 1;
-      mapRevisionRef.current = nextRevision;
-      setMapRevision(nextRevision);
-      resetTransientEditorState();
-      restartVectorWorker();
-      retainedBitmapRef.current?.close();
-      retainedBitmapRef.current = null;
-      rasterSourceRef.current = null;
-      const display = mapCanvasRef.current;
-      const memory = ensureProcessingCanvas();
-      display?.getContext("2d")?.clearRect(0, 0, display.width, display.height);
-      memory.getContext("2d")?.clearRect(0, 0, memory.width, memory.height);
-      setMapSource("none"); setMapVisible(false);
-      setCurrentPdfInfo(null);
-      setShapes([]); setSelectedIds([]); setSelectedSegment(null); setManualPoints([]); setEraserStrokes([]); setActiveEraserStroke(null); setRoi(null); setExpanded({}); cancelCalibration();
-      resetHistory();
-
-      try {
-        const cadResult = await parseCadFile(file);
-        if (loadToken !== rasterLoadTokenRef.current) return;
-        if (!cadResult.ok) throw new Error(cadResult.error || "CAD parsing failed");
-
-        const source = cadResult.canvas;
-        const sourceWidth = cadResult.width;
-        const sourceHeight = cadResult.height;
-
-        const processingScale = Math.min(1, Math.sqrt(MAX_PROCESSING_PIXELS / (sourceWidth * sourceHeight)));
-        const processingWidth = Math.max(1, Math.round(sourceWidth * processingScale));
-        const processingHeight = Math.max(1, Math.round(sourceHeight * processingScale));
-        memory.width = processingWidth; memory.height = processingHeight;
-        const context = memory.getContext("2d", { willReadFrequently: true });
-        if (!context) throw new Error("Processing canvas context unavailable");
-        context.clearRect(0, 0, processingWidth, processingHeight);
-        context.fillStyle = "#ffffff";
-        context.fillRect(0, 0, processingWidth, processingHeight);
-        context.imageSmoothingEnabled = processingScale < 1;
-        context.imageSmoothingQuality = "high";
-        context.drawImage(source, 0, 0, processingWidth, processingHeight);
-        rasterSourceRef.current = source;
-        setDocumentRaster({
-          nativeWidth: sourceWidth,
-          nativeHeight: sourceHeight,
-          processingWidth,
-          processingHeight,
-          processingScale,
-          revision: nextRevision,
-        });
-        setMapSource("upload"); setMapVisible(true);
-        if (cadResult.unitSuggestion) setUnit(cadResult.unitSuggestion);
-
-        if (cadResult.closedPolygons.length > 0) {
-          const autoShapes: Shape[] = cadResult.closedPolygons.map((poly, pIdx) => ({
-            id: `cad-poly-${Date.now()}-${pIdx}`,
-            name: `Plot ${String(pIdx + 1).padStart(2, "0")}`,
-            points: poly.points.map((p) => ({
-              x: Math.round(p.x * processingScale * 100) / 100,
-              y: Math.round(p.y * processingScale * 100) / 100,
-            })),
-            closed: true,
-            visible: true,
-            color: poly.color || "#00ff87",
-            source: "auto",
-            diagonals: [],
-          }));
-          setShapes(autoShapes);
-        }
-
-        hasFittedRef.current = false;
-        window.requestAnimationFrame(fitDocument);
-        notify(`${cadResult.format} CAD Drawing loaded (${cadResult.entityCount} vector entities, ${cadResult.layers.length} layers${cadResult.closedPolygons.length ? `, ${cadResult.closedPolygons.length} closed plots auto-detected` : ""})`);
-      } catch (error) {
-        if (loadToken !== rasterLoadTokenRef.current) return;
-        setMapSource("none"); setMapVisible(false);
-        const errorMsg = error instanceof Error ? error.message : "CAD load failed";
-        setCadGuidanceModal({ message: errorMsg, format: isDwg ? "DWG" : "DXF" });
-      }
-      return;
-    }
-
     // Regular image loading:
     const loadToken = ++rasterLoadTokenRef.current;
     const nextRevision = mapRevisionRef.current + 1;
@@ -2460,7 +2373,7 @@ export default function Home() {
         <div className="cad-header-actions">
           <button className="cad-icon-button" onClick={undo} disabled={!canUndo} title="Undo (Ctrl/Cmd+Z)"><Undo2 size={17} /></button>
           <button className="cad-icon-button" onClick={redo} disabled={!canRedo} title="Redo (Ctrl/Cmd+Shift+Z or Ctrl+Y)"><Redo2 size={17} /></button>
-          <button className="cad-icon-button" onClick={() => fileRef.current?.click()} title="Upload map image, PDF, DXF or DWG"><FileUp size={17} /></button><input ref={fileRef} type="file" accept="image/*,application/pdf,.pdf,.dxf,.dwg,application/dxf,application/dwg,application/x-dwg,application/x-autocad" hidden onChange={loadImage} />
+          <button className="cad-icon-button" onClick={() => fileRef.current?.click()} title="Upload map image or PDF"><FileUp size={17} /></button><input ref={fileRef} type="file" accept="image/*,application/pdf,.pdf" hidden onChange={loadImage} />
           <button className="cad-icon-button" onClick={() => setMapVisible((visible) => !visible)} disabled={mapSource === "none"} title={mapVisible ? "Hide background map" : "Show background map"}>{mapVisible ? <EyeOff size={17} /> : <Eye size={17} />}</button>
           <button className="cad-icon-button danger-icon" onClick={removeMap} disabled={mapSource === "none"} title="Clear background image from canvas and processing memory"><ImageOff size={17} /></button>
           <button className="cad-icon-button sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}><Menu size={18} /></button>
@@ -2822,75 +2735,6 @@ export default function Home() {
                   <Check size={15} /> Import Page {pdfSession.selectedPage}
                 </button>
               </div>
-            </footer>
-          </div>
-        </div>
-      )}
-
-      {/* CAD Guidance / DXF Export Helper Modal */}
-      {cadGuidanceModal && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true">
-          <div className="cad-guidance-modal">
-            <header className="cad-guidance-header">
-              <div className="cad-guidance-title">
-                <FileCode2 size={24} className="text-blue-600" />
-                <div>
-                  <h3>AutoCAD DWG / DXF Guidance</h3>
-                  <p>{cadGuidanceModal.message}</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                className="cad-guidance-close"
-                onClick={() => setCadGuidanceModal(null)}
-                title="Close"
-              >
-                <X size={18} />
-              </button>
-            </header>
-
-            <div className="cad-guidance-body">
-              <div className="cad-guidance-step">
-                <span className="step-num">1</span>
-                <div>
-                  <b>AutoCAD / Civil 3D me drawing kholein</b>
-                  <p>Apna CAD map AutoCAD, Civil 3D, QCAD ya LibreCAD software me open karein.</p>
-                </div>
-              </div>
-              <div className="cad-guidance-step">
-                <span className="step-num">2</span>
-                <div>
-                  <b>Save As → AutoCAD DXF (*.dxf) karein</b>
-                  <p>Menu me <code>File → Save As → AutoCAD DXF</code> select karein ya command bar me <code>DXFOUT</code> type karein.</p>
-                </div>
-              </div>
-              <div className="cad-guidance-step">
-                <span className="step-num">3</span>
-                <div>
-                  <b>PlotScale me .dxf file upload karein</b>
-                  <p>DXF open standard format hai jisme sabhi Khasra parcels, layers aur lines 100% HD Vector me turant load ho jayenge.</p>
-                </div>
-              </div>
-            </div>
-
-            <footer className="cad-guidance-footer">
-              <button
-                type="button"
-                className="pdf-page-btn-cancel"
-                onClick={() => setCadGuidanceModal(null)}
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                className="cad-guidance-btn-primary"
-                onClick={() => {
-                  setCadGuidanceModal(null);
-                  fileRef.current?.click();
-                }}
-              >
-                <FileUp size={16} /> Upload DXF File
-              </button>
             </footer>
           </div>
         </div>

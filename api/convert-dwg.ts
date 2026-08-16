@@ -55,14 +55,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const LibreDwg = pkg.LibreDwg;
       if (LibreDwg && typeof LibreDwg.create === "function") {
         const libredwg = await LibreDwg.create();
-        const dwg = libredwg.dwg_read_data(new Uint8Array(buffer), pkg.Dwg_File_Type.DWG);
+        const arrayBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer;
+        const dwg = libredwg.dwg_read_data(arrayBuffer, pkg.Dwg_File_Type.DWG);
         if (dwg) {
           const db = libredwg.convert(dwg);
           libredwg.dwg_free(dwg);
           if (db && db.entities && db.entities.length > 0) {
             // Convert entities to DXF text format
             const dxfParts: string[] = ["0\nSECTION\n2\nENTITIES"];
-            for (const ent of db.entities) {
+            for (const ent of db.entities as any[]) {
               if (ent.type === "LINE" && ent.startPoint && ent.endPoint) {
                 dxfParts.push(`0\nLINE\n8\n${ent.layer || "0"}\n10\n${ent.startPoint.x}\n20\n${ent.startPoint.y}\n11\n${ent.endPoint.x}\n21\n${ent.endPoint.y}`);
               } else if ((ent.type === "LWPOLYLINE" || ent.type === "POLYLINE") && ent.vertices && ent.vertices.length >= 2) {

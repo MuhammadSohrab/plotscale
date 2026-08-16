@@ -6,6 +6,7 @@ import {
   CloudOff,
   FolderOpen,
   Image,
+  FileCode2,
   LogOut,
   MapPinned,
   PencilRuler,
@@ -65,6 +66,13 @@ export function DashboardPage() {
       description: "Trace boundaries from a map, image or PDF",
       tone: "blue",
       to: "/image-trace",
+    },
+    {
+      icon: FileCode2,
+      title: "CAD Measurement",
+      description: "Inspect layers, calculate 1:1 land area & parcels from AutoCAD DWG / DXF maps",
+      tone: "green",
+      to: "/cad-measure",
     },
     {
       icon: Calculator,
