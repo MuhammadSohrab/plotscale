@@ -770,14 +770,33 @@ export async function parseCadFile(file: File): Promise<CadParseResult> {
       format = "DWG";
       const buffer = await file.arrayBuffer();
 
-      // First try WebAssembly DWG-to-DXF converter
-      const convertedDxf = await convertDwgToDxf(buffer);
-      if (convertedDxf) {
-        const parsed = parseDxfText(convertedDxf);
+      // 1. Try Client WebAssembly DWG-to-DXF converter
+      let dxfText = await convertDwgToDxf(buffer);
+
+      // 2. If client WASM couldn't decode, try Cloud Serverless API
+      if (!dxfText && typeof fetch !== "undefined") {
+        try {
+          const response = await fetch("/api/convert-dwg", {
+            method: "POST",
+            headers: { "Content-Type": "application/octet-stream" },
+            body: buffer,
+          });
+          if (response.ok) {
+            const json = await response.json();
+            if (json.ok && typeof json.dxf === "string") {
+              dxfText = json.dxf;
+              version = "AutoCAD Vector (Cloud Decoded)";
+            }
+          }
+        } catch {}
+      }
+
+      if (dxfText) {
+        const parsed = parseDxfText(dxfText);
         entities = parsed.entities;
         layers = parsed.layers;
         bounds = parsed.bounds;
-        version = "AutoCAD Vector (WASM Decoded)";
+        if (!version || version.includes("2000")) version = "AutoCAD Vector";
       } else {
         const parsed = parseDwgBinary(buffer);
         entities = parsed.entities;
