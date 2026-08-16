@@ -728,6 +728,127 @@ export async function convertDwgToDxf(dwgBuffer: ArrayBuffer): Promise<string | 
   }
 }
 
+let libreDwgPromise: Promise<any> | null = null;
+
+export async function getLibreDwg() {
+  if (!libreDwgPromise) {
+    libreDwgPromise = (async () => {
+      try {
+        const pkg = await import("@mlightcad/libredwg-web");
+        const LibreDwg = pkg.LibreDwg;
+        if (LibreDwg && typeof LibreDwg.create === "function") {
+          return await LibreDwg.create(typeof window !== "undefined" ? "/" : undefined);
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    })();
+  }
+  return libreDwgPromise;
+}
+
+export async function parseDwgWithLibreDwg(buffer: ArrayBuffer): Promise<{
+  entities: CadEntity[];
+  layers: string[];
+  bounds: { minX: number; minY: number; maxX: number; maxY: number };
+} | null> {
+  try {
+    const pkg = await import("@mlightcad/libredwg-web");
+    const libredwg = await getLibreDwg();
+    if (!libredwg) return null;
+
+    const dataArr = new Uint8Array(buffer);
+    const dwg = libredwg.dwg_read_data(dataArr, pkg.Dwg_File_Type.DWG);
+    if (!dwg) return null;
+
+    const db = libredwg.convert(dwg);
+    try {
+      libredwg.dwg_free(dwg);
+    } catch {}
+
+    if (!db || !db.entities || db.entities.length === 0) {
+      return null;
+    }
+
+    const entities: CadEntity[] = [];
+    const layersSet = new Set<string>();
+    const allPoints: Array<{ x: number; y: number }> = [];
+
+    for (const ent of db.entities) {
+      if (ent.layer) layersSet.add(ent.layer);
+
+      if (ent.type === "LINE" && ent.startPoint && ent.endPoint) {
+        entities.push({
+          type: "LINE",
+          layer: ent.layer || "0",
+          color: ent.color ? `#${(ent.color & 0xffffff).toString(16).padStart(6, "0")}` : "#0f172a",
+          points: [
+            { x: ent.startPoint.x, y: ent.startPoint.y },
+            { x: ent.endPoint.x, y: ent.endPoint.y },
+          ],
+        });
+        allPoints.push({ x: ent.startPoint.x, y: ent.startPoint.y });
+        allPoints.push({ x: ent.endPoint.x, y: ent.endPoint.y });
+      } else if ((ent.type === "LWPOLYLINE" || ent.type === "POLYLINE") && ent.vertices && ent.vertices.length >= 2) {
+        const pts = ent.vertices.map((v: any) => ({ x: v.x, y: v.y }));
+        entities.push({
+          type: "LWPOLYLINE",
+          layer: ent.layer || "0",
+          color: ent.color ? `#${(ent.color & 0xffffff).toString(16).padStart(6, "0")}` : "#0f172a",
+          points: pts,
+          closed: ent.isClosed === true || ent.flag === 1,
+        });
+        pts.forEach((p: { x: number; y: number }) => allPoints.push(p));
+      } else if (ent.type === "CIRCLE" && ent.center && ent.radius) {
+        entities.push({
+          type: "CIRCLE",
+          layer: ent.layer || "0",
+          color: ent.color ? `#${(ent.color & 0xffffff).toString(16).padStart(6, "0")}` : "#0f172a",
+          center: { x: ent.center.x, y: ent.center.y },
+          radius: ent.radius,
+        });
+        allPoints.push({ x: ent.center.x - ent.radius, y: ent.center.y - ent.radius });
+        allPoints.push({ x: ent.center.x + ent.radius, y: ent.center.y + ent.radius });
+      } else if (ent.type === "ARC" && ent.center && ent.radius) {
+        entities.push({
+          type: "ARC",
+          layer: ent.layer || "0",
+          color: ent.color ? `#${(ent.color & 0xffffff).toString(16).padStart(6, "0")}` : "#0f172a",
+          center: { x: ent.center.x, y: ent.center.y },
+          radius: ent.radius,
+          startAngle: ent.startAngle,
+          endAngle: ent.endAngle,
+        });
+        allPoints.push({ x: ent.center.x - ent.radius, y: ent.center.y - ent.radius });
+        allPoints.push({ x: ent.center.x + ent.radius, y: ent.center.y + ent.radius });
+      } else if ((ent.type === "TEXT" || ent.type === "MTEXT") && ent.text) {
+        const pt = ent.startPoint || ent.insertionPoint || { x: 0, y: 0 };
+        entities.push({
+          type: "TEXT",
+          layer: ent.layer || "0",
+          text: ent.text,
+          points: [{ x: pt.x, y: pt.y }],
+          height: ent.textHeight || 12,
+        });
+        allPoints.push({ x: pt.x, y: pt.y });
+      }
+    }
+
+    if (entities.length === 0) return null;
+
+    const bounds = computeRobustBounds(allPoints);
+    return {
+      entities,
+      layers: Array.from(layersSet),
+      bounds,
+    };
+  } catch (err) {
+    console.warn("parseDwgWithLibreDwg error:", err);
+    return null;
+  }
+}
+
 /**
  * Universal CAD (DWG / DXF) File Parser Entry Point
  */
@@ -770,39 +891,48 @@ export async function parseCadFile(file: File): Promise<CadParseResult> {
       format = "DWG";
       const buffer = await file.arrayBuffer();
 
-      // 1. Try Client WebAssembly DWG-to-DXF converter
-      let dxfText = await convertDwgToDxf(buffer);
-
-      // 2. If client WASM couldn't decode, try Cloud Serverless API
-      if (!dxfText && typeof fetch !== "undefined") {
-        try {
-          const response = await fetch("/api/convert-dwg", {
-            method: "POST",
-            headers: { "Content-Type": "application/octet-stream" },
-            body: buffer,
-          });
-          if (response.ok) {
-            const json = await response.json();
-            if (json.ok && typeof json.dxf === "string") {
-              dxfText = json.dxf;
-              version = "AutoCAD Vector (Cloud Decoded)";
-            }
-          }
-        } catch {}
-      }
-
-      if (dxfText) {
-        const parsed = parseDxfText(dxfText);
-        entities = parsed.entities;
-        layers = parsed.layers;
-        bounds = parsed.bounds;
-        if (!version || version.includes("2000")) version = "AutoCAD Vector";
+      // 1. First, try GNU LibreDWG Direct WASM Parser (decodes R13 to AutoCAD 2024 directly!)
+      const libreDwgResult = await parseDwgWithLibreDwg(buffer);
+      if (libreDwgResult && libreDwgResult.entities.length > 0) {
+        entities = libreDwgResult.entities;
+        layers = libreDwgResult.layers;
+        bounds = libreDwgResult.bounds;
+        version = "AutoCAD DWG Vector (LibreDWG Decoded)";
       } else {
-        const parsed = parseDwgBinary(buffer);
-        entities = parsed.entities;
-        layers = parsed.layers;
-        bounds = parsed.bounds;
-        version = parsed.version;
+        // 2. Try Client WebAssembly libdxfrw DWG-to-DXF converter
+        let dxfText = await convertDwgToDxf(buffer);
+
+        // 3. If client WASM couldn't decode, try Cloud Serverless API
+        if (!dxfText && typeof fetch !== "undefined") {
+          try {
+            const response = await fetch("/api/convert-dwg", {
+              method: "POST",
+              headers: { "Content-Type": "application/octet-stream" },
+              body: buffer,
+            });
+            if (response.ok) {
+              const json = await response.json();
+              if (json.ok && typeof json.dxf === "string") {
+                dxfText = json.dxf;
+                version = "AutoCAD Vector (Cloud Decoded)";
+              }
+            }
+          } catch {}
+        }
+
+        if (dxfText) {
+          const parsed = parseDxfText(dxfText);
+          entities = parsed.entities;
+          layers = parsed.layers;
+          bounds = parsed.bounds;
+          if (!version || version.includes("2000")) version = "AutoCAD Vector";
+        } else {
+          const parsed = parseDwgBinary(buffer);
+          entities = parsed.entities;
+          layers = parsed.layers;
+          bounds = parsed.bounds;
+          version = parsed.version;
+        }
       }
     }
 

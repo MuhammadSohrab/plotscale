@@ -49,7 +49,54 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ ok: false, error: "Uploaded file is not a valid AutoCAD DWG drawing." });
     }
 
-    // Try converting using libdxfrw WebAssembly / Node wrapper
+    // 1. Try LibreDWG parser (decodes all versions from R13 to AutoCAD 2024)
+    try {
+      const pkg = await import("@mlightcad/libredwg-web");
+      const LibreDwg = pkg.LibreDwg;
+      if (LibreDwg && typeof LibreDwg.create === "function") {
+        const libredwg = await LibreDwg.create();
+        const dwg = libredwg.dwg_read_data(new Uint8Array(buffer), pkg.Dwg_File_Type.DWG);
+        if (dwg) {
+          const db = libredwg.convert(dwg);
+          libredwg.dwg_free(dwg);
+          if (db && db.entities && db.entities.length > 0) {
+            // Convert entities to DXF text format
+            const dxfParts: string[] = ["0\nSECTION\n2\nENTITIES"];
+            for (const ent of db.entities) {
+              if (ent.type === "LINE" && ent.startPoint && ent.endPoint) {
+                dxfParts.push(`0\nLINE\n8\n${ent.layer || "0"}\n10\n${ent.startPoint.x}\n20\n${ent.startPoint.y}\n11\n${ent.endPoint.x}\n21\n${ent.endPoint.y}`);
+              } else if ((ent.type === "LWPOLYLINE" || ent.type === "POLYLINE") && ent.vertices && ent.vertices.length >= 2) {
+                const isClosed = ent.isClosed === true || ent.flag === 1;
+                dxfParts.push(`0\nLWPOLYLINE\n8\n${ent.layer || "0"}\n90\n${ent.vertices.length}\n70\n${isClosed ? 1 : 0}`);
+                for (const v of ent.vertices) {
+                  dxfParts.push(`10\n${v.x}\n20\n${v.y}`);
+                }
+              } else if (ent.type === "CIRCLE" && ent.center && ent.radius) {
+                dxfParts.push(`0\nCIRCLE\n8\n${ent.layer || "0"}\n10\n${ent.center.x}\n20\n${ent.center.y}\n40\n${ent.radius}`);
+              } else if (ent.type === "ARC" && ent.center && ent.radius) {
+                dxfParts.push(`0\nARC\n8\n${ent.layer || "0"}\n10\n${ent.center.x}\n20\n${ent.center.y}\n40\n${ent.radius}\n50\n${ent.startAngle || 0}\n51\n${ent.endAngle || 360}`);
+              } else if ((ent.type === "TEXT" || ent.type === "MTEXT") && ent.text) {
+                const pt = ent.startPoint || ent.insertionPoint || { x: 0, y: 0 };
+                dxfParts.push(`0\nTEXT\n8\n${ent.layer || "0"}\n10\n${pt.x}\n20\n${pt.y}\n40\n${ent.textHeight || 10}\n1\n${ent.text}`);
+              }
+            }
+            dxfParts.push("0\nENDSEC\n0\nEOF");
+            const dxf = dxfParts.join("\n");
+
+            return res.status(200).json({
+              ok: true,
+              format: "DXF",
+              dxf,
+              version: header,
+            });
+          }
+        }
+      }
+    } catch (libreErr) {
+      console.warn("LibreDWG conversion error in serverless function:", libreErr);
+    }
+
+    // 2. Try libdxfrw WebAssembly / Node wrapper
     try {
       const createModule = (await import("@mlightcad/libdxfrw-web/dist/libdxfrw.js")).default;
       const libdxfrw = await createModule();
