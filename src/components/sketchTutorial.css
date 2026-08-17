@@ -1,0 +1,398 @@
+/* PlotScale Sketch Pad Interactive Tutorial Styling */
+
+.sketch-tutorial-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: tutorialFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tutorialFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sketch-tutorial-modal {
+  width: min(820px, 100%);
+  max-height: 92svh;
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: tutorialSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tutorialSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Header */
+.sketch-tutorial-header {
+  padding: 18px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sketch-tutorial-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sketch-tutorial-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid #dbeafe;
+}
+
+.sketch-tutorial-title-group h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.sketch-tutorial-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sketch-lang-switcher {
+  display: flex;
+  background: #e2e8f0;
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.sketch-lang-btn {
+  padding: 4px 10px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sketch-lang-btn.is-active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.sketch-tutorial-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sketch-tutorial-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Body Layout */
+.sketch-tutorial-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Animation Showcase Stage */
+.sketch-tutorial-stage {
+  width: 100%;
+  height: 280px;
+  background: #0f172a;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.sketch-stage-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sketch-stage-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.sketch-stage-play-overlay {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sketch-stage-play-overlay:hover {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Step Content Card */
+.sketch-tutorial-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sketch-tutorial-step-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sketch-step-pill {
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.sketch-tutorial-step-title h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.sketch-tutorial-desc {
+  margin: 0;
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.sketch-tutorial-tip-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  color: #166534;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.sketch-tutorial-tip-box strong {
+  color: #15803d;
+}
+
+/* Footer & Controls */
+.sketch-tutorial-footer {
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sketch-tutorial-progress-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sketch-dot-btn {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.sketch-dot-btn.is-active {
+  width: 26px;
+  border-radius: 6px;
+  background: #2563eb;
+}
+
+.sketch-tutorial-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sketch-btn-tutorial-prev, .sketch-btn-tutorial-next {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sketch-btn-tutorial-prev {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+.sketch-btn-tutorial-prev:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.sketch-btn-tutorial-prev:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sketch-btn-tutorial-next {
+  background: #2563eb;
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.sketch-btn-tutorial-next:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.sketch-btn-try-canvas {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 10px;
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+  transition: all 0.15s;
+}
+
+.sketch-btn-try-canvas:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+/* Header Trigger Pill in SketchPadPage */
+.sketch-tutorial-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 16px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  animation: pulseGlow 3s infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.2); }
+  50% { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+}
+
+.sketch-tutorial-pill-btn:hover {
+  background: #dbeafe;
+  color: #1e40af;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .sketch-tutorial-modal {
+    max-height: 96svh;
+    border-radius: 18px;
+  }
+  .sketch-tutorial-body {
+    padding: 16px;
+    gap: 16px;
+  }
+  .sketch-tutorial-stage {
+    height: 210px;
+  }
+  .sketch-tutorial-footer {
+    padding: 12px 16px;
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+  .sketch-tutorial-nav-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .sketch-tutorial-header {
+    padding: 14px 16px;
+  }
+}

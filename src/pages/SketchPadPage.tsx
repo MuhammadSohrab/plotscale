@@ -30,6 +30,7 @@ import {
   Maximize2,
   Minus,
   PencilRuler,
+  PlayCircle,
   Plus,
   Redo2,
   RotateCcw,
@@ -48,6 +49,7 @@ import { exportPlotPdf } from "../services/PlotReportService";
 import { localDatabaseService } from "../services/LocalDatabaseService";
 import { CrosshairPointMarker } from "../components/common/PointMarker";
 import { OffsetDragHandleOverlay } from "../components/common/OffsetDragHandle";
+import { SketchTutorialModal } from "../components/SketchTutorialModal";
 import {
   adjustSideCanvasLength,
   calculateHeronArea,
@@ -151,6 +153,7 @@ export default function SketchPadPage() {
   // Modals & Notifications
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [tutorialOpen, setTutorialOpen] = useState(false);
   const [plotName, setPlotName] = useState("Khasra Field Survey Plot");
   const [notification, setNotification] = useState<string | null>(null);
 
@@ -1098,26 +1101,26 @@ export default function SketchPadPage() {
 
       // Physical side lengths
       const sideLengthsMeters = outerSides.map((s) => {
-        const p1 = points[s.from];
-        const p2 = points[s.to];
+        const p1 = points[s.fromIndex];
+        const p2 = points[s.toIndex];
         const distPx = p1 && p2 ? Math.hypot(p2.x - p1.x, p2.y - p1.y) : 0;
         const distPhysical = s.length > 0 ? s.length : (distPx / activeScale);
         return distPhysical * unitFactor;
       });
 
       const sideLabels = outerSides.map((s) => {
-        const p1 = points[s.from];
-        const p2 = points[s.to];
+        const p1 = points[s.fromIndex];
+        const p2 = points[s.toIndex];
         const distPx = p1 && p2 ? Math.hypot(p2.x - p1.x, p2.y - p1.y) : 0;
         const distPhysical = s.length > 0 ? s.length : (distPx / activeScale);
         return `${distPhysical.toFixed(2)} ${lengthUnitSymbol}`;
       });
 
       const activeDiags = (activeDiagonalsList && activeDiagonalsList.length > 0) ? activeDiagonalsList : diagonals;
-      const diagonalPairs = activeDiags.map((d) => [d.fromIndex ?? d.from, d.toIndex ?? d.to]);
+      const diagonalPairs = activeDiags.map((d) => [d.fromIndex, d.toIndex]);
       const diagonalsMeters = activeDiags.map((d) => {
-        const from = d.fromIndex ?? d.from;
-        const to = d.toIndex ?? d.to;
+        const from = d.fromIndex;
+        const to = d.toIndex;
         const p1 = points[from];
         const p2 = points[to];
         const distPx = p1 && p2 ? Math.hypot(p2.x - p1.x, p2.y - p1.y) : 0;
@@ -1196,6 +1199,16 @@ export default function SketchPadPage() {
         <span className="calculator-header__chip">
           <PencilRuler size={14} /> Sketch Pad
         </span>
+        <button
+          type="button"
+          className="sketch-tutorial-pill-btn"
+          onClick={() => setTutorialOpen(true)}
+          title="Watch Interactive Video Tutorial / वीडियो ट्यूटोरियल देखें"
+          style={{ marginLeft: "auto" }}
+        >
+          <PlayCircle size={15} />
+          <span>Tutorial (गाइड)</span>
+        </button>
       </header>
 
       {/* Main Workspace Shell */}
@@ -1855,6 +1868,31 @@ export default function SketchPadPage() {
           </div>
         </div>
       )}
+      {/* Interactive Video / Animated Tutorial Modal */}
+      <SketchTutorialModal
+        isOpen={tutorialOpen}
+        onClose={() => setTutorialOpen(false)}
+        onLoadSamplePlot={() => {
+          const samplePoints: Point[] = [
+            { x: 250, y: 150 },
+            { x: 550, y: 120 },
+            { x: 620, y: 380 },
+            { x: 220, y: 410 },
+          ];
+          setPoints(samplePoints);
+          setClosed(true);
+          setPlotName("Sample Irregular Plot");
+          const s0: SideMeasurement = { id: "side-0-1", fromIndex: 0, toIndex: 1, length: 60, isLocked: true, rawPxLength: 300 };
+          const s1: SideMeasurement = { id: "side-1-2", fromIndex: 1, toIndex: 2, length: 55, isLocked: true, rawPxLength: 270 };
+          const s2: SideMeasurement = { id: "side-2-3", fromIndex: 2, toIndex: 3, length: 80, isLocked: true, rawPxLength: 400 };
+          const s3: SideMeasurement = { id: "side-3-0", fromIndex: 3, toIndex: 0, length: 52, isLocked: true, rawPxLength: 260 };
+          setOuterSides([s0, s1, s2, s3]);
+          const d0: DiagonalMeasurement = { id: "diag-0-2", fromIndex: 0, toIndex: 2, length: 90, isLocked: true, rawPxLength: 450 };
+          setDiagonals([d0]);
+          setCalibrationScale(5);
+          notify("Loaded Tutorial Sample Plot (T1 + T2 Survey Triangulation)");
+        }}
+      />
     </main>
   );
 }
