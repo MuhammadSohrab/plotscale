@@ -10,10 +10,11 @@ import {
   type PointerEvent as ReactPointerEvent,
   type TouchEvent as ReactTouchEvent,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   ArrowLeft,
+  BookOpen,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -1199,16 +1200,26 @@ export default function SketchPadPage() {
         <span className="calculator-header__chip">
           <PencilRuler size={14} /> Sketch Pad
         </span>
-        <button
-          type="button"
-          className="sketch-tutorial-pill-btn"
-          onClick={() => setTutorialOpen(true)}
-          title="Watch Interactive Video Tutorial / वीडियो ट्यूटोरियल देखें"
-          style={{ marginLeft: "auto" }}
-        >
-          <PlayCircle size={15} />
-          <span>Tutorial (गाइड)</span>
-        </button>
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
+          <Link
+            to="/help"
+            className="sketch-tutorial-pill-btn"
+            title="Help Center & Documentation / सहायता केंद्र"
+            style={{ textDecoration: "none", background: "rgba(255,255,255,0.06)", color: "#cbd5e1", borderColor: "rgba(255,255,255,0.12)" }}
+          >
+            <BookOpen size={14} />
+            <span>Help (गाइड)</span>
+          </Link>
+          <button
+            type="button"
+            className="sketch-tutorial-pill-btn"
+            onClick={() => setTutorialOpen(true)}
+            title="Watch Interactive Video Tutorial / वीडियो ट्यूटोरियल देखें"
+          >
+            <PlayCircle size={15} />
+            <span>Video Guide</span>
+          </button>
+        </div>
       </header>
 
       {/* Main Workspace Shell */}

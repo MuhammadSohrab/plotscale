@@ -16,6 +16,7 @@ import { AreaCalculatorPage } from "./pages/AreaCalculatorPage";
 import ImageTracePage from "./pages/ImageTracePage";
 import SketchPadPage from "./pages/SketchPadPage";
 import CadMeasurePage from "./pages/CadMeasurePage";
+import HelpTutorialPage from "./pages/HelpTutorialPage";
 import {
   AnonymousRoute,
   AuthenticatedRoute,
@@ -138,7 +139,11 @@ export default function App() {
         <Route path="/units/compound" element={<CompoundRecipePage />} />
         <Route path="/units/*" element={<Navigate to="/units" replace />} />
         <Route path="/converter" element={<UnitConverterPage />} />
+        <Route path="/help" element={<HelpTutorialPage />} />
+        <Route path="/tutorials" element={<HelpTutorialPage />} />
       </Route>
+      <Route path="/help" element={<HelpTutorialPage />} />
+      <Route path="/tutorials" element={<HelpTutorialPage />} />
       <Route element={<AuthenticatedRoute />}>
         <Route path="/cloud-profile" element={<CloudProfilePage />} />
         <Route path="/saved-plots" element={<SavedPlotsPage />} />

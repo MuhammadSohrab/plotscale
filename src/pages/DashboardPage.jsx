@@ -11,6 +11,7 @@ import {
   MapPinned,
   PencilRuler,
   Settings2,
+  BookOpen,
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -98,6 +99,14 @@ export function DashboardPage() {
       tone: "green",
       badge: isGuest ? "Login" : null,
       onClick: () => openAccountFeature("My Plots", "/saved-plots"),
+    },
+    {
+      icon: BookOpen,
+      title: "Help & Tutorials (गाइड)",
+      description: "Visual step-by-step guides, FAQs, CAD lessons & Heron formulas",
+      tone: "green",
+      badge: "Knowledge Hub",
+      to: "/help",
     },
     {
       icon: Settings2,
