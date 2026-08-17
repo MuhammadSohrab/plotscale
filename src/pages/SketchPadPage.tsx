@@ -1874,23 +1874,29 @@ export default function SketchPadPage() {
         onClose={() => setTutorialOpen(false)}
         onLoadSamplePlot={() => {
           const samplePoints: Point[] = [
-            { x: 250, y: 150 },
-            { x: 550, y: 120 },
-            { x: 620, y: 380 },
-            { x: 220, y: 410 },
+            { x: 260, y: 120 },
+            { x: 500, y: 110 },
+            { x: 520, y: 320 },
+            { x: 680, y: 350 },
+            { x: 640, y: 490 },
+            { x: 270, y: 480 },
           ];
           setPoints(samplePoints);
           setClosed(true);
           setPlotName("Sample Irregular Plot");
-          const s0: SideMeasurement = { id: "side-0-1", fromIndex: 0, toIndex: 1, length: 60, isLocked: true, rawPxLength: 300 };
-          const s1: SideMeasurement = { id: "side-1-2", fromIndex: 1, toIndex: 2, length: 55, isLocked: true, rawPxLength: 270 };
-          const s2: SideMeasurement = { id: "side-2-3", fromIndex: 2, toIndex: 3, length: 80, isLocked: true, rawPxLength: 400 };
-          const s3: SideMeasurement = { id: "side-3-0", fromIndex: 3, toIndex: 0, length: 52, isLocked: true, rawPxLength: 260 };
-          setOuterSides([s0, s1, s2, s3]);
-          const d0: DiagonalMeasurement = { id: "diag-0-2", fromIndex: 0, toIndex: 2, length: 90, isLocked: true, rawPxLength: 450 };
-          setDiagonals([d0]);
-          setCalibrationScale(5);
-          notify("Loaded Tutorial Sample Plot (T1 + T2 Survey Triangulation)");
+          const s0: SideMeasurement = { id: "side-0-1", fromIndex: 0, toIndex: 1, length: 24, isLocked: true, rawPxLength: 240 };
+          const s1: SideMeasurement = { id: "side-1-2", fromIndex: 1, toIndex: 2, length: 35, isLocked: true, rawPxLength: 350 };
+          const s2: SideMeasurement = { id: "side-2-3", fromIndex: 2, toIndex: 3, length: 18, isLocked: true, rawPxLength: 180 };
+          const s3: SideMeasurement = { id: "side-3-4", fromIndex: 3, toIndex: 4, length: 26, isLocked: true, rawPxLength: 260 };
+          const s4: SideMeasurement = { id: "side-4-5", fromIndex: 4, toIndex: 5, length: 43, isLocked: true, rawPxLength: 430 };
+          const s5: SideMeasurement = { id: "side-5-0", fromIndex: 5, toIndex: 0, length: 56, isLocked: true, rawPxLength: 560 };
+          setOuterSides([s0, s1, s2, s3, s4, s5]);
+          const d0: DiagonalMeasurement = { id: "diag-2-0", fromIndex: 2, toIndex: 0, length: 40, isLocked: true, rawPxLength: 400 };
+          const d1: DiagonalMeasurement = { id: "diag-2-5", fromIndex: 2, toIndex: 5, length: 33, isLocked: true, rawPxLength: 330 };
+          const d2: DiagonalMeasurement = { id: "diag-2-4", fromIndex: 2, toIndex: 4, length: 35.5, isLocked: true, rawPxLength: 355 };
+          setDiagonals([d0, d1, d2]);
+          setCalibrationScale(10);
+          notify("Loaded 6-Corner Field Survey Plot (4 Triangles: 1,864.47 sq.ft)");
         }}
       />
     </main>
