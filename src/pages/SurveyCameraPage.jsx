@@ -13,6 +13,7 @@ import {
   Share2,
   SwitchCamera,
   Trash2,
+  WandSparkles,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -22,7 +23,6 @@ import { loadGoogleMaps } from "../services/GoogleMapsLoader";
 import { localDatabaseService } from "../services/LocalDatabaseService";
 import { useAppStore } from "../store/useAppStore";
 import { canvasToJpeg, drawSurveyStamp, formatCaptureTime } from "../utils/surveyPhotoStamp";
-import { enterAppFullscreen, exitAppFullscreen } from "../utils/appFullscreen";
 import { createSatelliteSnapshot, satelliteImageryAttribution } from "../utils/satelliteSnapshot";
 import "./surveyCamera.css";
 
@@ -30,6 +30,14 @@ const CAMERA_CONSTRAINTS = {
   width: { ideal: 2560 },
   height: { ideal: 1440 },
 };
+
+const CAMERA_FILTERS = [
+  { id: "none", label: "Original", css: "none" },
+  { id: "vivid", label: "Vivid", css: "saturate(1.35) contrast(1.08)" },
+  { id: "warm", label: "Warm", css: "sepia(.2) saturate(1.2) brightness(1.03)" },
+  { id: "cool", label: "Cool", css: "saturate(.92) hue-rotate(9deg) contrast(1.04)" },
+  { id: "mono", label: "Mono", css: "grayscale(1) contrast(1.12)" },
+];
 
 function getPosition() {
   return new Promise((resolve, reject) => {
@@ -152,10 +160,11 @@ export function SurveyCameraPage() {
   const [lightbox, setLightbox] = useState(null);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
-  const [isImmersive, setIsImmersive] = useState(() => Boolean(
-    document.fullscreenElement || document.webkitFullscreenElement,
-  ));
+  const [isImmersive, setIsImmersive] = useState(false);
+  const [filterId, setFilterId] = useState("none");
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   const [clock, setClock] = useState(() => new Date());
+  const activeFilter = CAMERA_FILTERS.find((filter) => filter.id === filterId) ?? CAMERA_FILTERS[0];
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -165,7 +174,6 @@ export function SurveyCameraPage() {
   }, []);
 
   const startCamera = useCallback(async (requestedFacingMode = facingMode) => {
-    enterAppFullscreen();
     if (!navigator.mediaDevices?.getUserMedia) {
       setError("This browser cannot open a live camera. Use PlotScale over HTTPS on a supported phone browser.");
       return;
@@ -220,22 +228,8 @@ export function SurveyCameraPage() {
     return () => window.clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const syncFullscreenState = () => {
-      const active = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
-      setIsImmersive(active);
-    };
-    document.addEventListener("fullscreenchange", syncFullscreenState);
-    document.addEventListener("webkitfullscreenchange", syncFullscreenState);
-    return () => {
-      document.removeEventListener("fullscreenchange", syncFullscreenState);
-      document.removeEventListener("webkitfullscreenchange", syncFullscreenState);
-    };
-  }, []);
-
   useEffect(() => () => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
-    exitAppFullscreen();
   }, []);
 
   const enableLocation = async () => {
@@ -301,7 +295,9 @@ export function SurveyCameraPage() {
         context.translate(width, 0);
         context.scale(-1, 1);
       }
+      context.filter = activeFilter.css;
       context.drawImage(video, 0, 0, width, height);
+      context.filter = "none";
       if (facingMode === "user") context.setTransform(1, 0, 0, 1, 0, 0);
       const capturedAt = new Date();
       drawSurveyStamp(context, width, height, {
@@ -315,6 +311,7 @@ export function SurveyCameraPage() {
         blob,
         capturedAt: capturedAt.toISOString(),
         facingMode,
+        filterId,
         ...location,
       });
       setLatestPhoto(photo);
@@ -361,21 +358,21 @@ export function SurveyCameraPage() {
   const leaveCamera = async () => {
     stopCamera();
     setIsImmersive(false);
-    await exitAppFullscreen();
     navigate("/dashboard");
   };
 
-  const toggleFullscreen = async () => {
+  const toggleFullscreen = () => {
     if (isImmersive) {
       setIsImmersive(false);
-      await exitAppFullscreen();
       return;
     }
     setIsImmersive(true);
-    const opened = await enterAppFullscreen();
-    if (!opened) {
-      setNotice("Camera view expanded. This browser may keep its address bar visible; install PlotScale to the Home Screen to hide browser controls too.");
-    }
+    setFilterPanelOpen(false);
+  };
+
+  const selectFilter = (nextFilterId) => {
+    setFilterId(nextFilterId);
+    setFilterPanelOpen(false);
   };
 
   return (
@@ -411,11 +408,24 @@ export function SurveyCameraPage() {
       {view === "camera" ? (
         <section className="survey-camera-workspace">
           <div className={`survey-viewfinder ${facingMode === "user" ? "is-front" : ""}`}>
-            <video ref={videoRef} muted playsInline autoPlay aria-label="Live camera preview" />
+            <video ref={videoRef} muted playsInline autoPlay aria-label="Live camera preview" style={{ filter: activeFilter.css }} />
             {isImmersive && (
               <button className="survey-immersive-exit" type="button" onClick={toggleFullscreen} aria-label="Exit clean full-screen camera">
                 <Minimize2 size={22} />
               </button>
+            )}
+            <button className={`survey-filter-toggle ${filterId !== "none" ? "is-active" : ""}`} type="button" onClick={() => setFilterPanelOpen((open) => !open)} aria-expanded={filterPanelOpen} aria-label={`Choose photo filter. Current filter: ${activeFilter.label}`}>
+              <WandSparkles size={19} />
+              <span>{activeFilter.label}</span>
+            </button>
+            {filterPanelOpen && (
+              <div className="survey-filter-panel" role="listbox" aria-label="Photo filters">
+                {CAMERA_FILTERS.map((filter) => (
+                  <button key={filter.id} type="button" className={filter.id === filterId ? "is-active" : ""} onClick={() => selectFilter(filter.id)} role="option" aria-selected={filter.id === filterId}>
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
             )}
             {cameraState !== "ready" && cameraState !== "capturing" && (
               <div className="survey-viewfinder__empty">

@@ -75,6 +75,7 @@ export function createSurveyPhoto(input = {}) {
     blob: input.blob,
     capturedAt,
     facingMode: input.facingMode === "user" ? "user" : "environment",
+    filterId: input.filterId?.trim() || "none",
     latitude: Number.isFinite(input.latitude) ? input.latitude : null,
     longitude: Number.isFinite(input.longitude) ? input.longitude : null,
     accuracyM: Number.isFinite(input.accuracyM) ? input.accuracyM : null,
