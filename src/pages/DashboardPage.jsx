@@ -12,6 +12,7 @@ import {
   PencilRuler,
   Settings2,
   BookOpen,
+  Camera,
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -40,10 +41,6 @@ export function DashboardPage() {
     navigate(authenticatedPath);
   };
 
-  const showUpcomingFeature = (featureName) => {
-    setDialog({ featureName, mode: "upcoming" });
-  };
-
   const measuringTools = [
     {
       icon: PencilRuler,
@@ -60,6 +57,14 @@ export function DashboardPage() {
       description: "Full-featured satellite map surveying tool with entrance point & GeoJSON/KML export",
       tone: "green",
       to: "/calculator?mode=map_mode",
+    },
+    {
+      icon: Camera,
+      title: "GPS Survey Camera",
+      description: "Capture front/rear camera photos with GPS, address, date and offline gallery",
+      tone: "blue",
+      badge: "New",
+      to: "/survey-camera",
     },
     {
       icon: Image,

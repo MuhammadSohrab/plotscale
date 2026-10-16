@@ -17,6 +17,7 @@ import ImageTracePage from "./pages/ImageTracePage";
 import SketchPadPage from "./pages/SketchPadPage";
 import CadMeasurePage from "./pages/CadMeasurePage";
 import HelpTutorialPage from "./pages/HelpTutorialPage";
+import { SurveyCameraPage } from "./pages/SurveyCameraPage";
 import {
   AnonymousRoute,
   AuthenticatedRoute,
@@ -133,6 +134,7 @@ export default function App() {
         <Route path="/calculator" element={<AreaCalculatorPage />} />
         <Route path="/image-trace" element={<ImageTracePage />} />
         <Route path="/cad-measure" element={<CadMeasurePage />} />
+        <Route path="/survey-camera" element={<SurveyCameraPage />} />
         <Route path="/sketch" element={<SketchPadPage />} />
         <Route path="/units" element={<UnitDefaultsPage />} />
         <Route path="/units/custom" element={<CustomUnitPage />} />

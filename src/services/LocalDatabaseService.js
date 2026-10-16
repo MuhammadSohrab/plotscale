@@ -9,6 +9,7 @@ import {
   createMeasurement,
   createMediaReference,
   createSavedPlot,
+  createSurveyPhoto,
 } from "../models/localModels";
 import {
   createUnitPreferences,
@@ -131,6 +132,39 @@ export class PlotScaleDatabase extends Dexie {
       if (migratedProfiles.length) {
         await transaction.table("userUnitProfiles").bulkPut(migratedProfiles);
       }
+    });
+    this.version(5).stores({
+      plots: "id, name, mode, ownerUserId, createdAt, modifiedAt",
+      measurements: "id, plotId, updatedAt",
+      boundaries: "plotId, updatedAt",
+      media: "id, plotId, kind, createdAt",
+      metadata: "key",
+      unitRegistry: "id, dimension, isFlexible, isCustom, ownerKey, packId",
+      unitHierarchy: "id, familyId, parentUnitId, childUnitId, packId",
+      toolsRegistry: "id, dimension, isFlexible, packId",
+      userLocalProfiles: "id, ownerKey, familyId, packId, verificationState, isDefault, revision, updatedAt",
+      unitPreferences: "ownerKey, updatedAt",
+      unitPacks: "[id+version], id, version, tier, status, installedAt",
+      packCatalog: "id, activeVersion, updatedAt",
+      locationProfiles: "ownerKey, countryCode, resolutionLevel, updatedAt",
+      customAreaUnits: "id, ownerKey, updatedAt",
+      customTools: "id, ownerKey, updatedAt",
+      compoundRecipes: "id, ownerKey, dimension, updatedAt",
+      plotUnitSnapshots: "plotId, profileId, packId, packVersion, createdAt",
+      countryDirectory: "code, iso3, name, continent",
+      locationNodes: "id, parentId, countryCode, [countryCode+levelIndex], typeCode, officialCode",
+      measurementRegions: "id, countryCode, parentMeasurementRegionId, regionType",
+      standardUnitCatalog: "id, dimension, packId",
+      localSuggestionPacks: "[id+version], id, version, status",
+      unitDrafts: "id, ownerKey, status, updatedAt",
+      userUnitProfiles: "id, ownerKey, familyId, packId, verificationState, isDefault, revision, updatedAt",
+      unitProfileRevisions: "[profileId+profileVersion], profileId, ownerKey, createdAt",
+      customUnitFamilies: "id, ownerKey, dimension, updatedAt",
+      standaloneCustomUnits: "id, ownerKey, dimension, updatedAt",
+      customMeasuringTools: "id, ownerKey, updatedAt",
+      catalogVersions: "id, activeVersion, updatedAt",
+      unitSyncQueue: "++queueId, ownerKey, entityType, entityId, status, createdAt",
+      surveyPhotos: "id, ownerKey, capturedAt, facingMode",
     });
   }
 }
@@ -910,6 +944,24 @@ class LocalDatabaseService {
 
   async deleteMedia(id) {
     await this.db.media.delete(id);
+  }
+
+  async saveSurveyPhoto(input) {
+    const photo = createSurveyPhoto(input);
+    await this.db.surveyPhotos.put(photo);
+    return photo;
+  }
+
+  async listSurveyPhotos(ownerKey = "guest") {
+    return this.db.surveyPhotos
+      .where("ownerKey")
+      .equals(ownerKey)
+      .reverse()
+      .sortBy("capturedAt");
+  }
+
+  async deleteSurveyPhoto(id) {
+    await this.db.surveyPhotos.delete(id);
   }
 
   async deletePlot(id) {

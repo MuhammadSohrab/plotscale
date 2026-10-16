@@ -63,3 +63,25 @@ export function createMediaReference(plotId, input = {}) {
     createdAt: input.createdAt ?? new Date().toISOString(),
   };
 }
+
+export function createSurveyPhoto(input = {}) {
+  if (!(input.blob instanceof Blob)) throw new Error("A photo blob is required.");
+  const capturedAt = input.capturedAt ?? new Date().toISOString();
+  return {
+    id: input.id ?? crypto.randomUUID(),
+    ownerKey: input.ownerKey ?? "guest",
+    fileName: input.fileName ?? `plotscale-survey-${capturedAt.replace(/[:.]/g, "-")}.jpg`,
+    mimeType: input.mimeType ?? input.blob.type ?? "image/jpeg",
+    blob: input.blob,
+    capturedAt,
+    facingMode: input.facingMode === "user" ? "user" : "environment",
+    latitude: Number.isFinite(input.latitude) ? input.latitude : null,
+    longitude: Number.isFinite(input.longitude) ? input.longitude : null,
+    accuracyM: Number.isFinite(input.accuracyM) ? input.accuracyM : null,
+    altitudeM: Number.isFinite(input.altitudeM) ? input.altitudeM : null,
+    address: input.address?.trim() || "",
+    locality: input.locality?.trim() || "",
+    note: input.note?.trim() || "",
+    schemaVersion: 1,
+  };
+}

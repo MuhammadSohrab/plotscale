@@ -1,5 +1,5 @@
 import { ArrowRight, CloudOff, Database, ShieldCheck } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Brand } from "../components/Brand";
 import { ScreenShell } from "../components/ScreenShell";
 import { useAppStore } from "../store/useAppStore";
@@ -7,10 +7,12 @@ import { useAppStore } from "../store/useAppStore";
 export function GuestPage() {
   const enterGuestMode = useAppStore((state) => state.enterGuestMode);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const continueOffline = () => {
     enterGuestMode();
-    navigate("/dashboard", { replace: true });
+    const requestedPath = searchParams.get("next");
+    navigate(requestedPath?.startsWith("/") ? requestedPath : "/dashboard", { replace: true });
   };
 
   return (

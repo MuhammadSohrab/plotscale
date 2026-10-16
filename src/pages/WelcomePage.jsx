@@ -2,6 +2,7 @@ import {
   ArrowLeftRight,
   ArrowRight,
   Calculator,
+  Camera,
   Image,
   MapPinned,
   PencilRuler,
@@ -25,6 +26,14 @@ const modes = [
     title: "Map Measurement",
     description: "Drop pins on satellite imagery with GPS & entrance point",
     tone: "green",
+  },
+  {
+    icon: Camera,
+    title: "GPS Survey Camera",
+    description: "Take front/rear camera photos with GPS, date and offline gallery",
+    tone: "blue",
+    badge: "New",
+    to: "/guest?next=/survey-camera",
   },
   {
     icon: Image,
@@ -59,7 +68,7 @@ export function WelcomePage() {
       <section className="feature-group welcome-feature-group" aria-labelledby="welcome-measuring-tools">
         <h2 className="feature-group__title" id="welcome-measuring-tools">Measuring Tools</h2>
         <div className="feature-list">
-          {modes.map((mode) => <FeatureCard key={mode.title} {...mode} to="/guest" />)}
+          {modes.map((mode) => <FeatureCard key={mode.title} {...mode} to={mode.to ?? "/guest"} />)}
         </div>
       </section>
       <footer className="welcome-actions">

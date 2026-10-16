@@ -54,6 +54,27 @@ describe("LocalDatabaseService", () => {
     expect(await service.listMedia(plot.id)).toEqual([]);
   });
 
+  it("stores and deletes GPS survey photos in the device gallery", async () => {
+    const saved = await service.saveSurveyPhoto({
+      ownerKey: "guest",
+      blob: new Blob(["jpeg-bytes"], { type: "image/jpeg" }),
+      latitude: 26.7606,
+      longitude: 83.3732,
+      address: "Gorakhpur, Uttar Pradesh",
+    });
+
+    expect(await service.listSurveyPhotos("guest")).toEqual([
+      expect.objectContaining({
+        id: saved.id,
+        latitude: 26.7606,
+        longitude: 83.3732,
+      }),
+    ]);
+
+    await service.deleteSurveyPhoto(saved.id);
+    expect(await service.listSurveyPhotos("guest")).toEqual([]);
+  });
+
   it("seeds verified packs, keeps legacy local IDs hidden, and persists a versioned profile", async () => {
     const [units, hierarchy, packs] = await Promise.all([
       service.listUnitRegistry("guest"),
