@@ -1,13 +1,13 @@
-const TILE_BASE = "https://basemaps.cartocdn.com/light_nolabels/17";
+const TILE_BASE = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/17";
 const TILES = [
-  "92603/53443",
-  "92604/53443",
-  "92603/53444",
-  "92604/53444",
-  "92603/53445",
-  "92604/53445",
-  "92603/53446",
-  "92604/53446",
+  "55417/95878",
+  "55417/95879",
+  "55418/95878",
+  "55418/95879",
+  "55419/95878",
+  "55419/95879",
+  "55420/95878",
+  "55420/95879",
 ];
 
 export function MapBackdrop() {
@@ -17,7 +17,7 @@ export function MapBackdrop() {
         {TILES.map((tile) => (
           <img
             key={tile}
-            src={`${TILE_BASE}/${tile}.png`}
+            src={`${TILE_BASE}/${tile}`}
             alt=""
             width="256"
             height="256"
@@ -29,7 +29,7 @@ export function MapBackdrop() {
       </div>
       <span className="map-backdrop__wash" />
       <span className="map-backdrop__attribution">
-        Map data © OpenStreetMap contributors, © CARTO
+        Imagery © Esri, Maxar, Earthstar Geographics, GIS Community
       </span>
     </div>
   );

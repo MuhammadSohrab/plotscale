@@ -96,7 +96,8 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
   grid-template-columns: 256px 256px;
   transform: translateX(-50%) scale(0.84);
   transform-origin: top center;
-  filter: saturate(0.35) contrast(1.5) brightness(1.02);
+  opacity: 0.42;
+  filter: saturate(0.35) contrast(0.78) brightness(1.24);
 }
 .map-backdrop__tiles img {
   display: block;
@@ -106,18 +107,18 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 .map-backdrop__tint {
   position: absolute;
   inset: 0;
-  background: #8fa6c6;
-  mix-blend-mode: multiply;
-  opacity: 0.5;
+  background: #d8e5f6;
+  mix-blend-mode: screen;
+  opacity: 0.66;
 }
 .map-backdrop__wash {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(246, 248, 251, 0.62) 0%,
-    rgba(240, 244, 250, 0.1) 42%,
-    rgba(246, 248, 251, 0.52) 100%
+    rgba(246, 248, 251, 0.82) 0%,
+    rgba(240, 244, 250, 0.56) 42%,
+    rgba(246, 248, 251, 0.9) 100%
   );
 }
 .map-backdrop__attribution {

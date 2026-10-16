@@ -21,6 +21,7 @@ import { Brand } from "../components/Brand";
 import { FeatureCard } from "../components/FeatureCard";
 import { cloudSyncService } from "../services/CloudSyncService";
 import { useAppStore } from "../store/useAppStore";
+import { enterAppFullscreen } from "../utils/appFullscreen";
 
 export function DashboardPage() {
   const { user, isGuest, storageReady, resetSession } = useAppStore();
@@ -65,6 +66,7 @@ export function DashboardPage() {
       tone: "blue",
       badge: "New",
       to: "/survey-camera",
+      onClick: enterAppFullscreen,
     },
     {
       icon: Image,

@@ -6,6 +6,8 @@ import {
   Images,
   LocateFixed,
   MapPin,
+  Maximize2,
+  Minimize2,
   Navigation,
   RefreshCw,
   Share2,
@@ -14,12 +16,14 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Brand } from "../components/Brand";
 import { loadGoogleMaps } from "../services/GoogleMapsLoader";
 import { localDatabaseService } from "../services/LocalDatabaseService";
 import { useAppStore } from "../store/useAppStore";
 import { canvasToJpeg, drawSurveyStamp, formatCaptureTime } from "../utils/surveyPhotoStamp";
+import { enterAppFullscreen, exitAppFullscreen } from "../utils/appFullscreen";
+import { createSatelliteSnapshot, satelliteImageryAttribution } from "../utils/satelliteSnapshot";
 import "./surveyCamera.css";
 
 const CAMERA_CONSTRAINTS = {
@@ -131,6 +135,8 @@ function CaptureReview({ photo, onClose, onDownload, onShare }) {
 export function SurveyCameraPage() {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
+  const satelliteImageRef = useRef(null);
+  const navigate = useNavigate();
   const user = useAppStore((state) => state.user);
   const ownerKey = user?.id ?? "guest";
   const [view, setView] = useState("camera");
@@ -138,12 +144,17 @@ export function SurveyCameraPage() {
   const [cameraState, setCameraState] = useState("idle");
   const [locationState, setLocationState] = useState("idle");
   const [location, setLocation] = useState(null);
+  const [satellitePreviewUrl, setSatellitePreviewUrl] = useState("");
+  const [satelliteState, setSatelliteState] = useState("idle");
   const [photos, setPhotos] = useState([]);
   const [latestPhoto, setLatestPhoto] = useState(null);
   const [captureReview, setCaptureReview] = useState(null);
   const [lightbox, setLightbox] = useState(null);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(() => Boolean(
+    document.fullscreenElement || document.webkitFullscreenElement,
+  ));
   const [clock, setClock] = useState(() => new Date());
 
   const stopCamera = useCallback(() => {
@@ -154,6 +165,7 @@ export function SurveyCameraPage() {
   }, []);
 
   const startCamera = useCallback(async (requestedFacingMode = facingMode) => {
+    enterAppFullscreen();
     if (!navigator.mediaDevices?.getUserMedia) {
       setError("This browser cannot open a live camera. Use PlotScale over HTTPS on a supported phone browser.");
       return;
@@ -208,8 +220,21 @@ export function SurveyCameraPage() {
     return () => window.clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const syncFullscreenState = () => setIsFullscreen(Boolean(
+      document.fullscreenElement || document.webkitFullscreenElement,
+    ));
+    document.addEventListener("fullscreenchange", syncFullscreenState);
+    document.addEventListener("webkitfullscreenchange", syncFullscreenState);
+    return () => {
+      document.removeEventListener("fullscreenchange", syncFullscreenState);
+      document.removeEventListener("webkitfullscreenchange", syncFullscreenState);
+    };
+  }, []);
+
   useEffect(() => () => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
+    exitAppFullscreen();
   }, []);
 
   const enableLocation = async () => {
@@ -223,10 +248,26 @@ export function SurveyCameraPage() {
         accuracyM: position.coords.accuracy,
         altitudeM: position.coords.altitude,
       };
+      satelliteImageRef.current = null;
+      setSatellitePreviewUrl("");
+      setSatelliteState("loading");
       setLocation({ ...base, address: "Resolving address…", locality: "Survey location" });
       setLocationState("ready");
-      const resolved = await resolveAddress(base.latitude, base.longitude);
+      const [addressResult, satelliteResult] = await Promise.allSettled([
+        resolveAddress(base.latitude, base.longitude),
+        createSatelliteSnapshot(base.latitude, base.longitude),
+      ]);
+      const resolved = addressResult.status === "fulfilled"
+        ? addressResult.value
+        : { address: "GPS coordinates captured", locality: "Survey location" };
       setLocation({ ...base, ...resolved });
+      if (satelliteResult.status === "fulfilled") {
+        satelliteImageRef.current = satelliteResult.value.image;
+        setSatellitePreviewUrl(satelliteResult.value.dataUrl);
+        setSatelliteState("ready");
+      } else {
+        setSatelliteState("error");
+      }
     } catch (caught) {
       setLocationState("error");
       setError(caught.code === 1
@@ -262,7 +303,11 @@ export function SurveyCameraPage() {
       context.drawImage(video, 0, 0, width, height);
       if (facingMode === "user") context.setTransform(1, 0, 0, 1, 0, 0);
       const capturedAt = new Date();
-      drawSurveyStamp(context, width, height, { ...location, capturedAt });
+      drawSurveyStamp(context, width, height, {
+        ...location,
+        capturedAt,
+        satelliteImage: satelliteImageRef.current,
+      });
       const blob = await canvasToJpeg(canvas);
       const photo = await localDatabaseService.saveSurveyPhoto({
         ownerKey,
@@ -312,12 +357,36 @@ export function SurveyCameraPage() {
     refreshGallery();
   };
 
+  const leaveCamera = async () => {
+    stopCamera();
+    await exitAppFullscreen();
+    navigate("/dashboard");
+  };
+
+  const toggleFullscreen = async () => {
+    if (isFullscreen) {
+      await exitAppFullscreen();
+      return;
+    }
+    const opened = await enterAppFullscreen();
+    if (!opened) {
+      setNotice("This browser cannot hide its controls. Install PlotScale to the Home Screen for an app-like full-screen view.");
+    }
+  };
+
   return (
-    <main className="survey-camera-page">
+    <main className={`survey-camera-page ${view === "camera" ? "survey-camera-page--camera" : ""}`}>
       <header className="survey-camera-header">
-        <Link className="icon-button" to="/dashboard" aria-label="Back to dashboard"><ArrowLeft size={19} /></Link>
+        <button className="icon-button" type="button" onClick={leaveCamera} aria-label="Back to dashboard"><ArrowLeft size={19} /></button>
         <Brand compact />
-        <span className="calculator-header__chip"><Camera size={14} /> Survey Camera</span>
+        {view === "camera" ? (
+          <button className="survey-fullscreen-button" type="button" onClick={toggleFullscreen} aria-label={isFullscreen ? "Exit full screen" : "Open camera full screen"}>
+            {isFullscreen ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
+            <span>{isFullscreen ? "Exit" : "Full screen"}</span>
+          </button>
+        ) : (
+          <span className="calculator-header__chip"><Camera size={14} /> Survey Camera</span>
+        )}
       </header>
 
       <section className="survey-camera-intro">
@@ -362,7 +431,11 @@ export function SurveyCameraPage() {
                 {location && <code>{location.latitude.toFixed(6)}, {location.longitude.toFixed(6)} · ±{Math.round(location.accuracyM)} m</code>}
                 <small>{formatCaptureTime(clock)}</small>
               </div>
-              <span className="survey-position-tile" aria-label="Map position preview"><MapPin size={27} /></span>
+              <span className={`survey-position-tile is-${satelliteState}`} aria-label="Satellite map position preview">
+                {satellitePreviewUrl ? <img src={satellitePreviewUrl} alt="Current GPS position in satellite view" /> : <small>{satelliteState === "loading" ? "Loading satellite…" : "Enable GPS"}</small>}
+                <MapPin className="survey-position-tile__pin" size={27} />
+                {satellitePreviewUrl && <em>Esri</em>}
+              </span>
             </div>
 
             <div className="survey-viewfinder__controls">
@@ -378,7 +451,7 @@ export function SurveyCameraPage() {
             <h2>Capture details</h2>
             <div className="survey-detail-row"><Camera size={18} /><span><strong>{facingMode === "user" ? "Front camera" : "Rear camera"}</strong><small>Tap switch to change camera</small></span></div>
             <div className="survey-detail-row"><Navigation size={18} /><span><strong>{location ? "GPS ready" : "GPS optional"}</strong><small>{location ? `Accuracy ±${Math.round(location.accuracyM)} m` : "Enable it before capture for a location stamp"}</small></span></div>
-            <p className="survey-privacy-note">Original photos and GPS metadata stay in IndexedDB on this device. PlotScale does not upload them automatically.</p>
+            <p className="survey-privacy-note">Photos stay in IndexedDB on this device and are never uploaded automatically. When GPS is enabled, Google resolves the address and nearby imagery tiles are requested from Esri; the photo itself is not sent.<br />{satelliteImageryAttribution}.</p>
             {latestPhoto && (
               <div className="survey-latest">
                 <strong>Latest photo saved</strong>

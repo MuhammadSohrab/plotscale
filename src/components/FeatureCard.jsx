@@ -35,7 +35,7 @@ export function FeatureCard({
 
   if (to) {
     return (
-      <Link className={cardClassName} to={to}>
+      <Link className={cardClassName} to={to} onClick={onClick}>
         {content}
       </Link>
     );

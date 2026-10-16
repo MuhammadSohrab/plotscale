@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Brand } from "../components/Brand";
 import { FeatureCard } from "../components/FeatureCard";
 import { ScreenShell } from "../components/ScreenShell";
+import { enterAppFullscreen } from "../utils/appFullscreen";
 
 const modes = [
   {
@@ -34,6 +35,7 @@ const modes = [
     tone: "blue",
     badge: "New",
     to: "/guest?next=/survey-camera",
+    onClick: enterAppFullscreen,
   },
   {
     icon: Image,

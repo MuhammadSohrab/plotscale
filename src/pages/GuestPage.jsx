@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Brand } from "../components/Brand";
 import { ScreenShell } from "../components/ScreenShell";
 import { useAppStore } from "../store/useAppStore";
+import { enterAppFullscreen } from "../utils/appFullscreen";
 
 export function GuestPage() {
   const enterGuestMode = useAppStore((state) => state.enterGuestMode);
@@ -12,6 +13,7 @@ export function GuestPage() {
   const continueOffline = () => {
     enterGuestMode();
     const requestedPath = searchParams.get("next");
+    if (requestedPath === "/survey-camera") enterAppFullscreen();
     navigate(requestedPath?.startsWith("/") ? requestedPath : "/dashboard", { replace: true });
   };
 

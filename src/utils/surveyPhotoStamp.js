@@ -45,39 +45,26 @@ function fitLines(context, text, maxWidth, maximumLines = 2) {
   return lines;
 }
 
-function drawPositionTile(context, x, y, size, latitude, longitude) {
+function drawPositionTile(context, x, y, size, latitude, longitude, satelliteImage) {
   context.save();
   roundedRect(context, x, y, size, size, size * 0.08);
   context.clip();
-  const gradient = context.createLinearGradient(x, y, x + size, y + size);
-  gradient.addColorStop(0, "#173f35");
-  gradient.addColorStop(1, "#315647");
-  context.fillStyle = gradient;
-  context.fillRect(x, y, size, size);
-
-  const seed = Math.abs(Math.round((latitude ?? 26) * 997 + (longitude ?? 83) * 991));
-  context.strokeStyle = "rgba(255,255,255,.22)";
-  context.lineWidth = Math.max(1, size * 0.012);
-  for (let index = -1; index < 5; index += 1) {
-    const shift = (seed % 17) * 0.004 * size;
-    context.beginPath();
-    context.moveTo(x - size * 0.2, y + index * size * 0.27 + shift);
-    context.lineTo(x + size * 1.2, y + (index + 1) * size * 0.22 + shift);
-    context.stroke();
+  if (satelliteImage?.complete && satelliteImage.naturalWidth) {
+    context.drawImage(satelliteImage, x, y, size, size);
+  } else {
+    const gradient = context.createLinearGradient(x, y, x + size, y + size);
+    gradient.addColorStop(0, "#16281f");
+    gradient.addColorStop(1, "#3b4b3f");
+    context.fillStyle = gradient;
+    context.fillRect(x, y, size, size);
+    context.fillStyle = "rgba(255,255,255,.82)";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.font = `700 ${Math.max(10, size * 0.075)}px Inter, Arial, sans-serif`;
+    context.fillText("SATELLITE", x + size / 2, y + size * 0.42);
+    context.font = `500 ${Math.max(8, size * 0.055)}px Inter, Arial, sans-serif`;
+    context.fillText("Enable GPS / go online", x + size / 2, y + size * 0.56);
   }
-  context.strokeStyle = "rgba(242,196,92,.62)";
-  context.lineWidth = Math.max(2, size * 0.025);
-  context.beginPath();
-  context.moveTo(x + size * 0.06, y + size * 0.72);
-  context.bezierCurveTo(
-    x + size * 0.34,
-    y + size * 0.56,
-    x + size * 0.64,
-    y + size * 0.75,
-    x + size * 0.96,
-    y + size * 0.38,
-  );
-  context.stroke();
 
   const pinX = x + size / 2;
   const pinY = y + size / 2;
@@ -150,7 +137,15 @@ export function drawSurveyStamp(context, width, height, metadata = {}) {
   const accuracy = Number.isFinite(metadata.accuracyM) ? ` · ±${Math.round(metadata.accuracyM)} m` : "";
   context.fillText(`${formatCaptureTime(metadata.capturedAt ?? new Date())}${accuracy}`, textX, cardY + 151 * scale);
 
-  drawPositionTile(context, tileX, tileY, tileSize, metadata.latitude, metadata.longitude);
+  drawPositionTile(
+    context,
+    tileX,
+    tileY,
+    tileSize,
+    metadata.latitude,
+    metadata.longitude,
+    metadata.satelliteImage,
+  );
   context.restore();
 }
 
