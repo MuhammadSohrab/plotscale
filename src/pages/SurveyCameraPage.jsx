@@ -152,7 +152,7 @@ export function SurveyCameraPage() {
   const [lightbox, setLightbox] = useState(null);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
-  const [isFullscreen, setIsFullscreen] = useState(() => Boolean(
+  const [isImmersive, setIsImmersive] = useState(() => Boolean(
     document.fullscreenElement || document.webkitFullscreenElement,
   ));
   const [clock, setClock] = useState(() => new Date());
@@ -221,9 +221,10 @@ export function SurveyCameraPage() {
   }, []);
 
   useEffect(() => {
-    const syncFullscreenState = () => setIsFullscreen(Boolean(
-      document.fullscreenElement || document.webkitFullscreenElement,
-    ));
+    const syncFullscreenState = () => {
+      const active = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+      setIsImmersive(active);
+    };
     document.addEventListener("fullscreenchange", syncFullscreenState);
     document.addEventListener("webkitfullscreenchange", syncFullscreenState);
     return () => {
@@ -359,30 +360,33 @@ export function SurveyCameraPage() {
 
   const leaveCamera = async () => {
     stopCamera();
+    setIsImmersive(false);
     await exitAppFullscreen();
     navigate("/dashboard");
   };
 
   const toggleFullscreen = async () => {
-    if (isFullscreen) {
+    if (isImmersive) {
+      setIsImmersive(false);
       await exitAppFullscreen();
       return;
     }
+    setIsImmersive(true);
     const opened = await enterAppFullscreen();
     if (!opened) {
-      setNotice("This browser cannot hide its controls. Install PlotScale to the Home Screen for an app-like full-screen view.");
+      setNotice("Camera view expanded. This browser may keep its address bar visible; install PlotScale to the Home Screen to hide browser controls too.");
     }
   };
 
   return (
-    <main className={`survey-camera-page ${view === "camera" ? "survey-camera-page--camera" : ""}`}>
+    <main className={`survey-camera-page ${view === "camera" ? "survey-camera-page--camera" : ""} ${isImmersive ? "is-immersive" : ""}`}>
       <header className="survey-camera-header">
         <button className="icon-button" type="button" onClick={leaveCamera} aria-label="Back to dashboard"><ArrowLeft size={19} /></button>
         <Brand compact />
         {view === "camera" ? (
-          <button className="survey-fullscreen-button" type="button" onClick={toggleFullscreen} aria-label={isFullscreen ? "Exit full screen" : "Open camera full screen"}>
-            {isFullscreen ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
-            <span>{isFullscreen ? "Exit" : "Full screen"}</span>
+          <button className="survey-fullscreen-button" type="button" onClick={toggleFullscreen} aria-label={isImmersive ? "Exit full screen" : "Open camera full screen"}>
+            {isImmersive ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
+            <span>{isImmersive ? "Exit" : "Full screen"}</span>
           </button>
         ) : (
           <span className="calculator-header__chip"><Camera size={14} /> Survey Camera</span>
@@ -408,6 +412,11 @@ export function SurveyCameraPage() {
         <section className="survey-camera-workspace">
           <div className={`survey-viewfinder ${facingMode === "user" ? "is-front" : ""}`}>
             <video ref={videoRef} muted playsInline autoPlay aria-label="Live camera preview" />
+            {isImmersive && (
+              <button className="survey-immersive-exit" type="button" onClick={toggleFullscreen} aria-label="Exit clean full-screen camera">
+                <Minimize2 size={22} />
+              </button>
+            )}
             {cameraState !== "ready" && cameraState !== "capturing" && (
               <div className="survey-viewfinder__empty">
                 <Camera size={42} />
