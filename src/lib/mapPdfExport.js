@@ -275,7 +275,7 @@ function drawCompass(pdf, cx, cy) {
   pdf.text('N', cx, cy - r - 1, { align: 'center', baseline: 'bottom' });
 }
 
-function drawPlotDiagram(pdf, bx, by, bw, bh, points, sideLabels, diagGroups, lengthFactor, showDiagonalsInDrawing, visibleDiagonals) {
+function drawPlotDiagram(pdf, bx, by, bw, bh, points, sideLabels, diagGroups, lengthUnitSymbol, lengthFactor, showDiagonalsInDrawing, visibleDiagonals) {
   if (!points || points.length < 2) return;
 
   const meters = pointsToMeters(points);
@@ -815,7 +815,7 @@ export async function exportMapModePDF({
   let y = drawHeader(pdf, logoDataUrl);
   y += 1;
 
-  drawPlotDiagram(pdf, MAP_ML, y, MAP_W, MAP_H, points, sideLabels, cfg.diagGroups, lengthFactor, cfg.showDiagonalsInDrawing, cfg.visibleDiagonals);
+  drawPlotDiagram(pdf, MAP_ML, y, MAP_W, MAP_H, points, sideLabels, cfg.diagGroups, lengthUnitSymbol, lengthFactor, cfg.showDiagonalsInDrawing, cfg.visibleDiagonals);
   y += MAP_H + 3;
 
   const bottomY = y;
